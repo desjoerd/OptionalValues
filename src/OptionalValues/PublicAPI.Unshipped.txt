@@ -1,0 +1,14 @@
+OptionalValues.OptionalValue<T>
+OptionalValues.OptionalValue<T>.Equals(OptionalValues.OptionalValue<T> other) -> bool
+OptionalValues.OptionalValue<T>.GetSpecifiedValueOrDefault() -> T
+OptionalValues.OptionalValue<T>.GetSpecifiedValueOrDefault(T defaultValue) -> T
+OptionalValues.OptionalValue<T>.IsSpecified.get -> bool
+OptionalValues.OptionalValue<T>.OptionalValue() -> void
+OptionalValues.OptionalValue<T>.OptionalValue(T value) -> void
+OptionalValues.OptionalValue<T>.SpecifiedValue.get -> T
+OptionalValues.OptionalValue<T>.Value.get -> T?
+override OptionalValues.OptionalValue<T>.GetHashCode() -> int
+override OptionalValues.OptionalValue<T>.ToString() -> string?
+static OptionalValues.OptionalValue<T>.implicit operator OptionalValues.OptionalValue<T>(T value) -> OptionalValues.OptionalValue<T>
+static OptionalValues.OptionalValue<T>.implicit operator T?(OptionalValues.OptionalValue<T> value) -> T?
+static OptionalValues.OptionalValue<T>.Unspecified.get -> OptionalValues.OptionalValue<T>
