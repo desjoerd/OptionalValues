@@ -1,3 +1,4 @@
+OptionalValues.OptionalValue
 OptionalValues.OptionalValue<T>
 OptionalValues.OptionalValue<T>.Equals(OptionalValues.OptionalValue<T> other) -> bool
 OptionalValues.OptionalValue<T>.GetSpecifiedValueOrDefault() -> T
@@ -7,8 +8,16 @@ OptionalValues.OptionalValue<T>.OptionalValue() -> void
 OptionalValues.OptionalValue<T>.OptionalValue(T value) -> void
 OptionalValues.OptionalValue<T>.SpecifiedValue.get -> T
 OptionalValues.OptionalValue<T>.Value.get -> T?
+OptionalValues.OptionalValueJsonExtensions
+override OptionalValues.OptionalValue<T>.Equals(object? obj) -> bool
 override OptionalValues.OptionalValue<T>.GetHashCode() -> int
 override OptionalValues.OptionalValue<T>.ToString() -> string?
+static OptionalValues.OptionalValue.GetUnderlyingType(System.Type! optionalValueType) -> System.Type!
+static OptionalValues.OptionalValue.IsOptionalValueType(System.Type! type) -> bool
 static OptionalValues.OptionalValue<T>.implicit operator OptionalValues.OptionalValue<T>(T value) -> OptionalValues.OptionalValue<T>
 static OptionalValues.OptionalValue<T>.implicit operator T?(OptionalValues.OptionalValue<T> value) -> T?
+static OptionalValues.OptionalValue<T>.operator !=(OptionalValues.OptionalValue<T> left, OptionalValues.OptionalValue<T> right) -> bool
+static OptionalValues.OptionalValue<T>.operator ==(OptionalValues.OptionalValue<T> left, OptionalValues.OptionalValue<T> right) -> bool
 static OptionalValues.OptionalValue<T>.Unspecified.get -> OptionalValues.OptionalValue<T>
+static OptionalValues.OptionalValueJsonExtensions.AddOptionalValueSupport(this System.Text.Json.JsonSerializerOptions! options) -> System.Text.Json.JsonSerializerOptions!
+static OptionalValues.OptionalValueJsonExtensions.WithOptionalValueSupport(this System.Text.Json.JsonSerializerOptions! options) -> System.Text.Json.JsonSerializerOptions!

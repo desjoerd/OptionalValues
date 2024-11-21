@@ -181,7 +181,18 @@ public class OptionalValueTest
             OptionalValue<string?> left = "Value";
             OptionalValue<string?> right = "Value";
 
-            left.Should().Be(right);
+            left.Equals(right).Should().BeTrue();
+            right.Equals(left).Should().BeTrue();
+        }
+
+        [Fact]
+        public void Should_Be_Equal_When_Same_Null()
+        {
+            OptionalValue<string?> left = null;
+            OptionalValue<string?> right = null;
+
+            left.Equals(right).Should().BeTrue();
+            right.Equals(left).Should().BeTrue();
         }
 
         [Fact]
@@ -190,7 +201,8 @@ public class OptionalValueTest
             OptionalValue<string?> left = OptionalValue<string?>.Unspecified;
             OptionalValue<string?> right = OptionalValue<string?>.Unspecified;
 
-            left.Should().Be(right);
+            left.Equals(right).Should().BeTrue();
+            right.Equals(left).Should().BeTrue();
         }
 
         [Fact]
@@ -199,7 +211,8 @@ public class OptionalValueTest
             OptionalValue<string?> left = default;
             OptionalValue<string?> right = default;
 
-            left.Should().Be(right);
+            left.Equals(right).Should().BeTrue();
+            right.Equals(left).Should().BeTrue();
         }
 
         [Fact]
@@ -208,7 +221,8 @@ public class OptionalValueTest
             OptionalValue<string?> left = "Value1";
             OptionalValue<string?> right = "Value2";
 
-            left.Should().NotBe(right);
+            left.Equals(right).Should().BeFalse();
+            right.Equals(left).Should().BeFalse();
         }
 
         [Fact]
@@ -217,7 +231,8 @@ public class OptionalValueTest
             OptionalValue<string?> left = OptionalValue<string?>.Unspecified;
             OptionalValue<string?> right = "Value2";
 
-            left.Should().NotBe(right);
+            left.Equals(right).Should().BeFalse();
+            right.Equals(left).Should().BeFalse();
         }
 
         [Fact]
@@ -226,7 +241,8 @@ public class OptionalValueTest
             OptionalValue<string?> left = default;
             OptionalValue<string?> right = "Value2";
 
-            left.Should().NotBe(right);
+            left.Equals(right).Should().BeFalse();
+            right.Equals(left).Should().BeFalse();
         }
 
         [Fact]
@@ -235,7 +251,8 @@ public class OptionalValueTest
             OptionalValue<string?> left = default;
             OptionalValue<string?> right = null;
 
-            left.Should().NotBe(right);
+            left.Equals(right).Should().BeFalse();
+            right.Equals(left).Should().BeFalse();
         }
     }
 

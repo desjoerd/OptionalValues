@@ -12,20 +12,33 @@ The `OptionalValue<T>` struct is designed to represent a value that can be in on
 
 This differs from `Nullable<T>`, which can only distinguish between the presence or absence of a value, and cannot differentiate between an unspecified value and a specified `null` value.
 
-## Features
-
-- **Distinguish Between Unspecified and Null Values**: Clearly differentiate when a value is intentionally `null` versus when it has not been specified at all.
-- **JSON Serialization Support**: Includes a custom JSON converter that correctly handles serialization and deserialization, ensuring unspecified values are omitted from JSON outputs.
-- **FluentValidation Extensions**: Provides extension methods to simplify the validation of `OptionalValue<T>` properties using FluentValidation.
-- **Patch Operation Support**: Ideal for API patch operations where fields can be updated to `null` or remain unchanged.
-
 ## Installation
 
 Install the package using the .NET CLI:
 
 ```bash
-dotnet add package PACKAGE_NAME
+dotnet add package OptionalValues
 ```
+
+For JSON serialization support, configure the `JsonSerializerOptions` to include the `OptionalValue<T>` converter:
+
+```csharp
+var options = new JsonSerializerOptions()
+    .AddOptionalValueSupport();
+```
+
+Optionally, install the FluentValidation extensions package:
+
+```bash
+dotnet add package OptionalValues.FluentValidation
+```
+
+## Features
+
+- **Distinguish Between Unspecified and Null Values**: Clearly differentiate when a value is intentionally `null` versus when it has not been specified at all.
+- **JSON Serialization Support**: Includes a custom JSON converter and TypeResolverModifier that correctly handles serialization and deserialization, ensuring unspecified values are omitted from JSON outputs.
+- **FluentValidation Extensions**: Provides extension methods to simplify the validation of `OptionalValue<T>` properties using FluentValidation.
+- **Patch Operation Support**: Ideal for API patch operations where fields can be updated to `null` or remain unchanged.
 
 ## Usage
 
@@ -121,8 +134,17 @@ bool areUnspecifiedEqual = unspecified == new OptionalValue<string>(); // True
 
 ### JSON Serialization with System.Text.Json
 
-`OptionalValue<T>` includes a custom JSON converter to handle serialization and deserialization of optional values.
-To properly serialize `OptionalValue<T>` properties, annotate them with `[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]`.
+`OptionalValue<T>` includes a custom JSON converter and JsonTypeInfoResolver Modifier to handle serialization and deserialization of optional values.
+To properly serialize `OptionalValue<T>` properties, add it to the `JsonSerializerOptions`:
+
+```csharp
+var newOptionsWithSupport = JsonSerializerOptions.Default
+    .WithOptionalValueSupport();
+
+// or
+var options = new JsonSerializerOptions();
+options.AddOptionalValueSupport();
+```
 
 #### Serialization Behavior
 
@@ -133,10 +155,8 @@ To properly serialize `OptionalValue<T>` properties, annotate them with `[JsonIg
 ```csharp
 public class Person
 {
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public OptionalValue<string> FirstName { get; set; }
 
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public OptionalValue<string> LastName { get; set; }
 }
 
@@ -269,10 +289,8 @@ When updating resources via API endpoints, it's crucial to distinguish between f
 ```csharp
 public class UpdateUserRequest
 {
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public OptionalValue<string?> Email { get; set; }
 
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public OptionalValue<string?> PhoneNumber { get; set; }
 }
 
@@ -297,7 +315,8 @@ public IActionResult UpdateUser(int id, UpdateUserRequest request)
 
 ## Limitations
 
-- **JSON Serialization**: You must annotate properties of type `OptionalValue<T>` with `[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]` to avoid serialization errors for unspecified values.
+- **DataAnnotations**: The `OptionalValue<T>` type does not support DataAnnotations validation attributes because they are tied to specific .NET Types (e.g. string).
+  - **"Workaround"**: Use the FluentValidation extensions to define validation rules for `OptionalValue<T>` properties.
 
 ## Contributing
 

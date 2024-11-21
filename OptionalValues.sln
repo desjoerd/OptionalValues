@@ -1,14 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{392590F2-70F4-43E8-852B-1CBFDF2E59AC}"
+	ProjectSection(SolutionItems) = preProject
+		src\Directory.Packages.props = src\Directory.Packages.props
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OptionalValues", "src\OptionalValues\OptionalValues.csproj", "{E1597F1E-C937-4BD0-9CEE-B6140C72794B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OptionalValues.FluentValidation", "src\OptionalValues.FluentValidation\OptionalValues.FluentValidation.csproj", "{546AF02C-0BF0-4906-8B4E-1412B73E9057}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OptionalValues.FluentValidation.Tests", "src\OptionalValues.FluentValidation.Tests\OptionalValues.FluentValidation.Tests.csproj", "{054E7F94-E4EF-49E5-944E-3A7303A27525}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OptionalValues.Tests", "src\OptionalValues.Tests\OptionalValues.Tests.csproj", "{15E7F3D2-2BB8-449A-9929-2E252EA682D2}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".root", ".root", "{17142E21-9BC9-4EEF-BFAB-65EE71195BF6}"
 	ProjectSection(SolutionItems) = preProject
@@ -18,7 +17,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".root", ".root", "{17142E21
 		README.md = README.md
 		Directory.Packages.props = Directory.Packages.props
 		.editorconfig = .editorconfig
+		Directory.Build.props = Directory.Build.props
+		version.json = version.json
 	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{8C8324D6-BC6A-456B-8A07-B95B641261D0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OptionalValues.FluentValidation.Tests", "test\OptionalValues.FluentValidation.Tests\OptionalValues.FluentValidation.Tests.csproj", "{1DA2FF65-6A7A-4492-95C8-9A999A977E12}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OptionalValues.Tests", "test\OptionalValues.Tests\OptionalValues.Tests.csproj", "{91DB844C-258B-473C-B3D8-BBF516AF7C1B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -34,19 +41,19 @@ Global
 		{546AF02C-0BF0-4906-8B4E-1412B73E9057}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{546AF02C-0BF0-4906-8B4E-1412B73E9057}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{546AF02C-0BF0-4906-8B4E-1412B73E9057}.Release|Any CPU.Build.0 = Release|Any CPU
-		{054E7F94-E4EF-49E5-944E-3A7303A27525}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{054E7F94-E4EF-49E5-944E-3A7303A27525}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{054E7F94-E4EF-49E5-944E-3A7303A27525}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{054E7F94-E4EF-49E5-944E-3A7303A27525}.Release|Any CPU.Build.0 = Release|Any CPU
-		{15E7F3D2-2BB8-449A-9929-2E252EA682D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{15E7F3D2-2BB8-449A-9929-2E252EA682D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{15E7F3D2-2BB8-449A-9929-2E252EA682D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{15E7F3D2-2BB8-449A-9929-2E252EA682D2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1DA2FF65-6A7A-4492-95C8-9A999A977E12}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1DA2FF65-6A7A-4492-95C8-9A999A977E12}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1DA2FF65-6A7A-4492-95C8-9A999A977E12}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1DA2FF65-6A7A-4492-95C8-9A999A977E12}.Release|Any CPU.Build.0 = Release|Any CPU
+		{91DB844C-258B-473C-B3D8-BBF516AF7C1B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{91DB844C-258B-473C-B3D8-BBF516AF7C1B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{91DB844C-258B-473C-B3D8-BBF516AF7C1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{91DB844C-258B-473C-B3D8-BBF516AF7C1B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{E1597F1E-C937-4BD0-9CEE-B6140C72794B} = {392590F2-70F4-43E8-852B-1CBFDF2E59AC}
 		{546AF02C-0BF0-4906-8B4E-1412B73E9057} = {392590F2-70F4-43E8-852B-1CBFDF2E59AC}
-		{054E7F94-E4EF-49E5-944E-3A7303A27525} = {392590F2-70F4-43E8-852B-1CBFDF2E59AC}
-		{15E7F3D2-2BB8-449A-9929-2E252EA682D2} = {392590F2-70F4-43E8-852B-1CBFDF2E59AC}
+		{1DA2FF65-6A7A-4492-95C8-9A999A977E12} = {8C8324D6-BC6A-456B-8A07-B95B641261D0}
+		{91DB844C-258B-473C-B3D8-BBF516AF7C1B} = {8C8324D6-BC6A-456B-8A07-B95B641261D0}
 	EndGlobalSection
 EndGlobal

@@ -1,0 +1,30 @@
+<Project>
+  <PropertyGroup>
+    <!-- Custom properties, which are used in the main projects -->
+    <OptionalValuesLibraryTargetFrameworks>net8.0;net9.0</OptionalValuesLibraryTargetFrameworks>
+    <OptionalValuesTestsTargetFrameworks>net8.0;net9.0</OptionalValuesTestsTargetFrameworks>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <GitVersionBaseDirectory>$(MSBuildThisFileDirectory)</GitVersionBaseDirectory>
+    <TreatWarningsAsErrors Condition="$(Configuration) == 'Release'">true</TreatWarningsAsErrors>
+  </PropertyGroup>
+
+  <Sdk Name="DotNet.ReproducibleBuilds.Isolated" Version="1.2.25"/>
+
+  <ItemGroup>
+    <PackageReference Include="Nerdbank.GitVersioning" PrivateAssets="all"/>
+    <PackageReference Include="DotNet.ReproducibleBuilds" PrivateAssets="All"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="$(AssemblyName).Tests"/>
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(IsTestProject)' != 'true'">
+    <PackageReference Include="Microsoft.CodeAnalysis.PublicApiAnalyzers">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+</Project>

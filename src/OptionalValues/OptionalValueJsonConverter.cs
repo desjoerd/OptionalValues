@@ -36,11 +36,12 @@ internal sealed class OptionalValueJsonConverter<T> : JsonConverter<OptionalValu
             // If we would not write anything, we end up with invalid JSON.
             // IE: { "value": }
             // So we throw an exception to indicate that the value is undefined.
-            throw new InvalidOperationException("Value is unspecified. Please set [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)] on the property.");
+            throw new InvalidOperationException("Value is unspecified. Writing the property would give a property without any value, resulting in invalid json. " +
+                                                "Add OptionalValue support via 'AddOptionalValueSupport()' on the 'JsonSerializerOptions' or " +
+                                                "set [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)] on the property.");
         }
 
         // Write the value or null if the value is null
         JsonSerializer.Serialize(writer, value.Value, options);
     }
 }
-

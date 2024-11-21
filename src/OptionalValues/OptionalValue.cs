@@ -8,7 +8,7 @@ namespace OptionalValues;
 /// </summary>
 /// <typeparam name="T">The type of the value, can be <see cref="Nullable{T}"/></typeparam>
 [JsonConverter(typeof(OptionalValueJsonConverterFactory))]
-public readonly record struct OptionalValue<T>
+public readonly struct OptionalValue<T> : IEquatable<OptionalValue<T>>
 {
     /// <summary>
     /// Creates an Unspecified OptionalValue.
@@ -75,6 +75,66 @@ public readonly record struct OptionalValue<T>
     public static OptionalValue<T> Unspecified => new();
 
     /// <summary>
+    /// Determines whether the other OptionalValue is equal to the current OptionalValue.
+    /// </summary>
+    /// <param name="other">The other OptionalValue to compare.</param>
+    /// <returns><c>true</c> if the other OptionalValue is equal to the current OptionalValue; otherwise, <c>false</c>.</returns>
+    public bool Equals(OptionalValue<T> other)
+    {
+        if (!IsSpecified)
+        {
+            return !other.IsSpecified;
+        }
+        return other.IsSpecified && EqualityComparer<T>.Default.Equals(Value, other.Value);
+    }
+
+    /// <inheritdoc />
+    public override bool Equals(object? obj) => obj is OptionalValue<T> other && Equals(other);
+
+    /// <inheritdoc />
+    public override int GetHashCode()
+    {
+        if (IsSpecified)
+        {
+            if (Value is null)
+            {
+                return 0;
+            }
+            return EqualityComparer<T>.Default.GetHashCode(Value);
+        }
+
+        // unspecified, a different value than null
+        return Int32.MinValue;
+    }
+
+    /// <inheritdoc />
+    public override string? ToString()
+    {
+        if (!IsSpecified)
+        {
+            return "Unspecified";
+        }
+
+        return Value is null ? "Null" : Value.ToString();
+    }
+
+    /// <summary>
+    /// Overloads the equality operator for OptionalValue.
+    /// </summary>
+    /// <param name="left">Value to compare to right</param>
+    /// <param name="right">Value to compare to left</param>
+    /// <returns><c>true</c> if the values are equal; otherwise, <c>false</c>.</returns>
+    public static bool operator ==(OptionalValue<T> left, OptionalValue<T> right) => left.Equals(right);
+
+    /// <summary>
+    /// Overloads the inequality operator for OptionalValue.
+    /// </summary>
+    /// <param name="left">Value to compare to right</param>
+    /// <param name="right">Value to compare to left</param>
+    /// <returns><c>true</c> if the values are not equal; otherwise, <c>false</c>.</returns>
+    public static bool operator !=(OptionalValue<T> left, OptionalValue<T> right) => !(left == right);
+
+    /// <summary>
     /// Implicitly converts a value to an OptionalValue.
     /// </summary>
     /// <param name="value"></param>
@@ -95,38 +155,41 @@ public readonly record struct OptionalValue<T>
         "CA2225:Operator overloads have named alternates",
         Justification = "The alternative is the constructor")]
     public static implicit operator T?(OptionalValue<T> value) => value.Value;
+}
 
-
-    /// <inheritdoc />
-    public bool Equals(OptionalValue<T> other)
+/// <summary>
+/// Provides a set of static methods for working with <see cref="OptionalValue{T}"/> types.
+/// </summary>
+public static class OptionalValue
+{
+    /// <summary>
+    /// Returns the underlying type argument of the specified OptionalValue type.
+    /// </summary>
+    /// <param name="optionalValueType">The OptionalValue type to get the underlying type of.</param>
+    /// <returns>The underlying type of the OptionalValue type.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="optionalValueType"/> is null.</exception>
+    /// <exception cref="ArgumentException">Thrown when <paramref name="optionalValueType"/> is not an OptionalValue type.</exception>
+    public static Type GetUnderlyingType(Type optionalValueType)
     {
-        if (!IsSpecified)
+        ArgumentNullException.ThrowIfNull(optionalValueType);
+
+        if (!IsOptionalValueType(optionalValueType))
         {
-            return !other.IsSpecified;
+            throw new ArgumentException("The specified type is not an OptionalValue type.", nameof(optionalValueType));
         }
 
-        return EqualityComparer<T>.Default.Equals(Value, other.Value);
+        return optionalValueType.GetGenericArguments()[0];
     }
 
-    /// <inheritdoc />
-    public override int GetHashCode()
+    /// <summary>
+    /// Determines whether the specified type is an OptionalValue type.
+    /// </summary>
+    /// <param name="type">The type to check.</param>
+    /// <returns><c>true</c> if the specified type is an OptionalValue type; otherwise, <c>false</c>.</returns>
+    public static bool IsOptionalValueType(Type type)
     {
-        if (!IsSpecified || Value is null)
-        {
-            return 0;
-        }
+        ArgumentNullException.ThrowIfNull(type);
 
-        return EqualityComparer<T>.Default.GetHashCode(Value);
-    }
-
-    /// <inheritdoc />
-    public override string? ToString()
-    {
-        if (!IsSpecified)
-        {
-            return "Unspecified";
-        }
-
-        return Value is null ? "Null" : Value.ToString();
+        return type.IsGenericType && type.GetGenericTypeDefinition() == typeof(OptionalValue<>);
     }
 }

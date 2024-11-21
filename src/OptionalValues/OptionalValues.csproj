@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFrameworks>$(OptionalValuesLibraryTargetFrameworks)</TargetFrameworks>
     <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
+    <Nullable Condition="$(TargetFramework) != 'netstandard2.0'">enable</Nullable>
 
     <AnalysisMode>All</AnalysisMode>
     <AnalysisLevel>latest</AnalysisLevel>
@@ -12,12 +12,26 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <!-- NuGet package properties -->
+    <PackageId>OptionalValues</PackageId>
+    <Authors>Sjoerd van der Meer</Authors>
+    <Description>Optional values for C# to model omitted values (undefined in javascript) and it has a JsonConvertor to support omitted values in Json.</Description>
+    <NeutralLanguage>en-US</NeutralLanguage>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/desjoerd/optionalvalues</RepositoryUrl>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageTags>optional partial undefined jsonpatch jsonmergepatch</PackageTags>
+  </PropertyGroup>
+
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.PublicApiAnalyzers">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Nerdbank.GitVersioning" PrivateAssets="all" />
+    <None Include="../../README.md" CopyToPublishDirectory="Always" Pack="true" PackagePath="./" />
+    <None Include="../../LICENSE" CopyToPublishDirectory="Always" Pack="true" PackagePath="./" />
+  </ItemGroup>
+
+  <ItemGroup Condition="$(TargetFramework) == 'netstandard2.0'">
+    <PackageReference Include="System.Text.Json" />
   </ItemGroup>
 
 </Project>
