@@ -1,2 +1,0 @@
-OptionalValues.FluentValidation.OptionalRuleExtensions
-static OptionalValues.FluentValidation.OptionalRuleExtensions.OptionalRuleFor<T, TProperty>(this FluentValidation.AbstractValidator<T>! validator, System.Linq.Expressions.Expression<System.Func<T, OptionalValues.OptionalValue<TProperty?>>!>! propertySelector, System.Func<FluentValidation.IRuleBuilderInitial<T, TProperty>!, FluentValidation.IRuleBuilderOptions<T, TProperty>!>! configure) -> void
