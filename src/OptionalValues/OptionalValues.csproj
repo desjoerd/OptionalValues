@@ -17,17 +17,22 @@
     <PackageId>OptionalValues</PackageId>
     <Authors>Sjoerd van der Meer</Authors>
     <Description>Optional values for C# to model omitted values (undefined in javascript) and it has a JsonConvertor to support omitted values in Json.</Description>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageIcon>icon.png</PackageIcon>
+    <PackageProjectUrl>https://github.com/desjoerd/optionalvalues</PackageProjectUrl>
     <NeutralLanguage>en-US</NeutralLanguage>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/desjoerd/optionalvalues</RepositoryUrl>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageTags>optional partial undefined jsonpatch jsonmergepatch</PackageTags>
+    <Copyright>Copyright (c) Sjoerd van der Meer 2024.</Copyright>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="../../README.md" CopyToPublishDirectory="Always" Pack="true" PackagePath="./" />
-    <None Include="../../LICENSE" CopyToPublishDirectory="Always" Pack="true" PackagePath="./" />
+    <None Include="../../README.md" CopyToPublishDirectory="Always" Pack="true"  PackagePath="\" />
+    <None Include="../../LICENSE" CopyToPublishDirectory="Always" Pack="true" PackagePath="\" />
+    <None Include="../../assets/icon.png" CopyToPublishDirectory="Always" Pack="true" PackagePath="\" />
   </ItemGroup>
 
   <ItemGroup Condition="$(TargetFramework) == 'netstandard2.0'">

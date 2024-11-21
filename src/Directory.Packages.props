@@ -1,6 +1,0 @@
-<Project>
-  <Import Project="$([MSBuild]::GetPathOfFileAbove(Directory.Packages.props, $(MSBuildThisFileDirectory)..))" />
-  <ItemGroup>
-    <PackageVersion Include="FluentValidation" Version="[11.0.0,)"/>
-  </ItemGroup>
-</Project>
