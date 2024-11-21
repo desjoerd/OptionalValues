@@ -15,19 +15,17 @@
   <PropertyGroup>
     <!-- NuGet package properties -->
     <PackageId>OptionalValues.FluentValidation</PackageId>
-    <Authors>Sjoerd van der Meer</Authors>
-    <Description>FluentValidation extensions to for OptionalValues.</Description>
     <NeutralLanguage>en-US</NeutralLanguage>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://github.com/desjoerd/optionalvalues</RepositoryUrl>
-    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <Description>FluentValidation extensions to for OptionalValues.</Description>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageIcon>icon.png</PackageIcon>
     <PackageTags>optional partial undefined jsonpatch jsonmergepatch fluentvalidation</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="../../README.md" Pack="true" PackagePath=""/>
-    <None Include="../../LICENSE" Pack="true" PackagePath=""/>
+    <None Include="../../README.md" CopyToPublishDirectory="Always" Pack="true"  PackagePath="\" />
+    <None Include="../../LICENSE" CopyToPublishDirectory="Always" Pack="true" PackagePath="\" />
+    <None Include="../../assets/icon.png" CopyToPublishDirectory="Always" Pack="true" PackagePath="\" />
   </ItemGroup>
 
   <ItemGroup>

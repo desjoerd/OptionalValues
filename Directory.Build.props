@@ -27,4 +27,15 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
   </ItemGroup>
+
+  <!-- Common nuget package properties -->
+  <PropertyGroup>
+    <Authors>Sjoerd van der Meer</Authors>
+    <Copyright>Copyright (c) Sjoerd van der Meer 2024.</Copyright>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/desjoerd/optionalvalues</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/desjoerd/optionalvalues</PackageProjectUrl>
+  </PropertyGroup>
 </Project>
