@@ -18,23 +18,22 @@ internal static class OptionalValueJsonTypeInfoResolverModifier
                 continue;
             }
 
-            if (!ShouldSerializeCache.TryGetValue(jsonPropertyInfo.PropertyType, out Func<object, object?, bool>? shouldSerialize))
-            {
-                PropertyInfo? property = jsonPropertyInfo.PropertyType.GetProperty(nameof(OptionalValue<object>.IsSpecified));
-                shouldSerialize = CreateShouldSerializeBasedOnBoolProperty(property!);
-                ShouldSerializeCache.TryAdd(jsonPropertyInfo.PropertyType, shouldSerialize);
-            }
-
+            Func<object, object?, bool> shouldSerialize = ShouldSerializeCache.GetOrAdd(jsonPropertyInfo.PropertyType, CreateShouldSerializeForOptionalValueTypeBasedOnIsDefined);
             jsonPropertyInfo.ShouldSerialize = shouldSerialize;
         }
     }
 
-    private static Func<object, object?, bool> CreateShouldSerializeBasedOnBoolProperty(PropertyInfo propertyInfo)
+    private static Func<object, object?, bool> CreateShouldSerializeForOptionalValueTypeBasedOnIsDefined(Type optionalValueType)
     {
+        PropertyInfo isSpecifiedProperty = optionalValueType.GetProperty(nameof(OptionalValue<object>.IsSpecified))!;
+
         ParameterExpression discard = Expression.Parameter(typeof(object), "discard");
         ParameterExpression instance = Expression.Parameter(typeof(object), "instance");
-        UnaryExpression convertedInstance = Expression.Convert(instance, propertyInfo.DeclaringType!);
-        MemberExpression propertyAccess = Expression.Property(convertedInstance, propertyInfo);
+        UnaryExpression convertedInstance = Expression.Convert(instance, isSpecifiedProperty.DeclaringType!);
+        MemberExpression propertyAccess = Expression.Property(convertedInstance, isSpecifiedProperty);
+
+        // If optionalValueType is OptionalValue<string> then the result would be:
+        // (object discard, object instance) => ((OptionalValue<string>)instance).IsSpecified;
 
         var lambda = Expression.Lambda<Func<object, object?, bool>>(propertyAccess, discard, instance);
         return lambda.Compile();

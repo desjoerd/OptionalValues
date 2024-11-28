@@ -19,21 +19,12 @@ internal sealed class OptionalValueJsonConverterFactory : JsonConverterFactory
     /// <param name="typeToConvert"></param>
     /// <returns></returns>
     public override bool CanConvert(Type typeToConvert)
-    {
-        // Ensure this factory only applies to DefineDefinedValues
-        if (!typeToConvert.IsGenericType)
-        {
-            return false;
-        }
-
-        return typeToConvert.GetGenericTypeDefinition() == typeof(OptionalValue<>);
-    }
+        => OptionalValue.IsOptionalValueType(typeToConvert);
 
     /// <inheritdoc />
     public override JsonConverter CreateConverter(Type typeToConvert, JsonSerializerOptions options)
     {
-        // Get the underlying type of DefineDefinedValues
-        Type valueType = typeToConvert.GetGenericArguments()[0];
+        Type valueType = OptionalValue.GetUnderlyingType(typeToConvert);
 
         // Create the specific DefinedJsonConverter<T> for the given T
         var converter = (JsonConverter)Activator.CreateInstance(
