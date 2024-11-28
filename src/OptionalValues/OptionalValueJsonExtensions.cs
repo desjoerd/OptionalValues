@@ -11,6 +11,7 @@ public static class OptionalValueJsonExtensions
     /// <summary>
     /// Modifies the provided <see cref="JsonSerializerOptions"/> to add support for <see cref="OptionalValue{T}"/>.
     /// </summary>
+    /// <remarks>This should prefereably be done as the last call, as it applies a modifier to the registered <see cref="JsonTypeInfoResolver"/> instances in the TypeInfoResolverChain.</remarks>
     /// <param name="options">The <see cref="JsonSerializerOptions"/> to modify.</param>
     /// <returns>The modified <see cref="JsonSerializerOptions"/> to allow for chaining.</returns>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="options"/> is <see langword="null"/>.</exception>
@@ -18,8 +19,16 @@ public static class OptionalValueJsonExtensions
     {
         ArgumentNullException.ThrowIfNull(options);
 
-        options.TypeInfoResolver = (options.TypeInfoResolver ?? new DefaultJsonTypeInfoResolver())
-            .WithAddedModifier(OptionalValueJsonTypeInfoResolverModifier.ModifyTypeInfo);
+        // If the options do not have a TypeInfoResolver, add the default one, with the modifier.
+        options.TypeInfoResolver ??= new DefaultJsonTypeInfoResolver();
+
+        // We need to add the modifier to all resolvers in the chain,
+        // because it needs to be applied to all types and it's properties.
+        for (var i = 0; i < options.TypeInfoResolverChain.Count; i++)
+        {
+            options.TypeInfoResolverChain[i] = options.TypeInfoResolverChain[i]
+                .WithAddedModifier(OptionalValueJsonTypeInfoResolverModifier.ModifyTypeInfo);
+        }
 
         return options;
     }
@@ -29,7 +38,7 @@ public static class OptionalValueJsonExtensions
     /// </summary>
     /// <param name="options">The base <see cref="JsonSerializerOptions"/> options to copy.</param>
     /// <returns>A new <see cref="JsonSerializerOptions"/> based on the provided options with support for <see cref="OptionalValue{T}"/>.</returns>
-    public static JsonSerializerOptions WithOptionalValueSupport(this JsonSerializerOptions options) =>
-        new JsonSerializerOptions(options)
+    public static JsonSerializerOptions WithOptionalValueSupport(this JsonSerializerOptions options)
+        => new JsonSerializerOptions(options)
             .AddOptionalValueSupport();
 }
