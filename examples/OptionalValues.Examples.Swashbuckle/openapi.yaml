@@ -1,0 +1,67 @@
+openapi: 3.0.1
+info:
+  title: OptionalValues.Examples.Swashbuckle
+  version: '1.0'
+paths:
+  /company:
+    post:
+      tags:
+        - Example
+      description: This directly returns the posted object
+      operationId: Example Post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Company'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Company'
+components:
+  schemas:
+    Address:
+      type: object
+      properties:
+        street:
+          type: string
+        city:
+          type: string
+        state:
+          type: string
+        zip:
+          type: string
+          nullable: true
+      additionalProperties: false
+    Company:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        summary:
+          maxLength: 60
+          minLength: 0
+          type: string
+          nullable: true
+        contact:
+          $ref: '#/components/schemas/Person'
+      additionalProperties: false
+    Person:
+      type: object
+      properties:
+        name:
+          type: string
+          nullable: true
+        age:
+          maximum: 120
+          minimum: 0
+          type: integer
+          format: int32
+        address:
+          $ref: '#/components/schemas/Address'
+      additionalProperties: false

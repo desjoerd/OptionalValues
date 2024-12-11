@@ -7,10 +7,39 @@ A .NET library that provides an `OptionalValue<T>` type, representing a value th
 The `OptionalValue<T>` struct is designed to represent a value that can be in one of three states:
 
 - **Unspecified**: The value has not been specified.
-- **Specified with a non-null value**: The value has been specified and is not `null`.
+- **Specified with a non-null value**: The value has been specified and is `not null`.
 - **Specified with a `null` value**: The value has been specified and is `null`.
 
 This differs from `Nullable<T>`, which can only distinguish between the presence or absence of a value, and cannot differentiate between an unspecified value and a specified `null` value.
+
+```csharp
+public class Person
+{
+    public OptionalValue<string> FirstName { get; set; }
+    public OptionalValue<string?> LastName { get; set; }
+    public OptionalValue<string> Address { get; set; }
+}
+
+var person = new Person
+{
+    FirstName = "John",
+    LastName = null,
+};
+
+person.FirstName.IsSpecified; // True
+person.FirstName.SpecifiedValue; // "John"
+
+person.LastName.IsSpecified; // True
+person.LastName.SpecifiedValue; // null
+
+person.Address.IsSpecified; // False
+person.Address.SpecifiedValue; // Throws InvalidOperationException
+
+var jsonSerializerOptions = new JsonSerializerOptions()
+    .AddOptionalValueSupport();
+string json = JsonSerializer.Serialize(person, jsonSerializerOptions);
+// Output: {"FirstName":"John","LastName":null}
+```
 
 ## Installation
 
@@ -27,10 +56,11 @@ var options = new JsonSerializerOptions()
     .AddOptionalValueSupport();
 ```
 
-Optionally, install the FluentValidation extensions package:
+Optionally, install one or more extension packages:
 
 ```bash
 dotnet add package OptionalValues.FluentValidation
+dotnet add package OptionalValues.Swashbuckle
 ```
 
 ## Features
@@ -38,11 +68,44 @@ dotnet add package OptionalValues.FluentValidation
 - **Distinguish Between Unspecified and Null Values**: Clearly differentiate when a value is intentionally `null` versus when it has not been specified at all.
 - **JSON Serialization Support**: Includes a custom JSON converter and TypeResolverModifier that correctly handles serialization and deserialization, ensuring unspecified values are omitted from JSON outputs.
 - **FluentValidation Extensions**: Provides extension methods to simplify the validation of `OptionalValue<T>` properties using FluentValidation.
+- **OpenApi/Swagger Support**: Includes a custom data contract resolver for Swashbuckle to generate accurate OpenAPI/Swagger documentation.
 - **Patch Operation Support**: Ideal for API patch operations where fields can be updated to `null` or remain unchanged.
 
-## Usage
+# Table of Contents
 
-### Creating an OptionalValue
+- [OptionalValues](#optionalvalues)
+  - [Overview](#overview)
+  - [Installation](#installation)
+  - [Features](#features)
+- [Table of Contents](#table-of-contents)
+- [Usage](#usage)
+  - [Creating an OptionalValue](#creating-an-optionalvalue)
+  - [Checking If a Value Is Specified](#checking-if-a-value-is-specified)
+  - [Accessing the Value](#accessing-the-value)
+  - [Implicit Conversions](#implicit-conversions)
+  - [Equality Comparisons](#equality-comparisons)
+  - [JSON Serialization with System.Text.Json](#json-serialization-with-systemtextjson)
+    - [Serialization Behavior](#serialization-behavior)
+    - [Deserialization Behavior](#deserialization-behavior)
+- [Library support](#library-support)
+  - [ASP.NET Core](#aspnet-core)
+  - [Swashbuckle](#swashbuckle)
+    - [Installation](#installation-1)
+  - [FluentValidation](#fluentvalidation)
+    - [Installation](#installation-2)
+    - [Using OptionalRuleFor](#using-optionalrulefor)
+    - [How It Works](#how-it-works)
+    - [Example Usage](#example-usage)
+- [Use Cases](#use-cases)
+  - [API Patch Operations](#api-patch-operations)
+- [Current Limitations](#current-limitations)
+- [Contributing](#contributing)
+- [License](#license)
+
+
+# Usage
+
+## Creating an OptionalValue
 
 You can create an `OptionalValue<T>` in several ways:
 
@@ -72,7 +135,7 @@ You can create an `OptionalValue<T>` in several ways:
   OptionalValue<string?> specifiedNull = null;
   ```
 
-### Checking If a Value Is Specified
+## Checking If a Value Is Specified
 
 Use the `IsSpecified` property to determine if the value has been specified:
 
@@ -87,12 +150,12 @@ else
 }
 ```
 
-### Accessing the Value
+## Accessing the Value
 
-- **Value**: Gets the value if specified; returns `null` if unspecified.
-- **SpecifiedValue**: Gets the specified value; throws `InvalidOperationException` if the value is unspecified.
-- **GetSpecifiedValueOrDefault()**: Gets the specified value or the default value of `T` if unspecified.
-- **GetSpecifiedValueOrDefault(T defaultValue)**: Gets the specified value or the provided default value if unspecified.
+- `.Value`: Gets the value if specified; returns `null` if unspecified.
+- `.SpecifiedValue`: Gets the specified value; throws `InvalidOperationException` if the value is unspecified.
+- `.GetSpecifiedValueOrDefault()`: Gets the specified value or the default value of `T` if unspecified.
+- `.GetSpecifiedValueOrDefault(T defaultValue)`: Gets the specified value or the provided default value if unspecified.
 
 ```csharp
 var optionalValue = new OptionalValue<string>("Example");
@@ -107,7 +170,7 @@ string specifiedValue = optionalValue.SpecifiedValue;
 string valueOrDefault = optionalValue.GetSpecifiedValueOrDefault("Default Value");
 ```
 
-### Implicit Conversions
+## Implicit Conversions
 
 `OptionalValue<T>` supports implicit conversions to and from `T`:
 
@@ -119,7 +182,7 @@ OptionalValue<int> optionalInt = 42;
 int? value = optionalInt;
 ```
 
-### Equality Comparisons
+## Equality Comparisons
 
 Equality checks consider both the `IsSpecified` property and the `Value`:
 
@@ -132,7 +195,7 @@ bool areEqual = value1 == value2; // True
 bool areUnspecifiedEqual = unspecified == new OptionalValue<string>(); // True
 ```
 
-### JSON Serialization with System.Text.Json
+## JSON Serialization with System.Text.Json
 
 `OptionalValue<T>` includes a custom JSON converter and JsonTypeInfoResolver Modifier to handle serialization and deserialization of optional values.
 To properly serialize `OptionalValue<T>` properties, add it to the `JsonSerializerOptions`:
@@ -146,7 +209,7 @@ var options = new JsonSerializerOptions();
 options.AddOptionalValueSupport();
 ```
 
-#### Serialization Behavior
+### Serialization Behavior
 
 - **Unspecified Values**: Omitted from the JSON output.
 - **Specified Null Values**: Serialized with a `null` value.
@@ -172,7 +235,7 @@ string json = JsonSerializer.Serialize(person);
 // Output: {"FirstName":"John"}
 ```
 
-#### Deserialization Behavior
+### Deserialization Behavior
 
 - **Missing Properties**: Deserialized as unspecified values.
 - **Properties with `null`**: Deserialized as specified with a `null` value.
@@ -189,11 +252,57 @@ bool isLastNameSpecified = person.LastName.IsSpecified; // True
 string lastName = person.LastName.SpecifiedValue; // null
 ```
 
-### FluentValidation Extensions
+# Library support
 
-The `PACKAGE_NAME.FluentValidation` package provides extension methods to simplify the validation of `OptionalValue<T>` properties using FluentValidation.
+## ASP.NET Core
 
-#### Installation
+The `OptionalValues` library integrates seamlessly with ASP.NET Core, allowing you to use `OptionalValue<T>` properties in your API models.
+
+You only need to configure the `JsonSerializerOptions` to include the `OptionalValue<T>` converter:
+
+```csharp
+// For Minimal API
+builder.Services.ConfigureHttpJsonOptions(jsonOptions =>
+{
+    // Make sure that AddOptionalValueSupport() is the last call when you are using the `TypeInfoResolverChain` of the `SerializerOptions`.
+    jsonOptions.SerializerOptions.AddOptionalValueSupport();
+});
+
+// For MVC
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.AddOptionalValueSupport();
+    });
+```
+
+## Swashbuckle
+
+The `OptionalValues.Swashbuckle` package provides a custom data contract resolver for Swashbuckle to generate accurate OpenAPI/Swagger documentation for `OptionalValue<T>` properties.
+
+It correctly unwraps the `OptionalValue<T>` type and generates the appropriate schema for the underlying type `T`.
+
+### Installation
+
+Install the package using the .NET CLI:
+
+```bash
+dotnet add package OptionalValues.Swashbuckle
+```
+
+Configure the Swashbuckle services to use the `OptionalValueDataContractResolver`:
+
+```csharp
+builder.Services.AddSwaggerGen();
+// after AddSwaggerGen when you want it to use an existing custom ISerializerDataContractResolver.
+builder.Services.AddSwaggerGenOptionalValueSupport();
+```
+
+## FluentValidation
+
+The `OptionalValues.FluentValidation` package provides extension methods to simplify the validation of `OptionalValue<T>` properties using FluentValidation.
+
+### Installation
 
 Install the package using the .NET CLI:
 
@@ -201,7 +310,7 @@ Install the package using the .NET CLI:
 dotnet add package OptionalValues.FluentValidation
 ```
 
-#### Using OptionalRuleFor
+### Using OptionalRuleFor
 
 The `OptionalRuleFor` extension method allows you to define validation rules for `OptionalValue<T>` properties that are only applied when the value is specified.
 
@@ -234,7 +343,7 @@ In this example:
 - The validation rules for `Email` and `Age` are applied only if the corresponding `OptionalValue<T>` is specified.
 - If the value is unspecified, the validation rules are skipped.
 
-#### How It Works
+### How It Works
 
 The `OptionalRuleFor` method:
 
@@ -242,7 +351,7 @@ The `OptionalRuleFor` method:
 - Accepts a configuration function where you define your validation rules using the standard FluentValidation syntax.
 - Internally, it checks if the value is specified (`IsSpecified`) before applying the validation rules.
 
-#### Example Usage
+### Example Usage
 
 ```csharp
 var validator = new UpdateUserRequestValidator();
@@ -280,9 +389,9 @@ var resultUnspecified = validator.Validate(unspecifiedRequest);
 // Validation rules are skipped for unspecified values
 ```
 
-## Use Cases
+# Use Cases
 
-### API Patch Operations
+## API Patch Operations
 
 When updating resources via API endpoints, it's crucial to distinguish between fields that should be updated to `null` and fields that should remain unchanged.
 
@@ -313,15 +422,16 @@ public IActionResult UpdateUser(int id, UpdateUserRequest request)
 }
 ```
 
-## Limitations
+# Current Limitations
 
 - **DataAnnotations**: The `OptionalValue<T>` type does not support DataAnnotations validation attributes because they are tied to specific .NET Types (e.g. string).
   - **"Workaround"**: Use the FluentValidation extensions to define validation rules for `OptionalValue<T>` properties.
+- **Support for other libraries**: Because `OptionalValue<T>` is a wrapper type it requires mapping to the underlying type for some libraries. Let me know if you have a specific library in mind that you would like to see support for.
 
-## Contributing
+# Contributing
 
 Contributions are welcome! Please feel free to submit issues or pull requests on the [GitHub repository](https://github.com/desjoerd/OptionalValues).
 
-## License
+# License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

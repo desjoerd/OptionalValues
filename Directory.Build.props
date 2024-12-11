@@ -21,7 +21,7 @@
     <InternalsVisibleTo Include="$(AssemblyName).Tests"/>
   </ItemGroup>
 
-  <ItemGroup Condition="'$(IsTestProject)' != 'true'">
+  <ItemGroup Condition="'$(IsTestProject)' != 'true' and '$(IsExampleProject)' != 'true'">
     <PackageReference Include="Microsoft.CodeAnalysis.PublicApiAnalyzers">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

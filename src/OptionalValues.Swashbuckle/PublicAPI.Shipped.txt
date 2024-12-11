@@ -1,0 +1,7 @@
+#nullable enable
+Microsoft.Extensions.DependencyInjection.OptionalValueSwashbuckleServiceCollectionExtensions
+OptionalValues.Swashbuckle.OptionalValueDataContractResolver
+OptionalValues.Swashbuckle.OptionalValueDataContractResolver.OptionalValueDataContractResolver(Swashbuckle.AspNetCore.SwaggerGen.ISerializerDataContractResolver! inner) -> void
+OptionalValues.Swashbuckle.OptionalValueDataContractResolver.OptionalValueDataContractResolver(System.Text.Json.JsonSerializerOptions! serializerOptions) -> void
+static Microsoft.Extensions.DependencyInjection.OptionalValueSwashbuckleServiceCollectionExtensions.AddSwaggerGenOptionalValueSupport(this Microsoft.Extensions.DependencyInjection.IServiceCollection! services) -> Microsoft.Extensions.DependencyInjection.IServiceCollection!
+virtual OptionalValues.Swashbuckle.OptionalValueDataContractResolver.GetDataContractForType(System.Type! type) -> Swashbuckle.AspNetCore.SwaggerGen.DataContract!

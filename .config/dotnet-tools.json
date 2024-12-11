@@ -4,9 +4,12 @@
   "tools": {
     "nbgv": {
       "version": "3.6.146",
-      "commands": [
-        "nbgv"
-      ],
+      "commands": ["nbgv"],
+      "rollForward": false
+    },
+    "swashbuckle.aspnetcore.cli": {
+      "version": "7.0.0",
+      "commands": ["swagger"],
       "rollForward": false
     }
   }

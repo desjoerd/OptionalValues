@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+
+    <IsPackable>false</IsPackable>
+    <IsExampleProject>true</IsExampleProject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi"/>
+    <PackageReference Include="Swashbuckle.AspNetCore"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\OptionalValues.Swashbuckle\OptionalValues.Swashbuckle.csproj" />
+    <ProjectReference Include="..\..\src\OptionalValues\OptionalValues.csproj"/>
+  </ItemGroup>
+
+
+  <Target Name="openapi" AfterTargets="Build">
+    <Message Text="generating openapi" Importance="high"/>
+    <Exec Command="dotnet tool run swagger tofile --yaml --output openapi.yaml $(OutputPath)$(AssemblyName).dll v1" EnvironmentVariables="DOTNET_ROLL_FORWARD=LatestMajor"/>
+  </Target>
+
+</Project>

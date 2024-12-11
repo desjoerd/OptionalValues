@@ -66,7 +66,7 @@ public class OptionalValueJsonWithSourceGeneratorTest
         var json = """{"Name":"John","Age":42}""";
 
         var options = CreateOptionsSingleContext();
-        var model = JsonSerializer.Deserialize<TestModel>(json, options);
+        var model = JsonSerializer.Deserialize<TestModel>(json, options)!;
 
         Assert.Equal("John", model.Name.Value);
         Assert.Equal(42, model.Age.Value);
@@ -78,7 +78,7 @@ public class OptionalValueJsonWithSourceGeneratorTest
         var json = "{}";
 
         var options = CreateOptionsSingleContext();
-        var model = JsonSerializer.Deserialize<TestModel>(json, options);
+        var model = JsonSerializer.Deserialize<TestModel>(json, options)!;
 
         Assert.False(model.Name.IsSpecified);
         Assert.False(model.Age.IsSpecified);
@@ -130,10 +130,10 @@ public class OptionalValueJsonWithSourceGeneratorTest
         var json = """{"Test":{"Name":"John","Age":42},"Street":"Main Street","HouseNumber":42}""";
 
         var options = CreateOptionsMultipleContexts();
-        var model = JsonSerializer.Deserialize<TestModelOtherContext>(json, options);
+        var model = JsonSerializer.Deserialize<TestModelOtherContext>(json, options)!;
 
-        Assert.Equal("John", model.Test.Value.Name.Value);
-        Assert.Equal(42, model.Test.Value.Age.Value);
+        Assert.Equal("John", model.Test.SpecifiedValue.Name.Value);
+        Assert.Equal(42, model.Test.SpecifiedValue.Age.Value);
         Assert.Equal("Main Street", model.Street.Value);
         Assert.Equal(42, model.HouseNumber.Value);
     }
@@ -144,7 +144,7 @@ public class OptionalValueJsonWithSourceGeneratorTest
         var json = """{"Test":{}}""";
 
         var options = CreateOptionsMultipleContexts();
-        var model = JsonSerializer.Deserialize<TestModelOtherContext>(json, options);
+        var model = JsonSerializer.Deserialize<TestModelOtherContext>(json, options)!;
 
         Assert.True(model.Test.IsSpecified);
 
