@@ -1,12 +1,23 @@
 # OptionalValues
 
-A .NET library that provides an `OptionalValue<T>` type, representing a value that may or may not be specified, with comprehensive support for JSON serialization.
+A .NET library that provides an `OptionalValue<T>` type, representing a value that may or may not be specified, with comprehensive support for JSON serialization. e.g. (`undefined`, `null`, `"value"`)
+
+[![NuGet](https://img.shields.io/nuget/v/OptionalValues.svg)](https://www.nuget.org/packages/OptionalValues)
+[![License](https://img.shields.io/github/license/desjoerd/OptionalValues)](https://github.com/desjoerd/OptionalValues/blob/main/LICENSE)
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/desjoerd/OptionalValues/.github%2Fworkflows%2Fci.yml)
+
+
+| Package                                                                                           | Version                                                                                                                                        |
+| ------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| [OptionalValues](https://www.nuget.org/packages/OptionalValues)                                   | [![NuGet](https://img.shields.io/nuget/v/OptionalValues.svg)](https://www.nuget.org/packages/OptionalValues)                                   |
+| [OptionalValues.FluentValidation](https://www.nuget.org/packages/OptionalValues.FluentValidation) | [![NuGet](https://img.shields.io/nuget/v/OptionalValues.FluentValidation.svg)](https://www.nuget.org/packages/OptionalValues.FluentValidation) |
+| [OptionalValues.Swashbuckle](https://www.nuget.org/packages/OptionalValues.Swashbuckle)           | [![NuGet](https://img.shields.io/nuget/v/OptionalValues.Swashbuckle.svg)](https://www.nuget.org/packages/OptionalValues.Swashbuckle)           |
 
 ## Overview
 
 The `OptionalValue<T>` struct is designed to represent a value that can be in one of three states:
 
-- **Unspecified**: The value has not been specified.
+- **Unspecified**: The value has not been specified. (e.g. `undefined`)
 - **Specified with a non-null value**: The value has been specified and is `not null`.
 - **Specified with a `null` value**: The value has been specified and is `null`.
 
@@ -65,7 +76,7 @@ dotnet add package OptionalValues.Swashbuckle
 
 ## Features
 
-- **Distinguish Between Unspecified and Null Values**: Clearly differentiate when a value is intentionally `null` versus when it has not been specified at all.
+- **Distinguish Between Unspecified and Null Values**: Clearly differentiate when a value is intentionally `null` versus when it has not been specified at all. This allows for mapping `undefined` values in JSON to `Unspecified` values in C#.
 - **JSON Serialization Support**: Includes a custom JSON converter and TypeResolverModifier that correctly handles serialization and deserialization, ensuring unspecified values are omitted from JSON outputs.
 - **FluentValidation Extensions**: Provides extension methods to simplify the validation of `OptionalValue<T>` properties using FluentValidation.
 - **OpenApi/Swagger Support**: Includes a custom data contract resolver for Swashbuckle to generate accurate OpenAPI/Swagger documentation.
