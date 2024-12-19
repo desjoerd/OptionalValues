@@ -32,6 +32,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OptionalValues.Swashbuckle"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OptionalValues.Swashbuckle.Tests", "test\OptionalValues.Swashbuckle.Tests\OptionalValues.Swashbuckle.Tests.csproj", "{D0BCAB11-7E91-43CF-A216-DAE10CD879E9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OptionalValues.Benchmarks", "test\OptionalValues.Benchmarks\OptionalValues.Benchmarks.csproj", "{2ACF2218-8CE3-4B8C-8813-1DCAA6C15E49}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -66,6 +68,10 @@ Global
 		{D0BCAB11-7E91-43CF-A216-DAE10CD879E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D0BCAB11-7E91-43CF-A216-DAE10CD879E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D0BCAB11-7E91-43CF-A216-DAE10CD879E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2ACF2218-8CE3-4B8C-8813-1DCAA6C15E49}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2ACF2218-8CE3-4B8C-8813-1DCAA6C15E49}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2ACF2218-8CE3-4B8C-8813-1DCAA6C15E49}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2ACF2218-8CE3-4B8C-8813-1DCAA6C15E49}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{E1597F1E-C937-4BD0-9CEE-B6140C72794B} = {392590F2-70F4-43E8-852B-1CBFDF2E59AC}
@@ -75,5 +81,6 @@ Global
 		{164B5400-6DD1-4386-85D4-6ECB440648F5} = {21EEF407-68F2-4918-B72A-ADAA541DF5BD}
 		{F5DF57C1-A9B4-416B-93BB-7679C4E89D6A} = {392590F2-70F4-43E8-852B-1CBFDF2E59AC}
 		{D0BCAB11-7E91-43CF-A216-DAE10CD879E9} = {8C8324D6-BC6A-456B-8A07-B95B641261D0}
+		{2ACF2218-8CE3-4B8C-8813-1DCAA6C15E49} = {8C8324D6-BC6A-456B-8A07-B95B641261D0}
 	EndGlobalSection
 EndGlobal

@@ -22,3 +22,7 @@ static OptionalValues.OptionalValue<T>.operator ==(OptionalValues.OptionalValue<
 static OptionalValues.OptionalValue<T>.Unspecified.get -> OptionalValues.OptionalValue<T>
 static OptionalValues.OptionalValueJsonExtensions.AddOptionalValueSupport(this System.Text.Json.JsonSerializerOptions! options) -> System.Text.Json.JsonSerializerOptions!
 static OptionalValues.OptionalValueJsonExtensions.WithOptionalValueSupport(this System.Text.Json.JsonSerializerOptions! options) -> System.Text.Json.JsonSerializerOptions!
+OptionalValues.OptionalValueJsonConverterFactory
+OptionalValues.OptionalValueJsonConverterFactory.OptionalValueJsonConverterFactory() -> void
+override OptionalValues.OptionalValueJsonConverterFactory.CanConvert(System.Type! typeToConvert) -> bool
+override OptionalValues.OptionalValueJsonConverterFactory.CreateConverter(System.Type! typeToConvert, System.Text.Json.JsonSerializerOptions! options) -> System.Text.Json.Serialization.JsonConverter!

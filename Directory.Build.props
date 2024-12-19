@@ -17,10 +17,6 @@
     <PackageReference Include="DotNet.ReproducibleBuilds" PrivateAssets="All"/>
   </ItemGroup>
 
-  <ItemGroup>
-    <InternalsVisibleTo Include="$(AssemblyName).Tests"/>
-  </ItemGroup>
-
   <ItemGroup Condition="'$(IsTestProject)' != 'true' and '$(IsExampleProject)' != 'true'">
     <PackageReference Include="Microsoft.CodeAnalysis.PublicApiAnalyzers">
       <PrivateAssets>all</PrivateAssets>

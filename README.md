@@ -112,6 +112,7 @@ dotnet add package OptionalValues.Swashbuckle
 - [Current Limitations](#current-limitations)
 - [Contributing](#contributing)
 - [License](#license)
+- [Benchmarks](#benchmarks)
 
 
 # Usage
@@ -446,3 +447,45 @@ Contributions are welcome! Please feel free to submit issues or pull requests on
 # License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+# Benchmarks
+
+The project is benchmarked with [BenchmarkDotNet](https://benchmarkdotnet.org/) to check any additional overhead that the `OptionalValue<T>` type might introduce. They are located in the `/test/OptionalValues.Benchmarks` directory.
+
+Below are the results of the benchmarks for the `OptionalValue<T>` serialization performance on my machine:
+
+```
+
+BenchmarkDotNet v0.14.0, Windows 11 (10.0.26100.2605)
+13th Gen Intel Core i9-13900H, 1 CPU, 20 logical and 14 physical cores
+.NET SDK 9.0.101
+  [Host]     : .NET 9.0.0 (9.0.24.52809), X64 RyuJIT AVX2
+  DefaultJob : .NET 9.0.0 (9.0.24.52809), X64 RyuJIT AVX2
+
+
+```
+| Method                                         |      Mean |    Error |   StdDev | Ratio | RatioSD |   Gen0 | Allocated | Alloc Ratio |
+| ---------------------------------------------- | --------: | -------: | -------: | ----: | ------: | -----: | --------: | ----------: |
+| SerializePrimitiveModel                        | 102.10 ns | 1.296 ns | 1.212 ns |  1.00 |    0.02 | 0.0088 |     112 B |        1.00 |
+| SerializeOptionalValueModel                    | 108.55 ns | 1.324 ns | 1.238 ns |  1.06 |    0.02 | 0.0134 |     168 B |        1.50 |
+| SerializePrimitiveModelWithSourceGenerator     |  75.65 ns | 1.554 ns | 1.727 ns |  0.74 |    0.02 | 0.0088 |     112 B |        1.00 |
+| SerializeOptionalValueModelWithSourceGenerator |  93.47 ns | 1.690 ns | 1.581 ns |  0.92 |    0.02 | 0.0134 |     168 B |        1.50 |
+
+*1ns = 1/1,000,000,000 seconds*
+
+It is comparing the serialization performance between these two models:
+```csharp
+public class PrimitiveModel
+{
+    public int Age { get; set; } = 42;
+    public string FirstName { get; set; } = "John";
+    public string? LastName { get; set; } = null;
+}
+
+public class OptionalValueModel
+{
+    public OptionalValue<int> Age { get; set; } = 42;
+    public OptionalValue<string> FirstName { get; set; } = "John";
+    public OptionalValue<string> LastName { get; set; } = default;
+}
+```

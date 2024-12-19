@@ -34,7 +34,7 @@ public static class OptionalValueJsonExtensions
     }
 
     /// <summary>
-    /// Creates a new <see cref="JsonSerializerOptions"/> with support for <see cref="OptionalValue{T}"/>.
+    /// Creates a new clone of <see cref="JsonSerializerOptions"/> with support for <see cref="OptionalValue{T}"/>.
     /// </summary>
     /// <param name="options">The base <see cref="JsonSerializerOptions"/> options to copy.</param>
     /// <returns>A new <see cref="JsonSerializerOptions"/> based on the provided options with support for <see cref="OptionalValue{T}"/>.</returns>
