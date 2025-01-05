@@ -1,7 +1,8 @@
 ﻿using System.Text.Json;
-using System.Text.Json.Serialization;
 
 using BenchmarkDotNet.Attributes;
+
+using OptionalValues.Benchmarks.TestObjects;
 
 namespace OptionalValues.Benchmarks;
 
@@ -14,22 +15,8 @@ public class JsonSerializePrimitives
 
     private static readonly JsonSerializerOptions OptionalValueSerializerWithSourceGeneratorOptions = new JsonSerializerOptions(JsonSerializerOptions.Default)
     {
-        TypeInfoResolver = SerializeSimpleJsonJsonSerializationContext.Default
+        TypeInfoResolver = TestObjects.PrimitivesJsonSerializationContext.Default
     }.AddOptionalValueSupport();
-
-    public class PrimitiveModel
-    {
-        public int Age { get; set; } = 42;
-        public string FirstName { get; set; } = "John";
-        public string? LastName { get; set; } = null;
-    }
-
-    public class OptionalValueModel
-    {
-        public OptionalValue<int> Age { get; set; } = 42;
-        public OptionalValue<string> FirstName { get; set; } = "John";
-        public OptionalValue<string> LastName { get; set; } = default;
-    }
 
     private static readonly PrimitiveModel DefaultModelInstance = new PrimitiveModel();
     private static readonly OptionalValueModel OptionalValueModelInstance = new OptionalValueModel();
@@ -57,12 +44,4 @@ public class JsonSerializePrimitives
     {
         return JsonSerializer.Serialize(OptionalValueModelInstance, OptionalValueSerializerWithSourceGeneratorOptions);
     }
-}
-
-[JsonSerializable(typeof(JsonSerializePrimitives.PrimitiveModel))]
-[JsonSerializable(typeof(JsonSerializePrimitives.OptionalValueModel))]
-[JsonSerializable(typeof(int))]
-[JsonSerializable(typeof(string))]
-public partial class SerializeSimpleJsonJsonSerializationContext : JsonSerializerContext
-{
 }
