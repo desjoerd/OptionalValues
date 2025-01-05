@@ -1,0 +1,6 @@
+OptionalValues.OptionalValueJsonConverterAttribute
+OptionalValues.OptionalValueJsonConverterAttribute.InnerConverterType.get -> System.Type?
+OptionalValues.OptionalValueJsonConverterAttribute.OptionalValueJsonConverterAttribute() -> void
+OptionalValues.OptionalValueJsonConverterAttribute.OptionalValueJsonConverterAttribute(System.Type! innerConverterType) -> void
+override OptionalValues.OptionalValueJsonConverterAttribute.CreateConverter(System.Type! typeToConvert) -> System.Text.Json.Serialization.JsonConverter?
+virtual OptionalValues.OptionalValueJsonConverterAttribute.CreateInnerConverter() -> System.Text.Json.Serialization.JsonConverter!

@@ -13,6 +13,20 @@ namespace OptionalValues;
     Justification = "Class is instantiated via reflection by JsonSerializer.")]
 public sealed class OptionalValueJsonConverterFactory : JsonConverterFactory
 {
+    private readonly JsonConverter? _customInnerConverter;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="OptionalValueJsonConverterFactory"/> class.
+    /// </summary>
+    public OptionalValueJsonConverterFactory()
+    {
+    }
+
+    internal OptionalValueJsonConverterFactory(JsonConverter? customInnerConverter)
+    {
+        _customInnerConverter = customInnerConverter;
+    }
+
     /// <inheritdoc />
     public override bool CanConvert(Type typeToConvert)
         => OptionalValue.IsOptionalValueType(typeToConvert);
@@ -23,9 +37,21 @@ public sealed class OptionalValueJsonConverterFactory : JsonConverterFactory
     {
         Type valueType = OptionalValue.GetUnderlyingType(typeToConvert);
 
-        JsonConverter inner = options.GetConverter(valueType);
+        JsonConverter? inner = _customInnerConverter ?? options.GetConverter(valueType);
+        if (inner is JsonConverterFactory factory)
+        {
+            inner = factory.CreateConverter(valueType, options);
+        }
 
-        // Create the specific DefinedJsonConverter<T> for the given T
+        switch (inner)
+        {
+            case null:
+                throw new InvalidOperationException($"No converter found for {valueType}.");
+            case JsonConverterFactory:
+                throw new InvalidOperationException($"Converter for {valueType} is a factory which returned a factory.");
+        }
+
+        // Create the specific OptionalValueJsonConverter<T> for the given T
         var converter = (JsonConverter)Activator.CreateInstance(
             typeof(OptionalValueJsonConverter<>).MakeGenericType(valueType), inner
         )!;
