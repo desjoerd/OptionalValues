@@ -16,16 +16,19 @@
     <!-- NuGet package properties -->
     <PackageId>OptionalValues</PackageId>
     <NeutralLanguage>en-US</NeutralLanguage>
-    <Description>Optional values for C# to model omitted values (undefined in javascript) and it has a JsonConvertor to support omitted values in Json.</Description>
+    <Description>Optional values for C# to model omitted values (undefined in javascript) and it has
+      a JsonConvertor to support omitted values in Json.</Description>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageIcon>icon.png</PackageIcon>
-    <PackageTags>optional partial undefined jsonpatch jsonmergepatch</PackageTags>
+    <PackageTags>optional partial json undefined jsonpatch jsonmergepatch patch System.Text.Json Api
+      unspecified</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="../../README.md" CopyToPublishDirectory="Always" Pack="true"  PackagePath="\" />
+    <None Include="../../README.md" CopyToPublishDirectory="Always" Pack="true" PackagePath="\" />
     <None Include="../../LICENSE" CopyToPublishDirectory="Always" Pack="true" PackagePath="\" />
-    <None Include="../../assets/icon.png" CopyToPublishDirectory="Always" Pack="true" PackagePath="\" />
+    <None Include="../../assets/icon.png" CopyToPublishDirectory="Always" Pack="true"
+      PackagePath="\" />
   </ItemGroup>
 
   <ItemGroup Condition="$(TargetFramework) == 'netstandard2.0'">

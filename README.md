@@ -10,8 +10,8 @@ A .NET library that provides an `OptionalValue<T>` type, representing a value th
 | Package                                                                                           | Version                                                                                                                                        |
 | ------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
 | [OptionalValues](https://www.nuget.org/packages/OptionalValues)                                   | [![NuGet](https://img.shields.io/nuget/v/OptionalValues.svg)](https://www.nuget.org/packages/OptionalValues)                                   |
-| [OptionalValues.FluentValidation](https://www.nuget.org/packages/OptionalValues.FluentValidation) | [![NuGet](https://img.shields.io/nuget/v/OptionalValues.FluentValidation.svg)](https://www.nuget.org/packages/OptionalValues.FluentValidation) |
 | [OptionalValues.Swashbuckle](https://www.nuget.org/packages/OptionalValues.Swashbuckle)           | [![NuGet](https://img.shields.io/nuget/v/OptionalValues.Swashbuckle.svg)](https://www.nuget.org/packages/OptionalValues.Swashbuckle)           |
+| [OptionalValues.FluentValidation](https://www.nuget.org/packages/OptionalValues.FluentValidation) | [![NuGet](https://img.shields.io/nuget/v/OptionalValues.FluentValidation.svg)](https://www.nuget.org/packages/OptionalValues.FluentValidation) |
 
 ## Overview
 
@@ -21,35 +21,45 @@ The `OptionalValue<T>` struct is designed to represent a value that can be in on
 - **Specified with a non-null value**: The value has been specified and is `not null`.
 - **Specified with a `null` value**: The value has been specified and is `null`.
 
-This differs from `Nullable<T>`, which can only distinguish between the presence or absence of a value, and cannot differentiate between an unspecified value and a specified `null` value.
+### Why
+When working with Json it's currently difficult to know whether a property was omitted or explicitly `null`. This makes it hard to support older clients that don't send all properties in a request. By using `OptionalValue<T>` you can distinguish between `null` and `Unspecified` values.
 
 ```csharp
-public class Person
+using System.Text.Json;
+using OptionalValues;
+
+var jsonSerializerOptions = new JsonSerializerOptions()
+    .AddOptionalValueSupport();
+
+var json =
+    """
+    {
+      "FirstName": "John",
+      "LastName": null
+    }
+    """;
+
+var person1 = JsonSerializer.Deserialize<Person>(json, jsonSerializerOptions);
+
+// equals:
+var person2 = new Person
+{
+    FirstName = "John",
+    LastName = null,
+    Address = OptionalValue<string>.Unspecified // or default
+};
+
+bool areEqual = person1 == person2; // True
+
+string serialized = JsonSerializer.Serialize(person2, jsonSerializerOptions);
+// Output: {"FirstName":"John","LastName":null}
+
+public record Person
 {
     public OptionalValue<string> FirstName { get; set; }
     public OptionalValue<string?> LastName { get; set; }
     public OptionalValue<string> Address { get; set; }
 }
-
-var person = new Person
-{
-    FirstName = "John",
-    LastName = null,
-};
-
-person.FirstName.IsSpecified; // True
-person.FirstName.SpecifiedValue; // "John"
-
-person.LastName.IsSpecified; // True
-person.LastName.SpecifiedValue; // null
-
-person.Address.IsSpecified; // False
-person.Address.SpecifiedValue; // Throws InvalidOperationException
-
-var jsonSerializerOptions = new JsonSerializerOptions()
-    .AddOptionalValueSupport();
-string json = JsonSerializer.Serialize(person, jsonSerializerOptions);
-// Output: {"FirstName":"John","LastName":null}
 ```
 
 ## Installation
@@ -86,6 +96,7 @@ dotnet add package OptionalValues.Swashbuckle
 
 - [OptionalValues](#optionalvalues)
   - [Overview](#overview)
+    - [Why](#why)
   - [Installation](#installation)
   - [Features](#features)
 - [Table of Contents](#table-of-contents)
