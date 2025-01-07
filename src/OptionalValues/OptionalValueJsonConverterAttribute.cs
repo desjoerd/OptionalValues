@@ -40,13 +40,7 @@ public class OptionalValueJsonConverterAttribute : JsonConverterAttribute
     {
         JsonConverter innerConverter = CreateInnerConverter();
 
-        return (JsonConverter?)Activator.CreateInstance(
-            type: typeof(OptionalValueJsonConverterFactory),
-            bindingAttr: BindingFlags.NonPublic | BindingFlags.Instance,
-            args: [innerConverter],
-            binder: null,
-            culture: null
-        );
+        return new OptionalValueJsonConverterFactory(innerConverter);
     }
 
     /// <summary>
