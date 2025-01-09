@@ -11,7 +11,7 @@ public static class OptionalValueJsonExtensions
     /// <summary>
     /// Modifies the provided <see cref="JsonSerializerOptions"/> to add support for <see cref="OptionalValue{T}"/>.
     /// </summary>
-    /// <remarks>This should prefereably be done as the last call, as it applies a modifier to the registered <see cref="JsonTypeInfoResolver"/> instances in the TypeInfoResolverChain.</remarks>
+    /// <remarks>This should preferably be done as the last call, as it applies a modifier to the registered <see cref="JsonTypeInfoResolver"/> instances in the TypeInfoResolverChain.</remarks>
     /// <param name="options">The <see cref="JsonSerializerOptions"/> to modify.</param>
     /// <returns>The modified <see cref="JsonSerializerOptions"/> to allow for chaining.</returns>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="options"/> is <see langword="null"/>.</exception>
