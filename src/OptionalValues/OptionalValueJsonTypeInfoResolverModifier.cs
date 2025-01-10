@@ -1,6 +1,8 @@
 using System.Collections.Concurrent;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Text.Json;
 using System.Text.Json.Serialization.Metadata;
 
 namespace OptionalValues;
@@ -18,8 +20,18 @@ internal static class OptionalValueJsonTypeInfoResolverModifier
                 continue;
             }
 
-            Func<object, object?, bool> shouldSerialize = ShouldSerializeCache.GetOrAdd(jsonPropertyInfo.PropertyType, CreateShouldSerializeForOptionalValueTypeBasedOnIsDefined);
+            Func<object, object?, bool> shouldSerialize = ShouldSerializeCache.GetOrAdd(
+                jsonPropertyInfo.PropertyType,
+                CreateShouldSerializeForOptionalValueTypeBasedOnIsDefined);
+
             jsonPropertyInfo.ShouldSerialize = shouldSerialize;
+
+#if NET9_0_OR_GREATER
+            if (jsonTypeInfo.Options.RespectNullableAnnotations && !jsonTypeInfo.Type.IsGenericType)
+            {
+                TryToRespectNullableAnnotationsForProperty(jsonPropertyInfo);
+            }
+#endif
         }
     }
 
@@ -38,4 +50,40 @@ internal static class OptionalValueJsonTypeInfoResolverModifier
         var lambda = Expression.Lambda<Func<object, object?, bool>>(propertyAccess, discard, instance);
         return lambda.Compile();
     }
+
+#if NET9_0_OR_GREATER
+    private static void TryToRespectNullableAnnotationsForProperty(JsonPropertyInfo jsonPropertyInfo)
+    {
+        if (OptionalValue.GetUnderlyingType(jsonPropertyInfo.PropertyType).IsValueType)
+        {
+            return;
+        }
+
+        var customAttributes = jsonPropertyInfo.AttributeProvider?
+            .GetCustomAttributes(typeof(NullableAttribute), false) ?? [];
+
+        if (customAttributes.Length == 0)
+        {
+            return;
+        }
+
+        var nullableAttribute = (NullableAttribute)customAttributes[0];
+
+        var flags = nullableAttribute.NullableFlags;
+        if (flags.Length >= 2 && flags[1] == 1)
+        {
+            jsonPropertyInfo.IsSetNullable = false;
+            Action<object, object?>? originalSet = jsonPropertyInfo.Set;
+            jsonPropertyInfo.Set = (target, value) =>
+            {
+                if (value!.Equals(null))
+                {
+                    throw new JsonException($"Property '{jsonPropertyInfo.Name}' is not nullable.");
+                }
+
+                originalSet?.Invoke(target, value);
+            };
+        }
+    }
+#endif
 }

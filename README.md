@@ -109,6 +109,7 @@ dotnet add package OptionalValues.Swashbuckle
   - [JSON Serialization with System.Text.Json](#json-serialization-with-systemtextjson)
     - [Serialization Behavior](#serialization-behavior)
     - [Deserialization Behavior](#deserialization-behavior)
+    - [Respect nullable annotations](#respect-nullable-annotations)
 - [Library support](#library-support)
   - [ASP.NET Core](#aspnet-core)
   - [Swashbuckle](#swashbuckle)
@@ -273,6 +274,41 @@ string firstName = person.FirstName.SpecifiedValue; // "John"
 
 bool isLastNameSpecified = person.LastName.IsSpecified; // True
 string lastName = person.LastName.SpecifiedValue; // null
+```
+
+### Respect nullable annotations
+
+`OptionalValue<T>` has support for respecting nullable annotations when enabling `RespectNullableAnnotations = true` in the `JsonSerializerOptions`. When enabled, when deserializing a `null` value on an `OptionalValue` which is NOT nullable, it will throw a `JsonException` with a message indicating that the value is not nullable.
+
+```csharp
+JsonSerializerOptions Options = new JsonSerializerOptions
+{
+    RespectNullableAnnotations = true,
+}.AddOptionalValueSupport();
+
+var json = """
+           {
+               "NotNullable": null
+           }
+           """;
+
+var model = JsonSerializer.Deserialize<Model>(json, Options); // Throws JsonException
+
+private class Model
+{
+    public OptionalValue<string> NotNullable { get; init; }
+}
+```
+
+There are a few limitations to this feature:
+- It only works when NOT using generics.
+
+```csharp
+// it does not work with this, because the type is generic and we cannot determine if it is nullable or not as this information is not available at runtime.
+public class Model<T>
+{
+    public OptionalValue<T> NotNullable { get; init; }
+}
 ```
 
 # Library support

@@ -349,7 +349,7 @@ public class OptionalValueJsonTest
             {
                 const string json = """{"ProvidedValue":"foo","ValueNullOrDefault":null}""";
 
-                var testData = JsonSerializer.Deserialize<TestDataMultiple<string>>(json, SerializerOptionsWithTypeResolver)!;
+                var testData = JsonSerializer.Deserialize<TestDataMultiple<string?>>(json, SerializerOptionsWithTypeResolver)!;
 
                 Assert.True(testData.ProvidedValue.IsSpecified);
                 testData.ProvidedValue.SpecifiedValue.Should().Be("foo");
