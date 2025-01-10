@@ -89,7 +89,14 @@ public readonly struct OptionalValue<T> : IEquatable<OptionalValue<T>>
     }
 
     /// <inheritdoc />
-    public override bool Equals(object? obj) => obj is OptionalValue<T> other && Equals(other);
+    public override bool Equals(object? obj) =>
+        obj switch
+        {
+            OptionalValue<T> other => Equals(other),
+            T value => Equals(new OptionalValue<T>(value)),
+            null => IsSpecified && Value is null,
+            _ => false,
+        };
 
     /// <inheritdoc />
     public override int GetHashCode()

@@ -173,86 +173,125 @@ public class OptionalValueTest
         }
     }
 
-    public class EqualityOptionalValue : OptionalValueTest
+    public class EqualsTest : OptionalValueTest
     {
-        [Fact]
-        public void Should_Be_Equal_When_Same_Value()
+        public class EqualsOptionalValue : EqualsTest
         {
-            OptionalValue<string?> left = "Value";
-            OptionalValue<string?> right = "Value";
+            [Fact]
+            public void Should_Be_Equal_When_Same_Value()
+            {
+                OptionalValue<string?> left = "Value";
+                OptionalValue<string?> right = "Value";
 
-            left.Equals(right).Should().BeTrue();
-            right.Equals(left).Should().BeTrue();
+                left.Equals(right).Should().BeTrue();
+                right.Equals(left).Should().BeTrue();
+            }
+
+            [Fact]
+            public void Should_Be_Equal_When_Same_Null()
+            {
+                OptionalValue<string?> left = null;
+                OptionalValue<string?> right = null;
+
+                left.Equals(right).Should().BeTrue();
+                right.Equals(left).Should().BeTrue();
+            }
+
+            [Fact]
+            public void Should_Be_Equal_When_Same_Unspecified()
+            {
+                OptionalValue<string?> left = OptionalValue<string?>.Unspecified;
+                OptionalValue<string?> right = OptionalValue<string?>.Unspecified;
+
+                left.Equals(right).Should().BeTrue();
+                right.Equals(left).Should().BeTrue();
+            }
+
+            [Fact]
+            public void Should_Be_Equal_When_Same_Default()
+            {
+                OptionalValue<string?> left = default;
+                OptionalValue<string?> right = default;
+
+                left.Equals(right).Should().BeTrue();
+                right.Equals(left).Should().BeTrue();
+            }
+
+            [Fact]
+            public void Should_Not_Be_Equal_When_Different_Value()
+            {
+                OptionalValue<string?> left = "Value1";
+                OptionalValue<string?> right = "Value2";
+
+                left.Equals(right).Should().BeFalse();
+                right.Equals(left).Should().BeFalse();
+            }
+
+            [Fact]
+            public void Should_Not_Be_Equal_When_One_Unspecified()
+            {
+                OptionalValue<string?> left = OptionalValue<string?>.Unspecified;
+                OptionalValue<string?> right = "Value2";
+
+                left.Equals(right).Should().BeFalse();
+                right.Equals(left).Should().BeFalse();
+            }
+
+            [Fact]
+            public void Should_Not_Be_Equal_When_One_Default()
+            {
+                OptionalValue<string?> left = default;
+                OptionalValue<string?> right = "Value2";
+
+                left.Equals(right).Should().BeFalse();
+                right.Equals(left).Should().BeFalse();
+            }
+
+            [Fact]
+            public void Should_Not_Be_Equal_When_One_Null()
+            {
+                OptionalValue<string?> left = default;
+                OptionalValue<string?> right = null;
+
+                left.Equals(right).Should().BeFalse();
+                right.Equals(left).Should().BeFalse();
+            }
         }
 
-        [Fact]
-        public void Should_Be_Equal_When_Same_Null()
+        public class EqualsObject : EqualsTest
         {
-            OptionalValue<string?> left = null;
-            OptionalValue<string?> right = null;
+            [Theory]
+            [InlineData(null, null)]
+            [InlineData("Value", "Value")]
+            public void Should_Be_Equal_When_Same(string? left, string? right)
+            {
+                object sut = (OptionalValue<string?>)left;
 
-            left.Equals(right).Should().BeTrue();
-            right.Equals(left).Should().BeTrue();
-        }
+                sut.Equals(right).Should().BeTrue();
+            }
 
-        [Fact]
-        public void Should_Be_Equal_When_Same_Unspecified()
-        {
-            OptionalValue<string?> left = OptionalValue<string?>.Unspecified;
-            OptionalValue<string?> right = OptionalValue<string?>.Unspecified;
+            [Theory]
+            [InlineData(null, "Value")]
+            [InlineData("Value", null)]
+            [InlineData("Value1", "Value2")]
+            public void Should_Not_Be_Equal_When_Different(string? left, string? right)
+            {
+                object sut = (OptionalValue<string?>)left;
 
-            left.Equals(right).Should().BeTrue();
-            right.Equals(left).Should().BeTrue();
-        }
+                sut.Equals(right).Should().BeFalse();
+            }
 
-        [Fact]
-        public void Should_Be_Equal_When_Same_Default()
-        {
-            OptionalValue<string?> left = default;
-            OptionalValue<string?> right = default;
+            [Fact]
+            public void Null_Should_Not_Be_Equal_To_Unspecified()
+            {
+                new OptionalValue<string?>(null).Equals(OptionalValue<string?>.Unspecified)
+                    .Should()
+                    .BeFalse();
 
-            left.Equals(right).Should().BeTrue();
-            right.Equals(left).Should().BeTrue();
-        }
-
-        [Fact]
-        public void Should_Not_Be_Equal_When_Different_Value()
-        {
-            OptionalValue<string?> left = "Value1";
-            OptionalValue<string?> right = "Value2";
-
-            left.Equals(right).Should().BeFalse();
-            right.Equals(left).Should().BeFalse();
-        }
-
-        [Fact]
-        public void Should_Not_Be_Equal_When_One_Unspecified()
-        {
-            OptionalValue<string?> left = OptionalValue<string?>.Unspecified;
-            OptionalValue<string?> right = "Value2";
-
-            left.Equals(right).Should().BeFalse();
-            right.Equals(left).Should().BeFalse();
-        }
-
-        [Fact]
-        public void Should_Not_Be_Equal_When_One_Default()
-        {
-            OptionalValue<string?> left = default;
-            OptionalValue<string?> right = "Value2";
-
-            left.Equals(right).Should().BeFalse();
-            right.Equals(left).Should().BeFalse();
-        }
-
-        [Fact]
-        public void Should_Not_Be_Equal_When_One_Null()
-        {
-            OptionalValue<string?> left = default;
-            OptionalValue<string?> right = null;
-
-            left.Equals(right).Should().BeFalse();
-            right.Equals(left).Should().BeFalse();
+                OptionalValue<string?>.Unspecified.Equals((object?)null)
+                    .Should()
+                    .BeFalse();
+            }
         }
     }
 
