@@ -1,4 +1,5 @@
 #nullable enable
+OptionalValues.Extensions.DictionaryExtensions
 OptionalValues.OptionalValue
 OptionalValues.OptionalValue<T>
 OptionalValues.OptionalValue<T>.Equals(OptionalValues.OptionalValue<T> other) -> bool
@@ -9,10 +10,23 @@ OptionalValues.OptionalValue<T>.OptionalValue() -> void
 OptionalValues.OptionalValue<T>.OptionalValue(T value) -> void
 OptionalValues.OptionalValue<T>.SpecifiedValue.get -> T
 OptionalValues.OptionalValue<T>.Value.get -> T?
+OptionalValues.OptionalValueJsonConverterAttribute
+OptionalValues.OptionalValueJsonConverterAttribute.InnerConverterType.get -> System.Type?
+OptionalValues.OptionalValueJsonConverterAttribute.OptionalValueJsonConverterAttribute() -> void
+OptionalValues.OptionalValueJsonConverterAttribute.OptionalValueJsonConverterAttribute(System.Type! innerConverterType) -> void
+OptionalValues.OptionalValueJsonConverterFactory
+OptionalValues.OptionalValueJsonConverterFactory.OptionalValueJsonConverterFactory() -> void
 OptionalValues.OptionalValueJsonExtensions
 override OptionalValues.OptionalValue<T>.Equals(object? obj) -> bool
 override OptionalValues.OptionalValue<T>.GetHashCode() -> int
 override OptionalValues.OptionalValue<T>.ToString() -> string?
+override OptionalValues.OptionalValueJsonConverterAttribute.CreateConverter(System.Type! typeToConvert) -> System.Text.Json.Serialization.JsonConverter?
+override OptionalValues.OptionalValueJsonConverterFactory.CanConvert(System.Type! typeToConvert) -> bool
+override OptionalValues.OptionalValueJsonConverterFactory.CreateConverter(System.Type! typeToConvert, System.Text.Json.JsonSerializerOptions! options) -> System.Text.Json.Serialization.JsonConverter!
+static OptionalValues.Extensions.DictionaryExtensions.AddOptionalValue<TKey, T>(this System.Collections.Generic.IDictionary<TKey, T>! dictionary, TKey key, OptionalValues.OptionalValue<T> value) -> void
+static OptionalValues.Extensions.DictionaryExtensions.GetOptionalValue<TKey, T>(this System.Collections.Generic.IDictionary<TKey, T>! dictionary, TKey key) -> OptionalValues.OptionalValue<T>
+static OptionalValues.Extensions.DictionaryExtensions.SetOptionalValue<TKey, T>(this System.Collections.Generic.IDictionary<TKey, T>! dictionary, TKey key, OptionalValues.OptionalValue<T> value) -> void
+static OptionalValues.Extensions.DictionaryExtensions.TryAddOptionalValue<TKey, T>(this System.Collections.Generic.IDictionary<TKey, T>! dictionary, TKey key, OptionalValues.OptionalValue<T> value) -> bool
 static OptionalValues.OptionalValue.GetUnderlyingType(System.Type! optionalValueType) -> System.Type!
 static OptionalValues.OptionalValue.IsOptionalValueType(System.Type! type) -> bool
 static OptionalValues.OptionalValue<T>.implicit operator OptionalValues.OptionalValue<T>(T value) -> OptionalValues.OptionalValue<T>
@@ -22,7 +36,4 @@ static OptionalValues.OptionalValue<T>.operator ==(OptionalValues.OptionalValue<
 static OptionalValues.OptionalValue<T>.Unspecified.get -> OptionalValues.OptionalValue<T>
 static OptionalValues.OptionalValueJsonExtensions.AddOptionalValueSupport(this System.Text.Json.JsonSerializerOptions! options) -> System.Text.Json.JsonSerializerOptions!
 static OptionalValues.OptionalValueJsonExtensions.WithOptionalValueSupport(this System.Text.Json.JsonSerializerOptions! options) -> System.Text.Json.JsonSerializerOptions!
-OptionalValues.OptionalValueJsonConverterFactory
-OptionalValues.OptionalValueJsonConverterFactory.OptionalValueJsonConverterFactory() -> void
-override OptionalValues.OptionalValueJsonConverterFactory.CanConvert(System.Type! typeToConvert) -> bool
-override OptionalValues.OptionalValueJsonConverterFactory.CreateConverter(System.Type! typeToConvert, System.Text.Json.JsonSerializerOptions! options) -> System.Text.Json.Serialization.JsonConverter!
+virtual OptionalValues.OptionalValueJsonConverterAttribute.CreateInnerConverter() -> System.Text.Json.Serialization.JsonConverter!
