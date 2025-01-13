@@ -1,7 +1,6 @@
 using System.Collections.Concurrent;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.Json.Serialization.Metadata;
 
@@ -60,31 +59,43 @@ internal static class OptionalValueJsonTypeInfoResolverModifier
             return;
         }
 
-        var customAttributes = jsonPropertyInfo.AttributeProvider?
-            .GetCustomAttributes(typeof(NullableAttribute), false) ?? [];
-
-        if (customAttributes.Length == 0)
+        NullabilityInfo? nullabilityInfo = CreateNullabilityInfo(jsonPropertyInfo.AttributeProvider);
+        if (nullabilityInfo is null)
         {
             return;
         }
 
-        var nullableAttribute = (NullableAttribute)customAttributes[0];
-
-        var flags = nullableAttribute.NullableFlags;
-        if (flags.Length >= 2 && flags[1] == 1)
+        if(nullabilityInfo.WriteState == NullabilityState.NotNull)
         {
-            jsonPropertyInfo.IsSetNullable = false;
-            Action<object, object?>? originalSet = jsonPropertyInfo.Set;
-            jsonPropertyInfo.Set = (target, value) =>
-            {
-                if (value!.Equals(null))
-                {
-                    throw new JsonException($"Property '{jsonPropertyInfo.Name}' is not nullable.");
-                }
-
-                originalSet?.Invoke(target, value);
-            };
+            AddNotNullableValidation(jsonPropertyInfo);
         }
+    }
+
+    private static NullabilityInfo? CreateNullabilityInfo(ICustomAttributeProvider? member)
+    {
+        var nullability = new NullabilityInfoContext();
+        return member switch
+        {
+            PropertyInfo propertyInfo => nullability.Create(propertyInfo).GenericTypeArguments[0],
+            FieldInfo fieldInfo => nullability.Create(fieldInfo).GenericTypeArguments[0],
+            ParameterInfo parameterInfo => nullability.Create(parameterInfo).GenericTypeArguments[0],
+            _ => null,
+        };
+    }
+
+    private static void AddNotNullableValidation(JsonPropertyInfo jsonPropertyInfo)
+    {
+        jsonPropertyInfo.IsSetNullable = false;
+        Action<object, object?>? originalSet = jsonPropertyInfo.Set;
+        jsonPropertyInfo.Set = (target, value) =>
+        {
+            if (value!.Equals(null))
+            {
+                throw new JsonException($"Property '{jsonPropertyInfo.Name}' is not nullable.");
+            }
+
+            originalSet?.Invoke(target, value);
+        };
     }
 #endif
 }
