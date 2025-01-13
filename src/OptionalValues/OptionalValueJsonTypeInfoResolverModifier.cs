@@ -25,6 +25,7 @@ internal static class OptionalValueJsonTypeInfoResolverModifier
                 CreateShouldSerializeForOptionalValueTypeBasedOnIsDefined);
 
             jsonPropertyInfo.ShouldSerialize = shouldSerialize;
+            jsonPropertyInfo.IsRequired = false; // OptionalValue<T> is never required
 
 #if NET9_0_OR_GREATER
             if (jsonTypeInfo.Options.RespectNullableAnnotations && !jsonTypeInfo.Type.IsGenericType)
