@@ -19,7 +19,7 @@
     <Description>Support for OptionalValues in schemas for Swashbuckle</Description>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageIcon>icon.png</PackageIcon>
-    <PackageTags>optional partial undefined jsonpatch jsonmergepatch swashbuckle aspnetcore</PackageTags>
+    <PackageTags>$(CommonPackageTags) swashbuckle aspnetcore</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>

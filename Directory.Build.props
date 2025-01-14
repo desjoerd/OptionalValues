@@ -3,6 +3,9 @@
     <!-- Custom properties, which are used in the main projects -->
     <OptionalValuesLibraryTargetFrameworks>net8.0;net9.0</OptionalValuesLibraryTargetFrameworks>
     <OptionalValuesTestsTargetFrameworks>net8.0;net9.0</OptionalValuesTestsTargetFrameworks>
+
+    <CommonPackageTags>optional partial json undefined jsonpatch jsonmergepatch patch System.Text.Json Api
+      unspecified</CommonPackageTags>
   </PropertyGroup>
 
   <PropertyGroup>

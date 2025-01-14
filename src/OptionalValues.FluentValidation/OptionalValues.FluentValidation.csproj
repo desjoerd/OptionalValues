@@ -16,10 +16,10 @@
     <!-- NuGet package properties -->
     <PackageId>OptionalValues.FluentValidation</PackageId>
     <NeutralLanguage>en-US</NeutralLanguage>
-    <Description>FluentValidation extensions to for OptionalValues.</Description>
+    <Description>FluentValidation extensions for OptionalValues.</Description>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageIcon>icon.png</PackageIcon>
-    <PackageTags>optional partial undefined jsonpatch jsonmergepatch fluentvalidation</PackageTags>
+    <PackageTags>$(CommonPackageTags) fluentvalidation</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>

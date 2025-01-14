@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFrameworks>$(OptionalValuesLibraryTargetFrameworks)</TargetFrameworks>
@@ -20,8 +20,7 @@
       a JsonConvertor to support omitted values in Json.</Description>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageIcon>icon.png</PackageIcon>
-    <PackageTags>optional partial json undefined jsonpatch jsonmergepatch patch System.Text.Json Api
-      unspecified</PackageTags>
+    <PackageTags>$(CommonPackageTags)</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
