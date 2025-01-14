@@ -34,6 +34,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OptionalValues.Swashbuckle.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OptionalValues.Benchmarks", "test\OptionalValues.Benchmarks\OptionalValues.Benchmarks.csproj", "{2ACF2218-8CE3-4B8C-8813-1DCAA6C15E49}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OptionalValues.DataAnnotations", "src\OptionalValues.DataAnnotations\OptionalValues.DataAnnotations.csproj", "{CADB92C4-AF07-411E-83D5-4AD8CDFCDEAE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OptionalValues.DataAnnotations.Tests", "test\OptionalValues.DataAnnotations.Tests\OptionalValues.DataAnnotations.Tests.csproj", "{0F669715-752B-40AF-99E1-EDB082D3E645}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -72,6 +76,14 @@ Global
 		{2ACF2218-8CE3-4B8C-8813-1DCAA6C15E49}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2ACF2218-8CE3-4B8C-8813-1DCAA6C15E49}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2ACF2218-8CE3-4B8C-8813-1DCAA6C15E49}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CADB92C4-AF07-411E-83D5-4AD8CDFCDEAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CADB92C4-AF07-411E-83D5-4AD8CDFCDEAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CADB92C4-AF07-411E-83D5-4AD8CDFCDEAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CADB92C4-AF07-411E-83D5-4AD8CDFCDEAE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0F669715-752B-40AF-99E1-EDB082D3E645}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F669715-752B-40AF-99E1-EDB082D3E645}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0F669715-752B-40AF-99E1-EDB082D3E645}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F669715-752B-40AF-99E1-EDB082D3E645}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{E1597F1E-C937-4BD0-9CEE-B6140C72794B} = {392590F2-70F4-43E8-852B-1CBFDF2E59AC}
@@ -82,5 +94,7 @@ Global
 		{F5DF57C1-A9B4-416B-93BB-7679C4E89D6A} = {392590F2-70F4-43E8-852B-1CBFDF2E59AC}
 		{D0BCAB11-7E91-43CF-A216-DAE10CD879E9} = {8C8324D6-BC6A-456B-8A07-B95B641261D0}
 		{2ACF2218-8CE3-4B8C-8813-1DCAA6C15E49} = {8C8324D6-BC6A-456B-8A07-B95B641261D0}
+		{CADB92C4-AF07-411E-83D5-4AD8CDFCDEAE} = {392590F2-70F4-43E8-852B-1CBFDF2E59AC}
+		{0F669715-752B-40AF-99E1-EDB082D3E645} = {8C8324D6-BC6A-456B-8A07-B95B641261D0}
 	EndGlobalSection
 EndGlobal
