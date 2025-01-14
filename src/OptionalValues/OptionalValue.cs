@@ -1,6 +1,8 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 
+using OptionalValues.Internal;
+
 namespace OptionalValues;
 
 /// <summary>
@@ -8,7 +10,7 @@ namespace OptionalValues;
 /// </summary>
 /// <typeparam name="T">The type of the value, can be <see cref="Nullable{T}"/></typeparam>
 [JsonConverter(typeof(OptionalValueJsonConverterFactory))]
-public readonly struct OptionalValue<T> : IEquatable<OptionalValue<T>>
+public readonly struct OptionalValue<T> : IEquatable<OptionalValue<T>>, IOptionalValueInternals
 {
     /// <summary>
     /// Creates an Unspecified OptionalValue.
@@ -162,6 +164,18 @@ public readonly struct OptionalValue<T> : IEquatable<OptionalValue<T>>
         "CA2225:Operator overloads have named alternates",
         Justification = "The alternative is the constructor")]
     public static implicit operator T?(OptionalValue<T> value) => value.Value;
+
+    /// <summary>
+    /// Returns the value as object.
+    /// </summary>
+    /// <remarks>Try not to use this method, as it will box the value and requires the OptionalValue to be boxed.</remarks>
+    object? IOptionalValueInternals.GetValue() => Value;
+
+    /// <summary>
+    /// Returns the value as object.
+    /// </summary>
+    /// <remarks>Try not to use this method, as it will box the value and requires the OptionalValue to be boxed.</remarks>
+    object? IOptionalValueInternals.GetSpecifiedValue() => SpecifiedValue;
 }
 
 /// <summary>

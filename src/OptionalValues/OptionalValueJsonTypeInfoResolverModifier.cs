@@ -4,12 +4,12 @@ using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization.Metadata;
 
+using OptionalValues.Internal;
+
 namespace OptionalValues;
 
 internal static class OptionalValueJsonTypeInfoResolverModifier
 {
-    private static readonly ConcurrentDictionary<Type, Func<object, object?, bool>> ShouldSerializeCache = new();
-
     internal static void ModifyTypeInfo(JsonTypeInfo jsonTypeInfo)
     {
         foreach (JsonPropertyInfo jsonPropertyInfo in jsonTypeInfo.Properties)
@@ -19,11 +19,7 @@ internal static class OptionalValueJsonTypeInfoResolverModifier
                 continue;
             }
 
-            Func<object, object?, bool> shouldSerialize = ShouldSerializeCache.GetOrAdd(
-                jsonPropertyInfo.PropertyType,
-                CreateShouldSerializeForOptionalValueTypeBasedOnIsDefined);
-
-            jsonPropertyInfo.ShouldSerialize = shouldSerialize;
+            jsonPropertyInfo.ShouldSerialize = (_, value) => ((IOptionalValueInternals)value!).IsSpecified;
             jsonPropertyInfo.IsRequired = false; // OptionalValue<T> is never required
 
 #if NET9_0_OR_GREATER
@@ -33,22 +29,6 @@ internal static class OptionalValueJsonTypeInfoResolverModifier
             }
 #endif
         }
-    }
-
-    private static Func<object, object?, bool> CreateShouldSerializeForOptionalValueTypeBasedOnIsDefined(Type optionalValueType)
-    {
-        PropertyInfo isSpecifiedProperty = optionalValueType.GetProperty(nameof(OptionalValue<object>.IsSpecified))!;
-
-        ParameterExpression discard = Expression.Parameter(typeof(object), "discard");
-        ParameterExpression instance = Expression.Parameter(typeof(object), "instance");
-        UnaryExpression convertedInstance = Expression.Convert(instance, isSpecifiedProperty.DeclaringType!);
-        MemberExpression propertyAccess = Expression.Property(convertedInstance, isSpecifiedProperty);
-
-        // If optionalValueType is OptionalValue<string> then the result would be:
-        // (object discard, object instance) => ((OptionalValue<string>)instance).IsSpecified;
-
-        var lambda = Expression.Lambda<Func<object, object?, bool>>(propertyAccess, discard, instance);
-        return lambda.Compile();
     }
 
 #if NET9_0_OR_GREATER
@@ -65,7 +45,7 @@ internal static class OptionalValueJsonTypeInfoResolverModifier
             return;
         }
 
-        if(nullabilityInfo.WriteState == NullabilityState.NotNull)
+        if (nullabilityInfo.WriteState == NullabilityState.NotNull)
         {
             AddNotNullableValidation(jsonPropertyInfo);
         }
