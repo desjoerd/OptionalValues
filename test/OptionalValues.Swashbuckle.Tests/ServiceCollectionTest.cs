@@ -1,6 +1,6 @@
-﻿using FluentAssertions;
+﻿using Microsoft.Extensions.DependencyInjection;
 
-using Microsoft.Extensions.DependencyInjection;
+using Shouldly;
 
 using Swashbuckle.AspNetCore.SwaggerGen;
 
@@ -17,7 +17,7 @@ public class ServiceCollectionTest
         ServiceProvider serviceProviderWithoutOptionalValue = services.BuildServiceProvider();
         ISerializerDataContractResolver dataContractResolverWithoutOptionalValue = serviceProviderWithoutOptionalValue
             .GetRequiredService<ISerializerDataContractResolver>();
-        dataContractResolverWithoutOptionalValue.Should().BeOfType<JsonSerializerDataContractResolver>();
+        dataContractResolverWithoutOptionalValue.ShouldBeOfType<JsonSerializerDataContractResolver>();
 
         // Add OptionalValue support
         services.AddSwaggerGenOptionalValueSupport();
@@ -27,7 +27,7 @@ public class ServiceCollectionTest
         ISerializerDataContractResolver dataContractResolverWithOptionalValue = serviceProviderWithOptionalValue
             .GetRequiredService<ISerializerDataContractResolver>();
 
-        dataContractResolverWithOptionalValue.Should().BeOfType<OptionalValueDataContractResolver>();
+        dataContractResolverWithOptionalValue.ShouldBeOfType<OptionalValueDataContractResolver>();
     }
 
     [Fact]
@@ -40,7 +40,7 @@ public class ServiceCollectionTest
 
         ServiceProvider serviceProvider = services.BuildServiceProvider();
         ISerializerDataContractResolver dataContractResolver = serviceProvider.GetRequiredService<ISerializerDataContractResolver>();
-        dataContractResolver.Should().BeOfType<OptionalValueDataContractResolver>();
+        dataContractResolver.ShouldBeOfType<OptionalValueDataContractResolver>();
     }
 
     [Fact]
@@ -56,9 +56,9 @@ public class ServiceCollectionTest
         ServiceProvider serviceProvider = services.BuildServiceProvider();
 
         ISerializerDataContractResolver dataContractResolver = serviceProvider.GetRequiredService<ISerializerDataContractResolver>();
-        dataContractResolver.Should().BeOfType<OptionalValueDataContractResolver>();
+        dataContractResolver.ShouldBeOfType<OptionalValueDataContractResolver>();
 
-        dataContractResolver.GetDataContractForType(typeof(ExampleType)).Should().NotBeNull();
+        dataContractResolver.GetDataContractForType(typeof(ExampleType)).ShouldNotBeNull();
     }
 
     private class ExampleType

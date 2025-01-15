@@ -1,4 +1,4 @@
-using FluentAssertions;
+using Shouldly;
 
 namespace OptionalValues.Tests;
 
@@ -11,9 +11,9 @@ public class OptionalValueTest
         {
             var sut = new OptionalValue<string?>();
 
-            sut.IsSpecified.Should().BeFalse();
-            sut.Should().Be(default(OptionalValue<string?>));
-            sut.Should().Be(OptionalValue<string>.Unspecified);
+            sut.IsSpecified.ShouldBeFalse();
+            sut.ShouldBe(default(OptionalValue<string?>));
+            sut.ShouldBe(OptionalValue<string?>.Unspecified);
         }
 
         [Fact]
@@ -21,8 +21,8 @@ public class OptionalValueTest
         {
             var sut = new OptionalValue<string?>("Value");
 
-            sut.IsSpecified.Should().BeTrue();
-            sut.Value.Should().Be("Value");
+            sut.IsSpecified.ShouldBeTrue();
+            sut.Value.ShouldBe("Value");
         }
     }
 
@@ -33,7 +33,7 @@ public class OptionalValueTest
         {
             OptionalValue<string?> sut = default;
 
-            sut.IsSpecified.Should().BeFalse();
+            sut.IsSpecified.ShouldBeFalse();
         }
 
         [Fact]
@@ -41,7 +41,7 @@ public class OptionalValueTest
         {
             OptionalValue<string?> sut = OptionalValue<string?>.Unspecified;
 
-            sut.IsSpecified.Should().BeFalse();
+            sut.IsSpecified.ShouldBeFalse();
         }
 
         [Theory]
@@ -51,7 +51,7 @@ public class OptionalValueTest
         {
             OptionalValue<string?> sut = value;
 
-            sut.IsSpecified.Should().BeTrue();
+            sut.IsSpecified.ShouldBeTrue();
         }
     }
 
@@ -62,7 +62,7 @@ public class OptionalValueTest
         {
             OptionalValue<string?> sut = "Value";
 
-            sut.Value.Should().Be("Value");
+            sut.Value.ShouldBe("Value");
         }
 
         [Fact]
@@ -70,7 +70,7 @@ public class OptionalValueTest
         {
             OptionalValue<string?> sut = default;
 
-            sut.Value.Should().BeNull();
+            sut.Value!.ShouldBeNull();
         }
 
         [Fact]
@@ -78,7 +78,7 @@ public class OptionalValueTest
         {
             OptionalValue<string?> sut = OptionalValue<string?>.Unspecified;
 
-            sut.Value.Should().BeNull();
+            sut.Value!.ShouldBeNull();
         }
 
         [Fact]
@@ -86,7 +86,7 @@ public class OptionalValueTest
         {
             OptionalValue<string?> sut = null;
 
-            sut.Value.Should().BeNull();
+            sut.Value!.ShouldBeNull();
         }
     }
 
@@ -97,7 +97,7 @@ public class OptionalValueTest
         {
             OptionalValue<string?> sut = "Value";
 
-            sut.SpecifiedValue.Should().Be("Value");
+            sut.SpecifiedValue.ShouldBe("Value");
         }
 
         [Fact]
@@ -105,7 +105,7 @@ public class OptionalValueTest
         {
             OptionalValue<string?> sut = null;
 
-            sut.SpecifiedValue.Should().Be(null);
+            sut.SpecifiedValue.ShouldBe(null);
         }
 
         [Fact]
@@ -113,9 +113,8 @@ public class OptionalValueTest
         {
             OptionalValue<string?> sut = OptionalValue<string?>.Unspecified;
 
-            sut.Invoking(x => x.SpecifiedValue)
-                .Should().Throw<InvalidOperationException>()
-                .WithMessage("Value is unspecified.");
+            Should.Throw<InvalidOperationException>(() => sut.SpecifiedValue)
+                .Message.ShouldBe("Value is unspecified.");
         }
     }
 
@@ -126,7 +125,7 @@ public class OptionalValueTest
         {
             OptionalValue<string?> sut = "Value";
 
-            sut.Value.Should().Be("Value");
+            sut.Value.ShouldBe("Value");
         }
     }
 
@@ -139,7 +138,7 @@ public class OptionalValueTest
 
             var value = (string?)sut;
 
-            value.Should().Be("Value");
+            value.ShouldBe("Value");
         }
 
         [Fact]
@@ -149,7 +148,7 @@ public class OptionalValueTest
 
             string? value = sut;
 
-            value.Should().BeNull();
+            value!.ShouldBeNull();
         }
 
         [Fact]
@@ -159,7 +158,7 @@ public class OptionalValueTest
 
             string? value = sut;
 
-            value.Should().BeNull();
+            value!.ShouldBeNull();
         }
 
         [Fact]
@@ -169,7 +168,7 @@ public class OptionalValueTest
 
             string? value = sut;
 
-            value.Should().BeNull();
+            value!.ShouldBeNull();
         }
     }
 
@@ -183,8 +182,8 @@ public class OptionalValueTest
                 OptionalValue<string?> left = "Value";
                 OptionalValue<string?> right = "Value";
 
-                left.Equals(right).Should().BeTrue();
-                right.Equals(left).Should().BeTrue();
+                left.Equals(right).ShouldBeTrue();
+                right.Equals(left).ShouldBeTrue();
             }
 
             [Fact]
@@ -193,8 +192,8 @@ public class OptionalValueTest
                 OptionalValue<string?> left = null;
                 OptionalValue<string?> right = null;
 
-                left.Equals(right).Should().BeTrue();
-                right.Equals(left).Should().BeTrue();
+                left.Equals(right).ShouldBeTrue();
+                right.Equals(left).ShouldBeTrue();
             }
 
             [Fact]
@@ -203,8 +202,8 @@ public class OptionalValueTest
                 OptionalValue<string?> left = OptionalValue<string?>.Unspecified;
                 OptionalValue<string?> right = OptionalValue<string?>.Unspecified;
 
-                left.Equals(right).Should().BeTrue();
-                right.Equals(left).Should().BeTrue();
+                left.Equals(right).ShouldBeTrue();
+                right.Equals(left).ShouldBeTrue();
             }
 
             [Fact]
@@ -213,8 +212,8 @@ public class OptionalValueTest
                 OptionalValue<string?> left = default;
                 OptionalValue<string?> right = default;
 
-                left.Equals(right).Should().BeTrue();
-                right.Equals(left).Should().BeTrue();
+                left.Equals(right).ShouldBeTrue();
+                right.Equals(left).ShouldBeTrue();
             }
 
             [Fact]
@@ -223,8 +222,8 @@ public class OptionalValueTest
                 OptionalValue<string?> left = "Value1";
                 OptionalValue<string?> right = "Value2";
 
-                left.Equals(right).Should().BeFalse();
-                right.Equals(left).Should().BeFalse();
+                left.Equals(right).ShouldBeFalse();
+                right.Equals(left).ShouldBeFalse();
             }
 
             [Fact]
@@ -233,8 +232,8 @@ public class OptionalValueTest
                 OptionalValue<string?> left = OptionalValue<string?>.Unspecified;
                 OptionalValue<string?> right = "Value2";
 
-                left.Equals(right).Should().BeFalse();
-                right.Equals(left).Should().BeFalse();
+                left.Equals(right).ShouldBeFalse();
+                right.Equals(left).ShouldBeFalse();
             }
 
             [Fact]
@@ -243,8 +242,8 @@ public class OptionalValueTest
                 OptionalValue<string?> left = default;
                 OptionalValue<string?> right = "Value2";
 
-                left.Equals(right).Should().BeFalse();
-                right.Equals(left).Should().BeFalse();
+                left.Equals(right).ShouldBeFalse();
+                right.Equals(left).ShouldBeFalse();
             }
 
             [Fact]
@@ -253,8 +252,8 @@ public class OptionalValueTest
                 OptionalValue<string?> left = default;
                 OptionalValue<string?> right = null;
 
-                left.Equals(right).Should().BeFalse();
-                right.Equals(left).Should().BeFalse();
+                left.Equals(right).ShouldBeFalse();
+                right.Equals(left).ShouldBeFalse();
             }
         }
 
@@ -267,7 +266,7 @@ public class OptionalValueTest
             {
                 object sut = (OptionalValue<string?>)left;
 
-                sut.Equals(right).Should().BeTrue();
+                sut.Equals(right).ShouldBeTrue();
             }
 
             [Theory]
@@ -278,19 +277,17 @@ public class OptionalValueTest
             {
                 object sut = (OptionalValue<string?>)left;
 
-                sut.Equals(right).Should().BeFalse();
+                sut.Equals(right).ShouldBeFalse();
             }
 
             [Fact]
             public void Null_Should_Not_Be_Equal_To_Unspecified()
             {
                 new OptionalValue<string?>(null).Equals(OptionalValue<string?>.Unspecified)
-                    .Should()
-                    .BeFalse();
+                    .ShouldBeFalse();
 
                 OptionalValue<string?>.Unspecified.Equals((object?)null)
-                    .Should()
-                    .BeFalse();
+                    .ShouldBeFalse();
             }
         }
     }
@@ -302,7 +299,7 @@ public class OptionalValueTest
         {
             OptionalValue<string?> sut = "Value";
 
-            sut.GetSpecifiedValueOrDefault().Should().Be("Value");
+            sut.GetSpecifiedValueOrDefault().ShouldBe("Value");
         }
 
         [Fact]
@@ -310,7 +307,7 @@ public class OptionalValueTest
         {
             OptionalValue<string?> sut = default;
 
-            sut.GetSpecifiedValueOrDefault().Should().Be(null);
+            sut.GetSpecifiedValueOrDefault().ShouldBe(null);
         }
 
         [Fact]
@@ -318,7 +315,7 @@ public class OptionalValueTest
         {
             OptionalValue<string?> sut = default;
 
-            sut.GetSpecifiedValueOrDefault("Default").Should().Be("Default");
+            sut.GetSpecifiedValueOrDefault("Default").ShouldBe("Default");
         }
 
         [Fact]
@@ -326,7 +323,7 @@ public class OptionalValueTest
         {
             OptionalValue<string?> sut = "Value";
 
-            sut.GetSpecifiedValueOrDefault("Default").Should().Be("Value");
+            sut.GetSpecifiedValueOrDefault("Default").ShouldBe("Value");
         }
 
         [Fact]
@@ -334,7 +331,7 @@ public class OptionalValueTest
         {
             OptionalValue<string?> sut = null;
 
-            sut.GetSpecifiedValueOrDefault("Default").Should().Be(null);
+            sut.GetSpecifiedValueOrDefault("Default").ShouldBe(null);
         }
     }
 }

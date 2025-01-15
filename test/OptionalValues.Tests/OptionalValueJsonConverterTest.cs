@@ -1,6 +1,7 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
-using FluentAssertions;
+
+using Shouldly;
 
 namespace OptionalValues.Tests;
 
@@ -17,7 +18,7 @@ public class OptionalValueJsonTest
 
                 var json = JsonSerializer.Serialize(testData, JsonSerializerOptions.Default);
 
-                json.Should().Be("{}");
+                json.ShouldBe("{}");
             }
 
             [Fact]
@@ -27,7 +28,7 @@ public class OptionalValueJsonTest
 
                 var json = JsonSerializer.Serialize(testData, JsonSerializerOptions.Default);
 
-                json.Should().Be("""{"SingleValue":null}""");
+                json.ShouldBe("""{"SingleValue":null}""");
             }
 
             [Fact]
@@ -37,7 +38,7 @@ public class OptionalValueJsonTest
 
                 var json = JsonSerializer.Serialize(testData, JsonSerializerOptions.Default);
 
-                json.Should().Be("""{"SingleValue":"foo"}""");
+                json.ShouldBe("""{"SingleValue":"foo"}""");
             }
 
             [Fact]
@@ -47,7 +48,7 @@ public class OptionalValueJsonTest
 
                 var json = JsonSerializer.Serialize(testData, JsonSerializerOptions.Default);
 
-                json.Should().Be("""{"ProvidedValue":"foo","ValueNullOrDefault":null}""");
+                json.ShouldBe("""{"ProvidedValue":"foo","ValueNullOrDefault":null}""");
             }
 
             [Fact]
@@ -57,7 +58,7 @@ public class OptionalValueJsonTest
 
                 var json = JsonSerializer.Serialize(testData);
 
-                json.Should().Be("""{"ProvidedValue":30,"ValueNullOrDefault":0}""");
+                json.ShouldBe("""{"ProvidedValue":30,"ValueNullOrDefault":0}""");
             }
 
             [Fact]
@@ -67,7 +68,7 @@ public class OptionalValueJsonTest
 
                 var json = JsonSerializer.Serialize(testData);
 
-                json.Should().Be("""{"ProvidedValue":30,"ValueNullOrDefault":null}""");
+                json.ShouldBe("""{"ProvidedValue":30,"ValueNullOrDefault":null}""");
             }
 
             [Fact]
@@ -76,11 +77,10 @@ public class OptionalValueJsonTest
                 var invalidTestData = new InvalidTestData(OptionalValue<string>.Unspecified);
 
                 Action action = () => JsonSerializer.Serialize(invalidTestData);
-                action.Should()
-                    .Throw<InvalidOperationException>()
-                    .WithMessage("Value is unspecified. Writing the property would give a property without any value, resulting in invalid json. " +
-                                 "Add OptionalValue support via 'AddOptionalValueSupport()' on the 'JsonSerializerOptions' or " +
-                                 "set [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)] on the property.");
+                action.ShouldThrow<InvalidOperationException>()
+                    .Message.ShouldBe("Value is unspecified. Writing the property would give a property without any value, resulting in invalid json. " +
+                                      "Add OptionalValue support via 'AddOptionalValueSupport()' on the 'JsonSerializerOptions' or " +
+                                      "set [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)] on the property.");
             }
         }
 
@@ -93,13 +93,13 @@ public class OptionalValueJsonTest
 
                 var testData = JsonSerializer.Deserialize<TestDataMultiple<string>>(json)!;
 
-                Assert.True(testData.ProvidedValue.IsSpecified);
-                testData.ProvidedValue.SpecifiedValue.Should().Be("foo");
+                testData.ProvidedValue.IsSpecified.ShouldBeTrue();
+                testData.ProvidedValue.SpecifiedValue.ShouldBe("foo");
 
-                Assert.True(testData.ValueNullOrDefault.IsSpecified);
-                testData.ValueNullOrDefault.SpecifiedValue.Should().Be(null);
+                testData.ValueNullOrDefault.IsSpecified.ShouldBeTrue();
+                testData.ValueNullOrDefault.SpecifiedValue.ShouldBeNull();
 
-                Assert.False(testData.Unspecified.IsSpecified);
+                testData.Unspecified.IsSpecified.ShouldBeFalse();
             }
 
             [Fact]
@@ -109,13 +109,13 @@ public class OptionalValueJsonTest
 
                 var testData = JsonSerializer.Deserialize<TestDataMultiple<int>>(json)!;
 
-                Assert.True(testData.ProvidedValue.IsSpecified);
-                testData.ProvidedValue.SpecifiedValue.Should().Be(30);
+                testData.ProvidedValue.IsSpecified.ShouldBeTrue();
+                testData.ProvidedValue.SpecifiedValue.ShouldBe(30);
 
-                Assert.True(testData.ValueNullOrDefault.IsSpecified);
-                testData.ValueNullOrDefault.SpecifiedValue.Should().Be(0);
+                testData.ValueNullOrDefault.IsSpecified.ShouldBeTrue();
+                testData.ValueNullOrDefault.SpecifiedValue.ShouldBe(0);
 
-                Assert.False(testData.Unspecified.IsSpecified);
+                testData.Unspecified.IsSpecified.ShouldBeFalse();
             }
 
             [Fact]
@@ -125,13 +125,13 @@ public class OptionalValueJsonTest
 
                 var testData = JsonSerializer.Deserialize<TestDataMultiple<int?>>(json)!;
 
-                Assert.True(testData.ProvidedValue.IsSpecified);
-                testData.ProvidedValue.SpecifiedValue.Should().Be(30);
+                testData.ProvidedValue.IsSpecified.ShouldBeTrue();
+                testData.ProvidedValue.SpecifiedValue.ShouldBe(30);
 
-                Assert.True(testData.ValueNullOrDefault.IsSpecified);
-                testData.ValueNullOrDefault.SpecifiedValue.Should().Be(null);
+                testData.ValueNullOrDefault.IsSpecified.ShouldBeTrue();
+                testData.ValueNullOrDefault.SpecifiedValue.ShouldBeNull();
 
-                Assert.False(testData.Unspecified.IsSpecified);
+                testData.Unspecified.IsSpecified.ShouldBeFalse();
             }
 
             [Fact]
@@ -141,8 +141,8 @@ public class OptionalValueJsonTest
 
                 var testData = JsonSerializer.Deserialize<TestDataSingle<TestDataSingle<string?>>>(json)!;
 
-                Assert.True(testData.SingleValue.IsSpecified);
-                testData.SingleValue.SpecifiedValue.Should().Be(new TestDataSingle<string?>(null));
+                testData.SingleValue.IsSpecified.ShouldBeTrue();
+                testData.SingleValue.SpecifiedValue.ShouldBe(new TestDataSingle<string?>(null));
             }
         }
 
@@ -156,13 +156,13 @@ public class OptionalValueJsonTest
                 var json = JsonSerializer.Serialize(testData);
                 var deserialized = JsonSerializer.Deserialize<TestDataMultiple<string>>(json)!;
 
-                Assert.True(deserialized.ProvidedValue.IsSpecified);
-                deserialized.ProvidedValue.SpecifiedValue.Should().Be("foo");
+                deserialized.ProvidedValue.IsSpecified.ShouldBeTrue();
+                deserialized.ProvidedValue.SpecifiedValue.ShouldBe("foo");
 
-                Assert.True(deserialized.ValueNullOrDefault.IsSpecified);
-                deserialized.ValueNullOrDefault.SpecifiedValue.Should().Be(null);
+                deserialized.ValueNullOrDefault.IsSpecified.ShouldBeTrue();
+                deserialized.ValueNullOrDefault.SpecifiedValue.ShouldBeNull();
 
-                Assert.False(deserialized.Unspecified.IsSpecified);
+                deserialized.Unspecified.IsSpecified.ShouldBeFalse();
             }
 
             [Fact]
@@ -173,13 +173,13 @@ public class OptionalValueJsonTest
                 var json = JsonSerializer.Serialize(testData);
                 var deserialized = JsonSerializer.Deserialize<TestDataMultiple<int>>(json)!;
 
-                Assert.True(deserialized.ProvidedValue.IsSpecified);
-                deserialized.ProvidedValue.SpecifiedValue.Should().Be(30);
+                deserialized.ProvidedValue.IsSpecified.ShouldBeTrue();
+                deserialized.ProvidedValue.SpecifiedValue.ShouldBe(30);
 
-                Assert.True(deserialized.ValueNullOrDefault.IsSpecified);
-                deserialized.ValueNullOrDefault.SpecifiedValue.Should().Be(0);
+                deserialized.ValueNullOrDefault.IsSpecified.ShouldBeTrue();
+                deserialized.ValueNullOrDefault.SpecifiedValue.ShouldBe(0);
 
-                Assert.False(deserialized.Unspecified.IsSpecified);
+                deserialized.Unspecified.IsSpecified.ShouldBeFalse();
             }
 
             [Fact]
@@ -190,13 +190,13 @@ public class OptionalValueJsonTest
                 var json = JsonSerializer.Serialize(testData);
                 var deserialized = JsonSerializer.Deserialize<TestDataMultiple<int?>>(json)!;
 
-                Assert.True(deserialized.ProvidedValue.IsSpecified);
-                deserialized.ProvidedValue.SpecifiedValue.Should().Be(30);
+                deserialized.ProvidedValue.IsSpecified.ShouldBeTrue();
+                deserialized.ProvidedValue.SpecifiedValue.ShouldBe(30);
 
-                Assert.True(deserialized.ValueNullOrDefault.IsSpecified);
-                deserialized.ValueNullOrDefault.SpecifiedValue.Should().Be(null);
+                deserialized.ValueNullOrDefault.IsSpecified.ShouldBeTrue();
+                deserialized.ValueNullOrDefault.SpecifiedValue.ShouldBeNull();
 
-                Assert.False(deserialized.Unspecified.IsSpecified);
+                deserialized.Unspecified.IsSpecified.ShouldBeFalse();
             }
         }
 
@@ -207,13 +207,13 @@ public class OptionalValueJsonTest
             {
                 var testData = new TestDataMultiple<string>("foo");
 
-                Assert.True(testData.ProvidedValue.IsSpecified);
-                testData.ProvidedValue.SpecifiedValue.Should().Be("foo");
+                testData.ProvidedValue.IsSpecified.ShouldBeTrue();
+                testData.ProvidedValue.SpecifiedValue.ShouldBe("foo");
 
-                Assert.True(testData.ValueNullOrDefault.IsSpecified);
-                testData.ValueNullOrDefault.SpecifiedValue.Should().Be(null);
+                testData.ValueNullOrDefault.IsSpecified.ShouldBeTrue();
+                testData.ValueNullOrDefault.SpecifiedValue.ShouldBeNull();
 
-                Assert.False(testData.Unspecified.IsSpecified);
+                testData.Unspecified.IsSpecified.ShouldBeFalse();
             }
 
             [Fact]
@@ -221,13 +221,13 @@ public class OptionalValueJsonTest
             {
                 var testData = new TestDataMultiple<int>(30);
 
-                Assert.True(testData.ProvidedValue.IsSpecified);
-                testData.ProvidedValue.SpecifiedValue.Should().Be(30);
+                testData.ProvidedValue.IsSpecified.ShouldBeTrue();
+                testData.ProvidedValue.SpecifiedValue.ShouldBe(30);
 
-                Assert.True(testData.ValueNullOrDefault.IsSpecified);
-                testData.ValueNullOrDefault.SpecifiedValue.Should().Be(0);
+                testData.ValueNullOrDefault.IsSpecified.ShouldBeTrue();
+                testData.ValueNullOrDefault.SpecifiedValue.ShouldBe(0);
 
-                Assert.False(testData.Unspecified.IsSpecified);
+                testData.Unspecified.IsSpecified.ShouldBeFalse();
             }
 
             [Fact]
@@ -235,13 +235,13 @@ public class OptionalValueJsonTest
             {
                 var testData = new TestDataMultiple<int?>(30);
 
-                Assert.True(testData.ProvidedValue.IsSpecified);
-                testData.ProvidedValue.SpecifiedValue.Should().Be(30);
+                testData.ProvidedValue.IsSpecified.ShouldBeTrue();
+                testData.ProvidedValue.SpecifiedValue.ShouldBe(30);
 
-                Assert.True(testData.ValueNullOrDefault.IsSpecified);
-                testData.ValueNullOrDefault.SpecifiedValue.Should().Be(null);
+                testData.ValueNullOrDefault.IsSpecified.ShouldBeTrue();
+                testData.ValueNullOrDefault.SpecifiedValue.ShouldBeNull();
 
-                Assert.False(testData.Unspecified.IsSpecified);
+                testData.Unspecified.IsSpecified.ShouldBeFalse();
             }
         }
 
@@ -288,7 +288,7 @@ public class OptionalValueJsonTest
 
                 var json = JsonSerializer.Serialize(testData, SerializerOptionsWithTypeResolver);
 
-                json.Should().Be("{}");
+                json.ShouldBe("{}");
             }
 
             [Fact]
@@ -298,7 +298,7 @@ public class OptionalValueJsonTest
 
                 var json = JsonSerializer.Serialize(testData, SerializerOptionsWithTypeResolver);
 
-                json.Should().Be("""{"SingleValue":null}""");
+                json.ShouldBe("""{"SingleValue":null}""");
             }
 
             [Fact]
@@ -308,7 +308,7 @@ public class OptionalValueJsonTest
 
                 var json = JsonSerializer.Serialize(testData, SerializerOptionsWithTypeResolver);
 
-                json.Should().Be("""{"SingleValue":"foo"}""");
+                json.ShouldBe("""{"SingleValue":"foo"}""");
             }
 
             [Fact]
@@ -318,7 +318,7 @@ public class OptionalValueJsonTest
 
                 var json = JsonSerializer.Serialize(testData, SerializerOptionsWithTypeResolver);
 
-                json.Should().Be("""{"ProvidedValue":"foo","ValueNullOrDefault":null}""");
+                json.ShouldBe("""{"ProvidedValue":"foo","ValueNullOrDefault":null}""");
             }
 
             [Fact]
@@ -328,7 +328,7 @@ public class OptionalValueJsonTest
 
                 var json = JsonSerializer.Serialize(testData, SerializerOptionsWithTypeResolver);
 
-                json.Should().Be("""{"ProvidedValue":30,"ValueNullOrDefault":0}""");
+                json.ShouldBe("""{"ProvidedValue":30,"ValueNullOrDefault":0}""");
             }
 
             [Fact]
@@ -338,7 +338,7 @@ public class OptionalValueJsonTest
 
                 var json = JsonSerializer.Serialize(testData, SerializerOptionsWithTypeResolver);
 
-                json.Should().Be("""{"ProvidedValue":30,"ValueNullOrDefault":null}""");
+                json.ShouldBe("""{"ProvidedValue":30,"ValueNullOrDefault":null}""");
             }
         }
 
@@ -351,13 +351,13 @@ public class OptionalValueJsonTest
 
                 var testData = JsonSerializer.Deserialize<TestDataMultiple<string?>>(json, SerializerOptionsWithTypeResolver)!;
 
-                Assert.True(testData.ProvidedValue.IsSpecified);
-                testData.ProvidedValue.SpecifiedValue.Should().Be("foo");
+                testData.ProvidedValue.IsSpecified.ShouldBeTrue();
+                testData.ProvidedValue.SpecifiedValue.ShouldBe("foo");
 
-                Assert.True(testData.ValueNullOrDefault.IsSpecified);
-                testData.ValueNullOrDefault.SpecifiedValue.Should().Be(null);
+                testData.ValueNullOrDefault.IsSpecified.ShouldBeTrue();
+                testData.ValueNullOrDefault.SpecifiedValue.ShouldBeNull();
 
-                Assert.False(testData.Unspecified.IsSpecified);
+                testData.Unspecified.IsSpecified.ShouldBeFalse();
             }
 
             [Fact]
@@ -367,13 +367,13 @@ public class OptionalValueJsonTest
 
                 var testData = JsonSerializer.Deserialize<TestDataMultiple<int>>(json, SerializerOptionsWithTypeResolver)!;
 
-                Assert.True(testData.ProvidedValue.IsSpecified);
-                testData.ProvidedValue.SpecifiedValue.Should().Be(30);
+                testData.ProvidedValue.IsSpecified.ShouldBeTrue();
+                testData.ProvidedValue.SpecifiedValue.ShouldBe(30);
 
-                Assert.True(testData.ValueNullOrDefault.IsSpecified);
-                testData.ValueNullOrDefault.SpecifiedValue.Should().Be(0);
+                testData.ValueNullOrDefault.IsSpecified.ShouldBeTrue();
+                testData.ValueNullOrDefault.SpecifiedValue.ShouldBe(0);
 
-                Assert.False(testData.Unspecified.IsSpecified);
+                testData.Unspecified.IsSpecified.ShouldBeFalse();
             }
 
             [Fact]
@@ -383,13 +383,13 @@ public class OptionalValueJsonTest
 
                 var testData = JsonSerializer.Deserialize<TestDataMultiple<int?>>(json, SerializerOptionsWithTypeResolver)!;
 
-                Assert.True(testData.ProvidedValue.IsSpecified);
-                testData.ProvidedValue.SpecifiedValue.Should().Be(30);
+                testData.ProvidedValue.IsSpecified.ShouldBeTrue();
+                testData.ProvidedValue.SpecifiedValue.ShouldBe(30);
 
-                Assert.True(testData.ValueNullOrDefault.IsSpecified);
-                testData.ValueNullOrDefault.SpecifiedValue.Should().Be(null);
+                testData.ValueNullOrDefault.IsSpecified.ShouldBeTrue();
+                testData.ValueNullOrDefault.SpecifiedValue.ShouldBeNull();
 
-                Assert.False(testData.Unspecified.IsSpecified);
+                testData.Unspecified.IsSpecified.ShouldBeFalse();
             }
 
             [Fact]
@@ -399,8 +399,8 @@ public class OptionalValueJsonTest
 
                 var testData = JsonSerializer.Deserialize<TestDataSingle<TestDataSingle<string?>>>(json, SerializerOptionsWithTypeResolver)!;
 
-                Assert.True(testData.SingleValue.IsSpecified);
-                testData.SingleValue.SpecifiedValue.Should().Be(new TestDataSingle<string?>(null));
+                testData.SingleValue.IsSpecified.ShouldBeTrue();
+                testData.SingleValue.SpecifiedValue.ShouldBe(new TestDataSingle<string?>(null));
             }
         }
 
@@ -414,13 +414,13 @@ public class OptionalValueJsonTest
                 var json = JsonSerializer.Serialize(testData, SerializerOptionsWithTypeResolver);
                 var deserialized = JsonSerializer.Deserialize<TestDataMultiple<string>>(json, SerializerOptionsWithTypeResolver)!;
 
-                Assert.True(deserialized.ProvidedValue.IsSpecified);
-                deserialized.ProvidedValue.SpecifiedValue.Should().Be("foo");
+                deserialized.ProvidedValue.IsSpecified.ShouldBeTrue();
+                deserialized.ProvidedValue.SpecifiedValue.ShouldBe("foo");
 
-                Assert.True(deserialized.ValueNullOrDefault.IsSpecified);
-                deserialized.ValueNullOrDefault.SpecifiedValue.Should().Be(null);
+                deserialized.ValueNullOrDefault.IsSpecified.ShouldBeTrue();
+                deserialized.ValueNullOrDefault.SpecifiedValue.ShouldBeNull();
 
-                Assert.False(deserialized.Unspecified.IsSpecified);
+                deserialized.Unspecified.IsSpecified.ShouldBeFalse();
             }
 
             [Fact]
@@ -431,13 +431,13 @@ public class OptionalValueJsonTest
                 var json = JsonSerializer.Serialize(testData, SerializerOptionsWithTypeResolver);
                 var deserialized = JsonSerializer.Deserialize<TestDataMultiple<int>>(json, SerializerOptionsWithTypeResolver)!;
 
-                Assert.True(deserialized.ProvidedValue.IsSpecified);
-                deserialized.ProvidedValue.SpecifiedValue.Should().Be(30);
+                deserialized.ProvidedValue.IsSpecified.ShouldBeTrue();
+                deserialized.ProvidedValue.SpecifiedValue.ShouldBe(30);
 
-                Assert.True(deserialized.ValueNullOrDefault.IsSpecified);
-                deserialized.ValueNullOrDefault.SpecifiedValue.Should().Be(0);
+                deserialized.ValueNullOrDefault.IsSpecified.ShouldBeTrue();
+                deserialized.ValueNullOrDefault.SpecifiedValue.ShouldBe(0);
 
-                Assert.False(deserialized.Unspecified.IsSpecified);
+                deserialized.Unspecified.IsSpecified.ShouldBeFalse();
             }
 
             [Fact]
@@ -448,13 +448,13 @@ public class OptionalValueJsonTest
                 var json = JsonSerializer.Serialize(testData, SerializerOptionsWithTypeResolver);
                 var deserialized = JsonSerializer.Deserialize<TestDataMultiple<int?>>(json, SerializerOptionsWithTypeResolver)!;
 
-                Assert.True(deserialized.ProvidedValue.IsSpecified);
-                deserialized.ProvidedValue.SpecifiedValue.Should().Be(30);
+                deserialized.ProvidedValue.IsSpecified.ShouldBeTrue();
+                deserialized.ProvidedValue.SpecifiedValue.ShouldBe(30);
 
-                Assert.True(deserialized.ValueNullOrDefault.IsSpecified);
-                deserialized.ValueNullOrDefault.SpecifiedValue.Should().Be(null);
+                deserialized.ValueNullOrDefault.IsSpecified.ShouldBeTrue();
+                deserialized.ValueNullOrDefault.SpecifiedValue.ShouldBeNull();
 
-                Assert.False(deserialized.Unspecified.IsSpecified);
+                deserialized.Unspecified.IsSpecified.ShouldBeFalse();
             }
         }
 

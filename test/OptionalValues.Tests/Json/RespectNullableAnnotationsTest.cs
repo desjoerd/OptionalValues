@@ -2,7 +2,7 @@
 
 using System.Text.Json;
 
-using FluentAssertions;
+using Shouldly;
 
 namespace OptionalValues.Tests.Json;
 
@@ -39,8 +39,8 @@ public class RespectNullableAnnotationsTest
         Func<OptionalValueModel?> act = () => JsonSerializer.Deserialize<OptionalValueModel>(json, Options);
         Func<ReferenceModel?> actReference = () => JsonSerializer.Deserialize<ReferenceModel>(json, Options);
 
-        act.Should().Throw<JsonException>();
-        actReference.Should().Throw<JsonException>();
+        act.ShouldThrow<JsonException>();
+        actReference.ShouldThrow<JsonException>();
     }
 
     [Fact]
@@ -56,11 +56,11 @@ public class RespectNullableAnnotationsTest
         OptionalValueModel? model = JsonSerializer.Deserialize<OptionalValueModel>(json, Options);
         ReferenceModel? modelReference = JsonSerializer.Deserialize<ReferenceModel>(json, Options);
 
-        model!.NotNullable.SpecifiedValue.Should().Be("Some Value");
-        model.Nullable.SpecifiedValue.Should().BeNull();
+        model!.NotNullable.SpecifiedValue.ShouldBe("Some Value");
+        model.Nullable.SpecifiedValue.ShouldBeNull();
 
-        modelReference!.NotNullable.Should().Be("Some Value");
-        modelReference.Nullable.Should().BeNull();
+        modelReference!.NotNullable.ShouldBe("Some Value");
+        modelReference.Nullable.ShouldBeNull();
     }
 
     [Fact]
@@ -71,11 +71,11 @@ public class RespectNullableAnnotationsTest
         OptionalValueModel? model = JsonSerializer.Deserialize<OptionalValueModel>(json, Options);
         ReferenceModel? modelReference = JsonSerializer.Deserialize<ReferenceModel>(json, Options);
 
-        model!.NotNullable.IsSpecified.Should().BeFalse();
-        model.Nullable.IsSpecified.Should().BeFalse();
+        model!.NotNullable.IsSpecified.ShouldBeFalse();
+        model.Nullable.IsSpecified.ShouldBeFalse();
 
-        modelReference!.NotNullable.Should().BeNull();
-        modelReference.Nullable.Should().BeNull();
+        modelReference!.NotNullable.ShouldBeNull();
+        modelReference.Nullable.ShouldBeNull();
     }
 }
 

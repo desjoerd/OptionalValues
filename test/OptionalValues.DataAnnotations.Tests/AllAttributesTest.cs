@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 
-using FluentAssertions;
+using Shouldly;
 
 namespace OptionalValues.DataAnnotations.Tests;
 
@@ -84,8 +84,8 @@ public class AllAttributesTest
         var context = new ValidationContext(model);
         var results = new List<ValidationResult>();
 
-        Validator.TryValidateObject(model, context, results, true).Should().BeTrue();
-        results.Should().BeEmpty();
+        Validator.TryValidateObject(model, context, results, true).ShouldBeTrue();
+        results.ShouldBeEmpty();
     }
 
     [Fact]
@@ -95,8 +95,8 @@ public class AllAttributesTest
         var context = new ValidationContext(model);
         var results = new List<ValidationResult>();
 
-        Validator.TryValidateObject(model, context, results, true).Should().BeTrue();
-        results.Should().BeEmpty();
+        Validator.TryValidateObject(model, context, results, true).ShouldBeTrue();
+        results.ShouldBeEmpty();
     }
 
     [Fact]
@@ -106,12 +106,12 @@ public class AllAttributesTest
         var context = new ValidationContext(model);
         var results = new List<ValidationResult>();
 
-        Validator.TryValidateObject(model, context, results, true).Should().BeFalse();
-        results.Should().HaveCount(typeof(TestModel).GetProperties().Length);
+        Validator.TryValidateObject(model, context, results, true).ShouldBeFalse();
+        results.Count.ShouldBe(typeof(TestModel).GetProperties().Length);
 
-        foreach(PropertyInfo property in typeof(TestModel).GetProperties())
+        foreach (PropertyInfo property in typeof(TestModel).GetProperties())
         {
-            results.Should().ContainSingle(r => r.MemberNames.Contains(property.Name));
+            results.ShouldContain(r => r.MemberNames.Contains(property.Name));
         }
     }
 }

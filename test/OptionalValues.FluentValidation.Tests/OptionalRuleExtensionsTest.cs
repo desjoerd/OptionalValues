@@ -1,6 +1,7 @@
-using FluentAssertions;
 using FluentValidation;
 using FluentValidation.Results;
+
+using Shouldly;
 
 namespace OptionalValues.FluentValidation.Tests;
 
@@ -19,7 +20,7 @@ public class OptionalRuleExtensionsTest
 
         ValidationResult? result = validator.Validate(validTestData);
 
-        Assert.True(result.IsValid);
+        result.IsValid.ShouldBeTrue();
     }
 
     [Fact]
@@ -35,11 +36,10 @@ public class OptionalRuleExtensionsTest
 
         ValidationResult? result = validator.Validate(invalidTestData);
 
-        Assert.False(result.IsValid);
+        result.IsValid.ShouldBeFalse();
 
         result.Errors.Select(x => x.PropertyName)
-            .Should()
-            .BeEquivalentTo(nameof(TestData.FirstName), nameof(TestData.Age));
+            .ShouldBe([nameof(TestData.FirstName), nameof(TestData.Age)]);
     }
 
     [Fact]
@@ -55,7 +55,7 @@ public class OptionalRuleExtensionsTest
 
         ValidationResult? result = validator.Validate(partialValidTestData);
 
-        Assert.True(result.IsValid);
+        result.IsValid.ShouldBeTrue();
     }
 
     public class TestData

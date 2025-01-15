@@ -1,6 +1,6 @@
 ﻿using System.Text.Json;
 
-using FluentAssertions;
+using Shouldly;
 
 namespace OptionalValues.Tests.Json;
 
@@ -27,7 +27,7 @@ public class RequiredKeywordTest
         RequiredKeywordModel? requiredKeywordModel = JsonSerializer.Deserialize<RequiredKeywordModel>(json, Options);
         Func<ReferenceModel?> actReference = () => JsonSerializer.Deserialize<ReferenceModel>(json, Options);
 
-        requiredKeywordModel!.NotRequired.IsSpecified.Should().BeFalse();
-        actReference.Should().Throw<JsonException>();
+        requiredKeywordModel!.NotRequired.IsSpecified.ShouldBeFalse();
+        actReference.ShouldThrow<JsonException>();
     }
 }
