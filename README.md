@@ -10,6 +10,7 @@ A .NET library that provides an `OptionalValue<T>` type, representing a value th
 | Package                                                                                           | Version                                                                                                                                        |
 | ------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
 | [OptionalValues](https://www.nuget.org/packages/OptionalValues)                                   | [![NuGet](https://img.shields.io/nuget/v/OptionalValues.svg)](https://www.nuget.org/packages/OptionalValues)                                   |
+| [OptionalValues.DataAnnotations](https://www.nuget.org/packages/OptionalValues.DataAnnotations)   | [![NuGet](https://img.shields.io/nuget/v/OptionalValues.DataAnnotations.svg)](https://www.nuget.org/packages/OptionalValues.DataAnnotations)   |
 | [OptionalValues.Swashbuckle](https://www.nuget.org/packages/OptionalValues.Swashbuckle)           | [![NuGet](https://img.shields.io/nuget/v/OptionalValues.Swashbuckle.svg)](https://www.nuget.org/packages/OptionalValues.Swashbuckle)           |
 | [OptionalValues.FluentValidation](https://www.nuget.org/packages/OptionalValues.FluentValidation) | [![NuGet](https://img.shields.io/nuget/v/OptionalValues.FluentValidation.svg)](https://www.nuget.org/packages/OptionalValues.FluentValidation) |
 
@@ -80,14 +81,16 @@ var options = new JsonSerializerOptions()
 Optionally, install one or more extension packages:
 
 ```bash
-dotnet add package OptionalValues.FluentValidation
 dotnet add package OptionalValues.Swashbuckle
+dotnet add package OptionalValues.DataAnnotations
+dotnet add package OptionalValues.FluentValidation
 ```
 
 ## Features
 
 - **Distinguish Between Unspecified and Null Values**: Clearly differentiate when a value is intentionally `null` versus when it has not been specified at all. This allows for mapping `undefined` values in JSON to `Unspecified` values in C#.
 - **JSON Serialization Support**: Includes a custom JSON converter and TypeResolverModifier that correctly handles serialization and deserialization, ensuring unspecified values are omitted from JSON outputs.
+- **Optional DataAnnotations**: An extension library that provides support for DataAnnotations validation attributes on `OptionalValue<T>` properties.
 - **FluentValidation Extensions**: Provides extension methods to simplify the validation of `OptionalValue<T>` properties using FluentValidation.
 - **OpenApi/Swagger Support**: Includes a custom data contract resolver for Swashbuckle to generate accurate OpenAPI/Swagger documentation.
 - **Patch Operation Support**: Ideal for API patch operations where fields can be updated to `null` or remain unchanged.
@@ -114,6 +117,7 @@ dotnet add package OptionalValues.Swashbuckle
   - [ASP.NET Core](#aspnet-core)
   - [Swashbuckle](#swashbuckle)
     - [Installation](#installation-1)
+  - [System.ComponentModel.DataAnnotations](#systemcomponentmodeldataannotations)
   - [FluentValidation](#fluentvalidation)
     - [Installation](#installation-2)
     - [Using OptionalRuleFor](#using-optionalrulefor)
@@ -355,6 +359,55 @@ Configure the Swashbuckle services to use the `OptionalValueDataContractResolver
 builder.Services.AddSwaggerGen();
 // after AddSwaggerGen when you want it to use an existing custom ISerializerDataContractResolver.
 builder.Services.AddSwaggerGenOptionalValueSupport();
+```
+
+## System.ComponentModel.DataAnnotations
+
+The `OptionalValues.DataAnnotations` package provides DataAnnotations validation attributes for `OptionalValue<T>` properties. They are all overrides of the standard DataAnnotations attributes and prefixed with `Optional`. The key difference is that the validation rules are only applied when the value is `specified` (which is close to the default behavior which only applies it when it's not null).
+
+Install the package using the .NET CLI:
+
+```bash
+dotnet add package OptionalValues.DataAnnotations
+```
+
+Example usage:
+```csharp
+public class ExampleModel
+{
+    [OptionalAllowedValues("a")]
+    public OptionalValue<string> AllowedValues { get; set; }
+
+    [OptionalDeniedValues("a")]
+    public OptionalValue<string> DeniedValues { get; set; }
+
+    [OptionalLength(1, 5)]
+    public OptionalValue<int[]> LengthCollection { get; set; }
+
+    [OptionalLength(1, 5)]
+    public OptionalValue<string> LengthString { get; set; }
+
+    [OptionalMaxLength(5)]
+    public OptionalValue<int[]> MaxLengthCollection { get; set; }
+
+    [OptionalMaxLength(5)]
+    public OptionalValue<string> MaxLengthString { get; set; }
+
+    [OptionalMinLength(1)]
+    public OptionalValue<int[]> MinLengthCollection { get; set; }
+
+    [OptionalMinLength(1)]
+    public OptionalValue<string> MinLengthString { get; set; }
+
+    [OptionalRange(5, 42)]
+    public OptionalValue<int> Range { get; set; }
+
+    [OptionalRegularExpression("^something$")]
+    public OptionalValue<string> RegularExpression { get; set; }
+
+    [OptionalStringLength(5)]
+    public OptionalValue<string> StringLength { get; set; }
+}
 ```
 
 ## FluentValidation
