@@ -1,5 +1,7 @@
 ﻿OptionalValues.DataAnnotations.OptionalAllowedValuesAttribute
 OptionalValues.DataAnnotations.OptionalAllowedValuesAttribute.OptionalAllowedValuesAttribute(params object![]! allowedValues) -> void
+OptionalValues.DataAnnotations.OptionalBase64StringAttribute
+OptionalValues.DataAnnotations.OptionalBase64StringAttribute.OptionalBase64StringAttribute() -> void
 OptionalValues.DataAnnotations.OptionalDeniedValuesAttribute
 OptionalValues.DataAnnotations.OptionalDeniedValuesAttribute.OptionalDeniedValuesAttribute(params object![]! deniedValues) -> void
 OptionalValues.DataAnnotations.OptionalLengthAttribute
@@ -18,6 +20,7 @@ OptionalValues.DataAnnotations.OptionalRegularExpressionAttribute.OptionalRegula
 OptionalValues.DataAnnotations.OptionalStringLengthAttribute
 OptionalValues.DataAnnotations.OptionalStringLengthAttribute.OptionalStringLengthAttribute(int maximumLength) -> void
 override OptionalValues.DataAnnotations.OptionalAllowedValuesAttribute.IsValid(object? value) -> bool
+override OptionalValues.DataAnnotations.OptionalBase64StringAttribute.IsValid(object? value) -> bool
 override OptionalValues.DataAnnotations.OptionalDeniedValuesAttribute.IsValid(object? value) -> bool
 override OptionalValues.DataAnnotations.OptionalLengthAttribute.IsValid(object? value) -> bool
 override OptionalValues.DataAnnotations.OptionalMaxLengthAttribute.IsValid(object? value) -> bool

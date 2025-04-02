@@ -12,6 +12,9 @@ public class AllAttributesTest
         [OptionalAllowedValues("a")]
         public OptionalValue<string> AllowedValues { get; set; }
 
+        [OptionalBase64String]
+        public OptionalValue<string> Base64String { get; set; }
+
         [OptionalDeniedValues("a")]
         public OptionalValue<string> DeniedValues { get; set; }
 
@@ -48,6 +51,7 @@ public class AllAttributesTest
             => new()
             {
                 AllowedValues = "a",
+                Base64String = "dmFsaWQ=", // "valid" in base64
                 DeniedValues = "b",
                 LengthCollection = new[] { 1, 2, 3, 4, 5 },
                 LengthString = "12345",
@@ -64,6 +68,7 @@ public class AllAttributesTest
             => new()
             {
                 AllowedValues = "b",
+                Base64String = "invalid!",
                 DeniedValues = "a",
                 LengthCollection = new[] { 1, 2, 3, 4, 5, 6 },
                 LengthString = "123456",
