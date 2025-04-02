@@ -10,7 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi"/>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" VersionOverride="8.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore"/>
   </ItemGroup>
 
@@ -23,6 +23,7 @@
   <Target Name="openapi" AfterTargets="Build">
     <Message Text="generating openapi" Importance="high"/>
     <Exec Command="dotnet tool run swagger tofile --yaml --output openapi.yaml $(OutputPath)$(AssemblyName).dll v1" EnvironmentVariables="DOTNET_ROLL_FORWARD=LatestMajor"/>
+    <Exec Command="dotnet tool run swagger tofile --output openapi.json $(OutputPath)$(AssemblyName).dll v1" EnvironmentVariables="DOTNET_ROLL_FORWARD=LatestMajor"/>
   </Target>
 
 </Project>
