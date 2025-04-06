@@ -1,68 +1,67 @@
-openapi: 3.0.1
+openapi: 3.0.0
 info:
-  title: OptionalValues.Examples.Swashbuckle
-  version: '1.0'
+  title: OptionalValues.Examples.NSwag
+  version: 1.0.0
 paths:
   /company:
     post:
       tags:
-        - Example
-      description: This directly returns the posted object
+      - Example
       operationId: Example Post
       requestBody:
+        x-name: company
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/Company'
         required: true
+        x-position: 1
       responses:
-        '200':
-          description: OK
+        200:
+          description: ''
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Company'
 components:
   schemas:
+    Company:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type: string
+          format: guid
+        summary:
+          type: string
+          nullable: true
+        contact:
+          $ref: '#/components/schemas/Person'
+    Person:
+      type: object
+      additionalProperties: false
+      properties:
+        name:
+          type: string
+          nullable: true
+        age:
+          type: integer
+          format: int32
+          maximum: 120
+          minimum: 0
+        address:
+          $ref: '#/components/schemas/Address'
     Address:
       type: object
+      additionalProperties: false
       properties:
         street:
           type: string
         city:
           type: string
         state:
-          pattern: '^[a-zA-Z ]+$'
           type: string
+          pattern: ^[a-zA-Z ]+$
         zip:
           type: string
           nullable: true
-      additionalProperties: false
-    Company:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        summary:
-          maxLength: 50
-          minLength: 0
-          type: string
-          nullable: true
-        contact:
-          $ref: '#/components/schemas/Person'
-      additionalProperties: false
-    Person:
-      type: object
-      properties:
-        name:
-          type: string
-          nullable: true
-        age:
-          maximum: 120
-          minimum: 0
-          type: integer
-          format: int32
-        address:
-          $ref: '#/components/schemas/Address'
-      additionalProperties: false

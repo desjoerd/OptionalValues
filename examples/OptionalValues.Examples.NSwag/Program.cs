@@ -1,17 +1,19 @@
-using Microsoft.OpenApi.Models;
-
 using OptionalValues;
 using OptionalValues.DataAnnotations;
+using OptionalValues.NSwag;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(options =>
+builder.Services.AddOpenApiDocument(options =>
 {
-    options.SwaggerDoc("v1", new OpenApiInfo { Title = "OptionalValues.Examples.Swashbuckle", Version = "1.0" });
+    options.DocumentName = "v1";
+    options.Title = "OptionalValues.Examples.NSwag";
+    options.PostProcess = doc => doc.Generator = null;
+
+    // Add OptionalValue support to NSwag
+    options.SchemaSettings.TypeMappers.Add(new OptionalValueTypeMapper());
 });
-// Add OptionalValue support to Swashbuckle
-builder.Services.AddSwaggerGenOptionalValueSupport();
 
 // Add OptionalValue support to the JSON serializer
 builder.Services.ConfigureHttpJsonOptions(jsonOptions =>
@@ -21,12 +23,12 @@ builder.Services.ConfigureHttpJsonOptions(jsonOptions =>
 
 WebApplication app = builder.Build();
 
-app.UseSwagger();
-app.UseSwaggerUI();
+app.UseOpenApi();
+app.UseSwaggerUi();
 
 app.UseHttpsRedirection();
 
-// This is an example of how to use OptionalValues with Swashbuckle
+// This is an example of how to use OptionalValues with NSwag
 // It also shows what the JSON Serializer will do with the OptionalValues
 // You can play with the values in the Company object to see how the JSON Serializer will handle them
 // Play around by omitting properties or whole objects

@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\OptionalValues.DataAnnotations\OptionalValues.DataAnnotations.csproj" />
     <ProjectReference Include="..\..\src\OptionalValues.Swashbuckle\OptionalValues.Swashbuckle.csproj" />
     <ProjectReference Include="..\..\src\OptionalValues\OptionalValues.csproj"/>
   </ItemGroup>

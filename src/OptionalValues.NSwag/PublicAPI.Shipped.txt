@@ -1,0 +1,6 @@
+﻿#nullable enable
+OptionalValues.NSwag.OptionalValueTypeMapper
+OptionalValues.NSwag.OptionalValueTypeMapper.GenerateSchema(NJsonSchema.JsonSchema! schema, NJsonSchema.Generation.TypeMappers.TypeMapperContext! context) -> void
+OptionalValues.NSwag.OptionalValueTypeMapper.MappedType.get -> System.Type!
+OptionalValues.NSwag.OptionalValueTypeMapper.OptionalValueTypeMapper() -> void
+OptionalValues.NSwag.OptionalValueTypeMapper.UseReference.get -> bool

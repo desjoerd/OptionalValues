@@ -10,8 +10,9 @@ A .NET library that provides an `OptionalValue<T>` type, representing a value th
 | Package                                                                                           | Version                                                                                                                                        |
 | ------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
 | [OptionalValues](https://www.nuget.org/packages/OptionalValues)                                   | [![NuGet](https://img.shields.io/nuget/v/OptionalValues.svg)](https://www.nuget.org/packages/OptionalValues)                                   |
-| [OptionalValues.DataAnnotations](https://www.nuget.org/packages/OptionalValues.DataAnnotations)   | [![NuGet](https://img.shields.io/nuget/v/OptionalValues.DataAnnotations.svg)](https://www.nuget.org/packages/OptionalValues.DataAnnotations)   |
 | [OptionalValues.Swashbuckle](https://www.nuget.org/packages/OptionalValues.Swashbuckle)           | [![NuGet](https://img.shields.io/nuget/v/OptionalValues.Swashbuckle.svg)](https://www.nuget.org/packages/OptionalValues.Swashbuckle)           |
+| [OptionalValues.NSwag](https://www.nuget.org/packages/OptionalValues.NSwag)                       | [![NuGet](https://img.shields.io/nuget/v/OptionalValues.NSwag.svg)](https://www.nuget.org/packages/OptionalValues.NSwag)                       |
+| [OptionalValues.DataAnnotations](https://www.nuget.org/packages/OptionalValues.DataAnnotations)   | [![NuGet](https://img.shields.io/nuget/v/OptionalValues.DataAnnotations.svg)](https://www.nuget.org/packages/OptionalValues.DataAnnotations)   |
 | [OptionalValues.FluentValidation](https://www.nuget.org/packages/OptionalValues.FluentValidation) | [![NuGet](https://img.shields.io/nuget/v/OptionalValues.FluentValidation.svg)](https://www.nuget.org/packages/OptionalValues.FluentValidation) |
 
 ## Overview
@@ -82,6 +83,7 @@ Optionally, install one or more extension packages:
 
 ```bash
 dotnet add package OptionalValues.Swashbuckle
+dotnet add package OptionalValues.NSwag
 dotnet add package OptionalValues.DataAnnotations
 dotnet add package OptionalValues.FluentValidation
 ```
@@ -92,7 +94,9 @@ dotnet add package OptionalValues.FluentValidation
 - **JSON Serialization Support**: Includes a custom JSON converter and TypeResolverModifier that correctly handles serialization and deserialization, ensuring unspecified values are omitted from JSON outputs.
 - **Optional DataAnnotations**: An extension library that provides support for DataAnnotations validation attributes on `OptionalValue<T>` properties.
 - **FluentValidation Extensions**: Provides extension methods to simplify the validation of `OptionalValue<T>` properties using FluentValidation.
-- **OpenApi/Swagger Support**: Includes a custom data contract resolver for Swashbuckle to generate accurate OpenAPI/Swagger documentation.
+- **OpenApi/Swagger Support**: 
+  - **Swashbuckle** Includes a custom data contract resolver for Swashbuckle to generate accurate OpenAPI/Swagger documentation.
+  - **NSwag**: Support for NSwag is available through the `OptionalValues.NSwag` package. It includes an `OptionalValueTypeMapper` to map the `OptionalValue<T>` to it's underlying type `T` in the generated OpenAPI schema.
 - **Patch Operation Support**: Ideal for API patch operations where fields can be updated to `null` or remain unchanged.
 
 # Table of Contents
@@ -117,9 +121,11 @@ dotnet add package OptionalValues.FluentValidation
   - [ASP.NET Core](#aspnet-core)
   - [Swashbuckle](#swashbuckle)
     - [Installation](#installation-1)
+  - [NSwag](#nswag)
+    - [Installation](#installation-2)
   - [System.ComponentModel.DataAnnotations](#systemcomponentmodeldataannotations)
   - [FluentValidation](#fluentvalidation)
-    - [Installation](#installation-2)
+    - [Installation](#installation-3)
     - [Using OptionalRuleFor](#using-optionalrulefor)
     - [How It Works](#how-it-works)
     - [Example Usage](#example-usage)
@@ -359,6 +365,28 @@ Configure the Swashbuckle services to use the `OptionalValueDataContractResolver
 builder.Services.AddSwaggerGen();
 // after AddSwaggerGen when you want it to use an existing custom ISerializerDataContractResolver.
 builder.Services.AddSwaggerGenOptionalValueSupport();
+```
+
+## NSwag
+
+The `OptionalValues.NSwag` package provides an `OptionalValueTypeMapper` to map the `OptionalValue<T>` to its underlying type `T` in the generated OpenAPI schema.
+
+### Installation
+
+Install the package using the .NET CLI:
+
+```bash
+dotnet add package OptionalValues.NSwag
+```
+
+Configure the NSwag SchemaSettings to use the `OptionalValueTypeMapper`:
+
+```csharp
+builder.Services.AddOpenApiDocument(options =>
+{
+    // Add OptionalValue support to NSwag
+    options.SchemaSettings.TypeMappers.Add(new OptionalValueTypeMapper());
+});
 ```
 
 ## System.ComponentModel.DataAnnotations
