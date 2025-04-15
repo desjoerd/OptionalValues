@@ -4,3 +4,8 @@ OptionalValues.NSwag.OptionalValueTypeMapper.GenerateSchema(NJsonSchema.JsonSche
 OptionalValues.NSwag.OptionalValueTypeMapper.MappedType.get -> System.Type!
 OptionalValues.NSwag.OptionalValueTypeMapper.OptionalValueTypeMapper() -> void
 OptionalValues.NSwag.OptionalValueTypeMapper.UseReference.get -> bool
+OptionalValues.NSwag.OptionalValueReflectionService
+OptionalValues.NSwag.OptionalValueReflectionService.OptionalValueReflectionService() -> void
+OptionalValues.NSwag.OptionalValueSchemaSettingsExtensions
+override OptionalValues.NSwag.OptionalValueReflectionService.IsNullable(Namotion.Reflection.ContextualType! contextualType, NJsonSchema.Generation.ReferenceTypeNullHandling defaultReferenceTypeNullHandling) -> bool
+static OptionalValues.NSwag.OptionalValueSchemaSettingsExtensions.AddOptionalValueSupport(this NJsonSchema.Generation.JsonSchemaGeneratorSettings! schemaGeneratorSettings) -> NJsonSchema.Generation.SystemTextJsonSchemaGeneratorSettings!

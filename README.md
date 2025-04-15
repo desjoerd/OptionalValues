@@ -385,7 +385,7 @@ Configure the NSwag SchemaSettings to use the `OptionalValueTypeMapper`:
 builder.Services.AddOpenApiDocument(options =>
 {
     // Add OptionalValue support to NSwag
-    options.SchemaSettings.TypeMappers.Add(new OptionalValueTypeMapper());
+    options.SchemaSettings.AddOptionalValueSupport();
 });
 ```
 

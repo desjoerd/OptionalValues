@@ -41,13 +41,26 @@ public static class OptionalRuleExtensions
             Expression.Property(memberExpression, nameof(OptionalValue<object>.Value)),
             propertySelector.Parameters);
 
+        var whenIsSpecified = new WhenIsSpecified<T, TProperty>(propertySelector);
+
         // Create rules but apply them only when the value is defined
-        validator.When(x => propertySelector.Compile()(x).IsSpecified, () =>
+        validator.When(whenIsSpecified.Check, () =>
         {
             var propertySelectorObject = Expression.Lambda<Func<T, object>>(Expression.Convert(memberExpression, typeof(object)), propertySelector.Parameters);
 
             configure(validator.RuleFor(deepPropertySelector))
                 .OverridePropertyName(propertySelectorObject);
         });
+    }
+
+    private readonly struct WhenIsSpecified<T, TProperty>(Expression<Func<T, OptionalValue<TProperty?>>> propertySelector)
+    {
+        private readonly Func<T, OptionalValue<TProperty?>> _propertySelectorFunc = propertySelector.Compile();
+
+        public bool Check(T instance)
+        {
+            OptionalValue<TProperty?> value = _propertySelectorFunc(instance);
+            return value.IsSpecified;
+        }
     }
 }
