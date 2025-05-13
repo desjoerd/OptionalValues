@@ -53,6 +53,28 @@ public static class OptionalRuleExtensions
         });
     }
 
+    public static IRuleBuilderInitial<T, TProperty> RuleForOptionalValue<T, TProperty>(
+        this AbstractValidator<T> validator,
+        Expression<Func<T, OptionalValue<TProperty>>> propertySelector)
+    {
+        ArgumentNullException.ThrowIfNull(validator);
+        ArgumentNullException.ThrowIfNull(propertySelector);
+
+        if (propertySelector.Body is not MemberExpression memberExpression)
+        {
+            throw new InvalidOperationException("Invalid property selector");
+        }
+
+        // Create a more deep property selector which selects the .Value property of the Defined<TProperty?>
+        // For example if the propertySelector is x => x.Property then the deepPropertySelector will be x => x.Property.Value
+        var deepPropertySelector = Expression.Lambda<Func<T, TProperty>>(
+            Expression.Property(memberExpression, nameof(OptionalValue<object>.Value)),
+            propertySelector.Parameters);
+
+        return validator.RuleFor(deepPropertySelector)
+            .Configure(c => c.PropertyName = memberExpression.Member.Name);
+    }
+
     private readonly struct WhenIsSpecified<T, TProperty>(Expression<Func<T, OptionalValue<TProperty?>>> propertySelector)
     {
         private readonly Func<T, OptionalValue<TProperty?>> _propertySelectorFunc = propertySelector.Compile();
