@@ -39,9 +39,15 @@ public class OptionalValueTypeMapper : ITypeMapper
                 IsNullable = underlyingIsNullable
             },
         ]));
-        var jsonTypeDescription = JsonTypeDescription.Create(underlyingContextualType, schema.Type, underlyingIsNullable, schema.Format);
 
         context.JsonSchemaGenerator.Generate(schema, underlyingContextualType, context.JsonSchemaResolver);
+
+        if (underlyingIsNullable)
+        {
+            schema.IsNullableRaw = underlyingIsNullable;
+        }
+
+        var jsonTypeDescription = JsonTypeDescription.Create(underlyingContextualType, schema.Type, underlyingIsNullable, schema.Format);
         context.JsonSchemaGenerator.ApplyDataAnnotations(schema, jsonTypeDescription);
     }
 }
