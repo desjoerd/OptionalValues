@@ -1,0 +1,117 @@
+{
+  "openapi": "3.1.1",
+  "info": {
+    "title": "OptionalValues.Examples.OpenApi | v1",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/company": {
+      "post": {
+        "tags": [
+          "Example"
+        ],
+        "description": "This directly returns the posted object",
+        "operationId": "Example Post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Company"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Company"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Address": {
+        "type": "object",
+        "properties": {
+          "street": {
+            "type": "string",
+            "description": "A value that may or may not be specified. This is different from a Nullable&lt;T&gt; value type, as it allows for the distinction between a value that is null and a value that is unspecified."
+          },
+          "city": {
+            "type": "string",
+            "description": "A value that may or may not be specified. This is different from a Nullable&lt;T&gt; value type, as it allows for the distinction between a value that is null and a value that is unspecified."
+          },
+          "state": {
+            "pattern": "^[a-zA-Z ]+$",
+            "type": "string",
+            "description": "A value that may or may not be specified. This is different from a Nullable&lt;T&gt; value type, as it allows for the distinction between a value that is null and a value that is unspecified."
+          },
+          "zip": {
+            "type": "string",
+            "description": "A value that may or may not be specified. This is different from a Nullable&lt;T&gt; value type, as it allows for the distinction between a value that is null and a value that is unspecified."
+          }
+        },
+        "description": "Address2 of the person"
+      },
+      "Company": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The unique identifier for the company",
+            "format": "uuid"
+          },
+          "summary": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "description": "A value that may or may not be specified. This is different from a Nullable&lt;T&gt; value type, as it allows for the distinction between a value that is null and a value that is unspecified."
+          },
+          "contact": {
+            "$ref": "#/components/schemas/Person"
+          }
+        }
+      },
+      "Person": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "A value that may or may not be specified. This is different from a Nullable&lt;T&gt; value type, as it allows for the distinction between a value that is null and a value that is unspecified."
+          },
+          "age": {
+            "maximum": 120,
+            "minimum": 0,
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "A value that may or may not be specified. This is different from a Nullable&lt;T&gt; value type, as it allows for the distinction between a value that is null and a value that is unspecified.",
+            "format": "int32"
+          },
+          "address": {
+            "$ref": "#/components/schemas/Address"
+          },
+          "address2": {
+            "$ref": "#/components/schemas/Address"
+          }
+        },
+        "description": "A value that may or may not be specified. This is different from a Nullable&lt;T&gt; value type, as it allows for the distinction between a value that is null and a value that is unspecified."
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Example"
+    }
+  ]
+}

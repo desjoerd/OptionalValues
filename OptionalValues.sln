@@ -44,6 +44,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OptionalValues.Examples.NSw
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OptionalValues.NSwag.Tests", "test\OptionalValues.NSwag.Tests\OptionalValues.NSwag.Tests.csproj", "{A183996B-86DE-4870-B526-08FBFF4B0970}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OptionalValues.Examples.OpenApi", "examples\OptionalValues.Examples.OpenApi\OptionalValues.Examples.OpenApi.csproj", "{4D5CB835-4B26-48BD-A14A-647094B9250F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -102,6 +104,10 @@ Global
 		{A183996B-86DE-4870-B526-08FBFF4B0970}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A183996B-86DE-4870-B526-08FBFF4B0970}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A183996B-86DE-4870-B526-08FBFF4B0970}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4D5CB835-4B26-48BD-A14A-647094B9250F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4D5CB835-4B26-48BD-A14A-647094B9250F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4D5CB835-4B26-48BD-A14A-647094B9250F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4D5CB835-4B26-48BD-A14A-647094B9250F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{E1597F1E-C937-4BD0-9CEE-B6140C72794B} = {392590F2-70F4-43E8-852B-1CBFDF2E59AC}
@@ -117,5 +123,6 @@ Global
 		{D5897086-EC3B-44E2-888C-D15C91E092E6} = {392590F2-70F4-43E8-852B-1CBFDF2E59AC}
 		{52C7A12A-EAD4-4594-842E-D9075D29C6E7} = {21EEF407-68F2-4918-B72A-ADAA541DF5BD}
 		{A183996B-86DE-4870-B526-08FBFF4B0970} = {8C8324D6-BC6A-456B-8A07-B95B641261D0}
+		{4D5CB835-4B26-48BD-A14A-647094B9250F} = {21EEF407-68F2-4918-B72A-ADAA541DF5BD}
 	EndGlobalSection
 EndGlobal
