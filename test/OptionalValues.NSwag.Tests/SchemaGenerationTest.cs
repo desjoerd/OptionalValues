@@ -17,16 +17,14 @@ namespace OptionalValues.NSwag.Tests;
 
 public class SchemaGenerationTest(ITestOutputHelper output)
 {
-    private readonly JsonSchemaGeneratorSettings _settings = new SystemTextJsonSchemaGeneratorSettings
+    [Theory]
+    [InlineData(SchemaType.JsonSchema)]
+    [InlineData(SchemaType.OpenApi3)]
+    [InlineData(SchemaType.Swagger2)]
+    public void SchemaGeneration_Should_Be_The_Same(SchemaType schemaType)
     {
-        DefaultReferenceTypeNullHandling = ReferenceTypeNullHandling.NotNull,
-    }.AddOptionalValueSupport();
-
-    [Fact]
-    public void SchemaGeneration_Should_Be_The_Same()
-    {
-        var schemaPlainJson = GetJsonSchemaAsString<ExamplesPlain.Primitives>();
-        var schemaOptionalValuesJson = GetJsonSchemaAsString<ExamplesOptionalValues.Primitives>();
+        var schemaPlainJson = GetJsonSchemaAsString<ExamplesPlain.Primitives>(schemaType);
+        var schemaOptionalValuesJson = GetJsonSchemaAsString<ExamplesOptionalValues.Primitives>(schemaType);
 
         output.WriteLine(schemaOptionalValuesJson);
 
@@ -34,11 +32,14 @@ public class SchemaGenerationTest(ITestOutputHelper output)
         schemaOptionalValuesJson.ShouldBe(schemaPlainJson);
     }
 
-    [Fact]
-    public void SchemaGeneration_Should_Be_The_Same_Ref()
+    [Theory]
+    [InlineData(SchemaType.JsonSchema)]
+    [InlineData(SchemaType.OpenApi3)]
+    [InlineData(SchemaType.Swagger2)]
+    public void SchemaGeneration_Should_Be_The_Same_Ref(SchemaType schemaType)
     {
-        var schemaPlainJson = GetJsonSchemaAsString<ExamplesPlain.Root>();
-        var schemaOptionalValuesJson = GetJsonSchemaAsString<ExamplesOptionalValues.Root>();
+        var schemaPlainJson = GetJsonSchemaAsString<ExamplesPlain.Root>(schemaType);
+        var schemaOptionalValuesJson = GetJsonSchemaAsString<ExamplesOptionalValues.Root>(schemaType);
 
         output.WriteLine(schemaOptionalValuesJson);
 
@@ -75,12 +76,18 @@ public class SchemaGenerationTest(ITestOutputHelper output)
     }
 
 
-    private string GetJsonSchemaAsString<T>()
+    private string GetJsonSchemaAsString<T>(SchemaType schemaType)
     {
-        var jsonSchemaGenerator = new JsonSchemaGenerator(_settings);
+        JsonSchemaGeneratorSettings settings = new SystemTextJsonSchemaGeneratorSettings
+        {
+            SchemaType = schemaType,
+            DefaultReferenceTypeNullHandling = ReferenceTypeNullHandling.NotNull,
+        }.AddOptionalValueSupport();
+
+        var jsonSchemaGenerator = new JsonSchemaGenerator(settings);
 
         var jsonSchema = new JsonSchema();
-        var jsonSchemaResolver = new JsonSchemaResolver(jsonSchema, _settings);
+        var jsonSchemaResolver = new JsonSchemaResolver(jsonSchema, settings);
 
         jsonSchemaGenerator.Generate(jsonSchema, typeof(T), jsonSchemaResolver);
 

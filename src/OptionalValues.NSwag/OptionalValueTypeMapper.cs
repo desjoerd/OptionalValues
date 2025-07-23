@@ -26,6 +26,7 @@ public class OptionalValueTypeMapper : ITypeMapper
         Debug.Assert(schema != null, nameof(schema) + " != null");
         Debug.Assert(context != null, nameof(context) + " != null");
 
+        JsonSchemaGeneratorSettings settings = context.JsonSchemaGenerator.Settings;
 
         var contextualType = context.Type.ToContextualType(context.ParentAttributes);
         var underlyingIsNullable = contextualType.GenericArguments[0].IsNullableType
@@ -42,7 +43,9 @@ public class OptionalValueTypeMapper : ITypeMapper
 
         context.JsonSchemaGenerator.Generate(schema, underlyingContextualType, context.JsonSchemaResolver);
 
-        if (underlyingIsNullable)
+        var applyNullableRaw = settings.SchemaType != SchemaType.JsonSchema &&
+                               (settings.SchemaType == SchemaType.OpenApi3 || settings.GenerateCustomNullableProperties);
+        if (applyNullableRaw && underlyingIsNullable)
         {
             schema.IsNullableRaw = underlyingIsNullable;
         }
