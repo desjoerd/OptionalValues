@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using System.Reflection;
 using System.Text.Json.Serialization;
 
 namespace OptionalValues;
@@ -33,6 +32,7 @@ public class OptionalValueJsonConverterAttribute : JsonConverterAttribute
     /// <summary>
     /// Gets the type of the inner converter. This can be null if <see cref="CreateInnerConverter"/> is overridden to provide custom logic for creating the inner converter.
     /// </summary>
+    [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)]
     public Type? InnerConverterType { get; }
 
     /// <inheritdoc />

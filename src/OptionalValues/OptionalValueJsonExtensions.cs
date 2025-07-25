@@ -20,7 +20,9 @@ public static class OptionalValueJsonExtensions
         ArgumentNullException.ThrowIfNull(options);
 
         // If the options do not have a TypeInfoResolver, add the default one, with the modifier.
-        options.TypeInfoResolver ??= new DefaultJsonTypeInfoResolver();
+        options.TypeInfoResolver ??= JsonSerializer.IsReflectionEnabledByDefault
+            ? new DefaultJsonTypeInfoResolver()
+            : JsonTypeInfoResolver.Combine();
 
         // We need to add the modifier to all resolvers in the chain,
         // because it needs to be applied to all types and it's properties.

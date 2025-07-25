@@ -20,20 +20,14 @@ namespace OptionalValues;
     Justification = "Class is instantiated via reflection by OptionalValueJsonConverterFactory.")]
 internal sealed class OptionalValueJsonConverter<T>(JsonConverter inner) : JsonConverter<OptionalValue<T>>
 {
-    private readonly JsonConverter<T>? _inner = inner as JsonConverter<T>;
+    private readonly JsonConverter<T> _inner = (JsonConverter<T>)inner;
 
     /// <inheritdoc />
     public override bool HandleNull => true;
 
     /// <inheritdoc />
     public override OptionalValue<T> Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-    {
-        if (_inner is null)
-        {
-            return JsonSerializer.Deserialize<T>(ref reader, options)!;
-        }
-        return _inner.Read(ref reader, typeof(T), options)!;
-    }
+        => _inner.Read(ref reader, typeof(T), options)!;
 
     /// <inheritdoc />
     public override void Write(Utf8JsonWriter writer, OptionalValue<T> value, JsonSerializerOptions options)
@@ -44,19 +38,15 @@ internal sealed class OptionalValueJsonConverter<T>(JsonConverter inner) : JsonC
             // If we would not write anything, we end up with invalid JSON.
             // That is `{ "value": }`
             // So we throw an exception to indicate that the value is undefined.
-            throw new InvalidOperationException("Value is unspecified. Writing the property would give a property without any value, resulting in invalid json. " +
-                                                "Add OptionalValue support via 'AddOptionalValueSupport()' on the 'JsonSerializerOptions' or " +
-                                                "set [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)] on the property.");
+            ThrowWritingUnspecified();
         }
 
         // Write the value or null if the value is null
-        if (_inner is null)
-        {
-            JsonSerializer.Serialize(writer, value.SpecifiedValue, options);
-        }
-        else
-        {
-            _inner.Write(writer, value.SpecifiedValue, options);
-        }
+        _inner.Write(writer, value.SpecifiedValue, options);
     }
+
+    private static void ThrowWritingUnspecified()
+        => throw new InvalidOperationException("Value is unspecified. Writing the property would give a property without any value, resulting in invalid json. " +
+                                               "Add OptionalValue support via 'AddOptionalValueSupport()' on the 'JsonSerializerOptions' or " +
+                                               "set [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)] on the property.");
 }
