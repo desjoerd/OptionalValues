@@ -2,33 +2,15 @@
 
   <PropertyGroup>
     <TargetFrameworks>$(OptionalValuesLibraryTargetFrameworks)</TargetFrameworks>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable Condition="$(TargetFramework) != 'netstandard2.0'">enable</Nullable>
-
-    <AnalysisMode>All</AnalysisMode>
-    <AnalysisLevel>latest</AnalysisLevel>
-
-    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup>
     <!-- NuGet package properties -->
     <PackageId>OptionalValues</PackageId>
-    <NeutralLanguage>en-US</NeutralLanguage>
     <Description>Optional values for C# to model omitted values (undefined in javascript) and it has
       a JsonConvertor to support omitted values in Json.</Description>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
-    <PackageIcon>icon.png</PackageIcon>
     <PackageTags>$(CommonPackageTags)</PackageTags>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Include="../../README.md" CopyToPublishDirectory="Always" Pack="true" PackagePath="\" />
-    <None Include="../../LICENSE" CopyToPublishDirectory="Always" Pack="true" PackagePath="\" />
-    <None Include="../../assets/icon.png" CopyToPublishDirectory="Always" Pack="true"
-      PackagePath="\" />
-  </ItemGroup>
 
   <ItemGroup Condition="$(TargetFramework) == 'netstandard2.0'">
     <PackageReference Include="System.Text.Json" />
