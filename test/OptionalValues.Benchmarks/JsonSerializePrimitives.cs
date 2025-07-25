@@ -15,7 +15,7 @@ public class JsonSerializePrimitives
 
     private static readonly JsonSerializerOptions OptionalValueSerializerWithSourceGeneratorOptions = new JsonSerializerOptions(JsonSerializerOptions.Default)
     {
-        TypeInfoResolver = TestObjects.PrimitivesJsonSerializationContext.Default
+        TypeInfoResolver = PrimitivesJsonSerializationContext.Default
     }.AddOptionalValueSupport();
 
     private static readonly PrimitiveModel DefaultModelInstance = new PrimitiveModel();
