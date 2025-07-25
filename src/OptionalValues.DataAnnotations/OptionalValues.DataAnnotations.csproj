@@ -2,14 +2,6 @@
 
   <PropertyGroup>
     <TargetFrameworks>$(OptionalValuesLibraryTargetFrameworks)</TargetFrameworks>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-
-    <AnalysisMode>All</AnalysisMode>
-    <AnalysisLevel>latest</AnalysisLevel>
-
-    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
 
     <!-- CA1813: Avoid unsealed attributes -->
     <NoWarn>$(NoWarn);CA1813</NoWarn>
@@ -18,18 +10,9 @@
   <PropertyGroup>
     <!-- NuGet package properties -->
     <PackageId>OptionalValues.DataAnnotations</PackageId>
-    <NeutralLanguage>en-US</NeutralLanguage>
     <Description>DataAnnotations for OptionalValues.</Description>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
-    <PackageIcon>icon.png</PackageIcon>
     <PackageTags>$(CommonPackageTags) DataAnnotations System.ComponentModel.DataAnnotations validation attributes</PackageTags>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Include="../../README.md" CopyToPublishDirectory="Always" Pack="true"  PackagePath="\" />
-    <None Include="../../LICENSE" CopyToPublishDirectory="Always" Pack="true" PackagePath="\" />
-    <None Include="../../assets/icon.png" CopyToPublishDirectory="Always" Pack="true" PackagePath="\" />
-  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\OptionalValues\OptionalValues.csproj"/>

@@ -10,7 +10,28 @@
 
   <PropertyGroup>
     <GitVersionBaseDirectory>$(MSBuildThisFileDirectory)</GitVersionBaseDirectory>
+
+    <!-- Analysis settings -->
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+
+    <AnalysisMode>Default</AnalysisMode>
+    <AnalysisLevel>latest</AnalysisLevel>
     <TreatWarningsAsErrors Condition="$(Configuration) == 'Release'">true</TreatWarningsAsErrors>
+
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+  </PropertyGroup>
+
+  <!-- More strict analysis settings for packable projects -->
+  <PropertyGroup Condition="'$(IsPackable)' == 'true'">
+    <AnalysisMode>All</AnalysisMode>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <!-- Symbols and debugging settings, set to true and portable for snupkg -->
+  <PropertyGroup>
+    <IncludeSymbols>true</IncludeSymbols>
+    <DebugType>portable</DebugType>
   </PropertyGroup>
 
   <Sdk Name="DotNet.ReproducibleBuilds.Isolated" Version="1.2.25"/>
@@ -20,21 +41,34 @@
     <PackageReference Include="DotNet.ReproducibleBuilds" PrivateAssets="All"/>
   </ItemGroup>
 
-  <ItemGroup Condition="'$(IsTestProject)' != 'true' and '$(IsExampleProject)' != 'true'">
+  <ItemGroup Condition="'$(IsPackable)' == 'true'">
     <PackageReference Include="Microsoft.CodeAnalysis.PublicApiAnalyzers">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All"/>
   </ItemGroup>
 
   <!-- Common nuget package properties -->
   <PropertyGroup>
     <Authors>Sjoerd van der Meer</Authors>
     <Copyright>Copyright (c) Sjoerd van der Meer 2024.</Copyright>
+    <NeutralLanguage>en-US</NeutralLanguage>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageIcon>icon.png</PackageIcon>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/desjoerd/optionalvalues</RepositoryUrl>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <PackageProjectUrl>https://github.com/desjoerd/optionalvalues</PackageProjectUrl>
+    <!-- Create snupkg files for symbol packages -->
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
+
+  <ItemGroup Condition="'$(IsPackable)' == 'true'">
+    <None Include="$(MSBuildThisFileDirectory)/README.md" CopyToPublishDirectory="Always" Pack="true" PackagePath="\" />
+    <None Include="$(MSBuildThisFileDirectory)/LICENSE" CopyToPublishDirectory="Always" Pack="true" PackagePath="\" />
+    <None Include="$(MSBuildThisFileDirectory)/assets/icon.png" CopyToPublishDirectory="Always" Pack="true" PackagePath="\" />
+  </ItemGroup>
 </Project>

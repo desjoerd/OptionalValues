@@ -2,31 +2,14 @@
 
   <PropertyGroup>
     <TargetFrameworks>$(OptionalValuesLibraryTargetFrameworks)</TargetFrameworks>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-
-    <AnalysisMode>All</AnalysisMode>
-    <AnalysisLevel>latest</AnalysisLevel>
-
-    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup>
     <!-- NuGet package properties -->
     <PackageId>OptionalValues.FluentValidation</PackageId>
-    <NeutralLanguage>en-US</NeutralLanguage>
     <Description>FluentValidation extensions for OptionalValues.</Description>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
-    <PackageIcon>icon.png</PackageIcon>
     <PackageTags>$(CommonPackageTags) fluentvalidation</PackageTags>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Include="../../README.md" CopyToPublishDirectory="Always" Pack="true"  PackagePath="\" />
-    <None Include="../../LICENSE" CopyToPublishDirectory="Always" Pack="true" PackagePath="\" />
-    <None Include="../../assets/icon.png" CopyToPublishDirectory="Always" Pack="true" PackagePath="\" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="FluentValidation"/>
