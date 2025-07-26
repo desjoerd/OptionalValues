@@ -3,6 +3,9 @@ name: Tag and Create Draft Release
 on:
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   tag-release:
     runs-on: ubuntu-latest
