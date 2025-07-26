@@ -26,6 +26,3 @@ jobs:
 
       - name: Push packages to NuGet Test Feed
         run: dotnet nuget push *.nupkg --api-key ${{ secrets.NUGET_TEST_API_KEY }} --source https://apiint.nugettest.org/v3/index.json --skip-duplicate
-
-      - name: Push symbol packages to NuGet Test Feed
-        run: dotnet nuget push *.snupkg --api-key ${{ secrets.NUGET_TEST_API_KEY }} --source https://apiint.nugettest.org/v3/index.json --skip-duplicate
