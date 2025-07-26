@@ -1,4 +1,4 @@
-name: Publish NuGet Packages (Test)
+name: Publish NuGet Packages on Release Publish
 
 on:
   release:
@@ -25,4 +25,4 @@ jobs:
           fileName: "*.snupkg"
 
       - name: Push packages to NuGet Test Feed
-        run: dotnet nuget push *.nupkg --api-key ${{ secrets.NUGET_TEST_API_KEY }} --source https://apiint.nugettest.org/v3/index.json --skip-duplicate
+        run: dotnet nuget push *.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
