@@ -16,7 +16,13 @@ jobs:
         uses: robinraju/release-downloader@v1
         with:
           tag: ${{ github.event.release.tag_name }}
-          fileName: "*.nupkg,*.snupkg"
+          fileName: "*.nupkg"
+
+      - name: Download NuGet Symbol packages from release
+        uses: robinraju/release-downloader@v1
+        with:
+          tag: ${{ github.event.release.tag_name }}
+          fileName: "*.snupkg"
 
       - name: Push packages to NuGet Test Feed
         run: dotnet nuget push *.nupkg --api-key ${{ secrets.NUGET_TEST_API_KEY }} --source https://apiint.nugettest.org/v3/index.json --skip-duplicate
