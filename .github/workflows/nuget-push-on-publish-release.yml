@@ -1,0 +1,25 @@
+name: Publish NuGet Packages (Test)
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+
+jobs:
+  publish-to-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download NuGet packages from release
+        uses: robinraju/release-downloader@v1
+        with:
+          tag: ${{ github.event.release.tag_name }}
+          fileName: "*.nupkg,*.snupkg"
+
+      - name: Push packages to NuGet Test Feed
+        run: dotnet nuget push *.nupkg --api-key ${{ secrets.NUGET_TEST_API_KEY }} --source https://apiint.nugettest.org/v3/index.json --skip-duplicate
+
+      - name: Push symbol packages to NuGet Test Feed
+        run: dotnet nuget push *.snupkg --api-key ${{ secrets.NUGET_TEST_API_KEY }} --source https://apiint.nugettest.org/v3/index.json --skip-duplicate
