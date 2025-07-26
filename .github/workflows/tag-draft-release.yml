@@ -1,0 +1,96 @@
+name: Tag and Create Draft Release
+
+on:
+  workflow_dispatch:
+
+jobs:
+  tag-release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Nerdbank GitVersioning needs the full history to calculate the version number
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+          global-json-file: "global.json"
+      - name: Restore tools
+        run: dotnet tool restore
+
+      - name: Get version from nbgv
+        id: get_version
+        run: echo "version=$(nbgv get-version -v SemVer2)" >> $GITHUB_OUTPUT
+
+      # ✅ Only tag & push if build/tests succeeded
+      - name: Restore dependencies
+        run: dotnet restore
+      - name: Build
+        run: dotnet build --configuration Release --no-restore
+      - name: Test
+        run: dotnet test --configuration Release --no-build --verbosity normal
+
+      - name: Pack NuGet
+        run: dotnet pack --configuration Release --no-build -o ./artifacts
+
+      # Everything builds, now tag and draft the release
+      - name: Tag git version
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git tag v${{ steps.get_version.outputs.version }}
+          git push origin v${{ steps.get_version.outputs.version }}
+
+      - name: Get last published release tag (if exists)
+        id: last_release
+        run: |
+          gh auth setup-git
+          gh release list --limit 1 --json tagName --jq '.[0].tagName' > last_tag.txt || echo "" > last_tag.txt
+          echo "tag=$(cat last_tag.txt)" >> $GITHUB_OUTPUT
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Generate release notes
+        run: |
+          echo "## 🚀 Release v${{ steps.get_version.outputs.version }}" > notes.md
+          echo "" >> notes.md
+
+          RANGE_ARG=""
+          if [ -n "${{ steps.last_release.outputs.tag }}" ]; then
+            RANGE_ARG="${{ steps.last_release.outputs.tag }}..HEAD"
+          fi
+
+          # Features & Improvements
+          echo "### ✨ Features & Improvements" >> notes.md
+          git log $RANGE_ARG --pretty=format:"- %s" | grep -E "✨|⚡️" || echo "- _None_" >> notes.md
+          echo "" >> notes.md
+
+          # Bug Fixes
+          echo "### 🐛 Bug Fixes" >> notes.md
+          git log $RANGE_ARG --pretty=format:"- %s" | grep -E "🐛|🚑" || echo "- _None_" >> notes.md
+          echo "" >> notes.md
+
+          # Breaking Changes
+          echo "### ⚠️ Breaking Changes" >> notes.md
+          git log $RANGE_ARG --pretty=format:"- %s" | grep -E "💥|🔥" || echo "- _None_" >> notes.md
+          echo "" >> notes.md
+
+          # Documentation
+          echo "### 📝 Documentation" >> notes.md
+          git log $RANGE_ARG --pretty=format:"- %s" | grep "📝" || echo "- _None_" >> notes.md
+          echo "" >> notes.md
+
+      - name: Create draft GitHub release with attached NuGet package
+        uses: softprops/action-gh-release@v1
+        with:
+          draft: true
+          tag_name: v${{ steps.get_version.outputs.version }}
+          name: v${{ steps.get_version.outputs.version }}
+          body_path: notes.md
+          files: |
+            ./artifacts/*.nupkg
+            ./artifacts/*.snupkg
+          fail_on_unmatched_files: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
