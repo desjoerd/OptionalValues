@@ -45,44 +45,80 @@ jobs:
           git tag v${{ steps.get_version.outputs.version }}
           git push origin v${{ steps.get_version.outputs.version }}
 
-      - name: Get last published release tag (if exists)
-        id: last_release
+      - name: Determine previous tag by semantic version
+        id: prev_tag
         run: |
-          gh auth setup-git
-          gh release list --limit 1 --json tagName --jq '.[0].tagName' > last_tag.txt || echo "" > last_tag.txt
-          echo "tag=$(cat last_tag.txt)" >> $GITHUB_OUTPUT
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          current_tag="v${{ steps.get_version.outputs.version }}"
+          echo "Current tag: $current_tag"
+
+          # Get all tags sorted by semver
+          all_tags=$(git tag --sort=v:refname | grep '^v')
+          echo "All tags (semver sorted):"
+          echo "$all_tags"
+
+          # Find the previous tag by walking the sorted list
+          previous_tag=""
+          for tag in $all_tags; do
+            if [ "$tag" = "$current_tag" ]; then
+              break
+            fi
+            previous_tag=$tag
+          done
+
+          echo "Previous tag: $previous_tag"
+          echo "tag=$previous_tag" >> $GITHUB_OUTPUT
 
       - name: Generate release notes
         run: |
-          echo "## 🚀 Release v${{ steps.get_version.outputs.version }}" > notes.md
-          echo "" >> notes.md
+          current_tag="v${{ steps.get_version.outputs.version }}"
+          prev_tag="${{ steps.prev_tag.outputs.tag }}"
+          echo "Generating release notes for range: ${prev_tag}..${current_tag}"
 
           RANGE_ARG=""
-          if [ -n "${{ steps.last_release.outputs.tag }}" ]; then
-            RANGE_ARG="${{ steps.last_release.outputs.tag }}..HEAD"
+          if [ -n "$prev_tag" ]; then
+            RANGE_ARG="${prev_tag}..${current_tag}"
+          else
+            RANGE_ARG="$current_tag"  # first tag ever, just include that commit
           fi
 
-          # Features & Improvements
-          echo "### ✨ Features & Improvements" >> notes.md
-          git log $RANGE_ARG --pretty=format:"- %s" | grep -E "✨|⚡️" || echo "- _None_" >> notes.md
+          echo "## 🚀 Release ${current_tag}" > notes.md
           echo "" >> notes.md
 
-          # Bug Fixes
-          echo "### 🐛 Bug Fixes" >> notes.md
-          git log $RANGE_ARG --pretty=format:"- %s" | grep -E "🐛|🚑" || echo "- _None_" >> notes.md
-          echo "" >> notes.md
+          # Grab all commits in the range
+          all_commits=$(git log $RANGE_ARG --pretty=format:"%s")
 
-          # Breaking Changes
-          echo "### ⚠️ Breaking Changes" >> notes.md
-          git log $RANGE_ARG --pretty=format:"- %s" | grep -E "💥|🔥" || echo "- _None_" >> notes.md
-          echo "" >> notes.md
+          # Helper function for adding sections
+          add_section() {
+            local title=$1
+            local pattern=$2
+            local matches=$(echo "$all_commits" | grep -E "$pattern" || true)
 
-          # Documentation
-          echo "### 📝 Documentation" >> notes.md
-          git log $RANGE_ARG --pretty=format:"- %s" | grep "📝" || echo "- _None_" >> notes.md
-          echo "" >> notes.md
+            if [ -n "$matches" ]; then
+              echo "### $title" >> notes.md
+              echo "$matches" | sed 's/^/- /' >> notes.md
+              echo "" >> notes.md
+            fi
+          }
+
+          # Add categorized sections
+          add_section "✨ Features & Improvements" "✨|⚡️|♻️"
+          add_section "🐛 Bug Fixes" "🐛|🚑"
+          add_section "⚠️ Breaking Changes" "💥|🔥"
+          add_section "📝 Documentation" "📝"
+          add_section "🛠 Maintenance" "🧰|🔧|♿"
+
+          # Find commits that didn't match any of the above
+          known_pattern="✨|⚡️|♻️|🐛|🚑|💥|🔥|📝|🧰|🔧|♿"
+          other_commits=$(echo "$all_commits" | grep -Ev "$known_pattern" || true)
+
+          if [ -n "$other_commits" ]; then
+            echo "### 🔄 Other Changes" >> notes.md
+            echo "$other_commits" | sed 's/^/- /' >> notes.md
+            echo "" >> notes.md
+          fi
+
+          echo "Generated release notes:"
+          cat notes.md
 
       - name: Create draft GitHub release with attached NuGet package
         uses: softprops/action-gh-release@v1
