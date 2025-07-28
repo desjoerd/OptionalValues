@@ -1,0 +1,31 @@
+<Solution>
+  <Folder Name="/.root/">
+    <File Path=".editorconfig" />
+    <File Path=".gitignore" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Packages.props" />
+    <File Path="global.json" />
+    <File Path="LICENSE" />
+    <File Path="README.md" />
+    <File Path="version.json" />
+  </Folder>
+  <Folder Name="/examples/">
+    <Project Path="examples/OptionalValues.Examples.NSwag/OptionalValues.Examples.NSwag.csproj" />
+    <Project Path="examples/OptionalValues.Examples.Swashbuckle/OptionalValues.Examples.Swashbuckle.csproj" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/OptionalValues.DataAnnotations/OptionalValues.DataAnnotations.csproj" />
+    <Project Path="src/OptionalValues.FluentValidation/OptionalValues.FluentValidation.csproj" />
+    <Project Path="src/OptionalValues.NSwag/OptionalValues.NSwag.csproj" />
+    <Project Path="src/OptionalValues.Swashbuckle/OptionalValues.Swashbuckle.csproj" />
+    <Project Path="src/OptionalValues/OptionalValues.csproj" />
+  </Folder>
+  <Folder Name="/test/">
+    <Project Path="test/OptionalValues.Benchmarks/OptionalValues.Benchmarks.csproj" />
+    <Project Path="test/OptionalValues.DataAnnotations.Tests/OptionalValues.DataAnnotations.Tests.csproj" />
+    <Project Path="test/OptionalValues.FluentValidation.Tests/OptionalValues.FluentValidation.Tests.csproj" />
+    <Project Path="test/OptionalValues.NSwag.Tests/OptionalValues.NSwag.Tests.csproj" />
+    <Project Path="test/OptionalValues.Swashbuckle.Tests/OptionalValues.Swashbuckle.Tests.csproj" />
+    <Project Path="test/OptionalValues.Tests/OptionalValues.Tests.csproj" />
+  </Folder>
+</Solution>
