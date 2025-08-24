@@ -42,6 +42,9 @@ public class AllAttributesTest
         [OptionalRegularExpression("^something$")]
         public OptionalValue<string> RegularExpression { get; set; }
 
+        [OptionalRequired(AllowUnspecified = true)]
+        public OptionalValue<string> Required { get; set; }
+
         [OptionalStringLength(5)]
         public OptionalValue<string> StringLength { get; set; }
 
@@ -61,6 +64,7 @@ public class AllAttributesTest
                 MinLengthString = "1",
                 Range = 42,
                 RegularExpression = "something",
+                Required = "something",
                 StringLength = "12345",
             };
 
@@ -78,6 +82,7 @@ public class AllAttributesTest
                 MinLengthString = "",
                 Range = 4,
                 RegularExpression = "something else",
+                Required = "",
                 StringLength = "123456",
             };
     }
