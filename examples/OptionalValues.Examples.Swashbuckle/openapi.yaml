@@ -39,11 +39,15 @@ components:
           nullable: true
       additionalProperties: false
     Company:
+      required:
+        - name
       type: object
       properties:
         id:
           type: string
           format: uuid
+        name:
+          type: string
         summary:
           maxLength: 50
           minLength: 0

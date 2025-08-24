@@ -28,10 +28,14 @@ components:
     Company:
       type: object
       additionalProperties: false
+      required:
+      - name
       properties:
         id:
           type: string
           format: guid
+        name:
+          type: string
         summary:
           type: string
           nullable: true

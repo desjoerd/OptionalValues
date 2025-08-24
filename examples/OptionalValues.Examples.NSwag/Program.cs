@@ -44,6 +44,9 @@ class Company
 {
     public Guid Id { get; init; } = Guid.NewGuid();
 
+    [OptionalRequired]
+    public OptionalValue<string> Name { get; init; }
+
     [OptionalLength(0, 50)]
     public OptionalValue<string?> Summary { get; init; }
 
