@@ -29,7 +29,7 @@ public static class OptionalValueJsonExtensions
         for (var i = 0; i < options.TypeInfoResolverChain.Count; i++)
         {
             options.TypeInfoResolverChain[i] = options.TypeInfoResolverChain[i]
-                .WithAddedModifier(OptionalValueJsonTypeInfoResolverModifier.ModifyTypeInfo);
+                .WithOptionalValueSupport();
         }
 
         return options;
@@ -43,4 +43,7 @@ public static class OptionalValueJsonExtensions
     public static JsonSerializerOptions WithOptionalValueSupport(this JsonSerializerOptions options)
         => new JsonSerializerOptions(options)
             .AddOptionalValueSupport();
+
+    private static IJsonTypeInfoResolver WithOptionalValueSupport(this IJsonTypeInfoResolver resolver)
+        => resolver.WithAddedModifier(OptionalValueJsonTypeInfoResolverModifier.ModifyTypeInfo);
 }

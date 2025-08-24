@@ -17,7 +17,9 @@ public class OptionalValueJsonConverterAttribute : JsonConverterAttribute
     /// Initializes a new instance of <see cref="OptionalValueJsonConverterAttribute"/> with the specified inner converter type.
     /// </summary>
     /// <param name="innerConverterType"></param>
-    public OptionalValueJsonConverterAttribute(Type innerConverterType)
+    public OptionalValueJsonConverterAttribute(
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)]
+        Type innerConverterType)
     {
         InnerConverterType = innerConverterType;
     }
