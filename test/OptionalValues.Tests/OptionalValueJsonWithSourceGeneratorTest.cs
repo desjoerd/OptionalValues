@@ -172,13 +172,15 @@ public class OptionalValueJsonWithSourceGeneratorTest
 }
 
 [JsonSerializable(typeof(OptionalValueJsonWithSourceGeneratorTest.TestModel))]
-[JsonSerializable(typeof(int))]
 [JsonSerializable(typeof(string))]
+[JsonSerializable(typeof(int))]
 public partial class OptionalValueJsonWithSourceGeneratorJsonSerializationContext : JsonSerializerContext
 {
 }
 
 [JsonSerializable(typeof(OptionalValueJsonWithSourceGeneratorTest.TestModelOtherContext))]
+[JsonSerializable(typeof(string))]
+[JsonSerializable(typeof(int))]
 public partial class OtherOptionalValueJsonWithSourceGeneratorJsonSerializationContext : JsonSerializerContext
 {
 }
