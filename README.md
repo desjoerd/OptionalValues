@@ -399,6 +399,11 @@ Install the package using the .NET CLI:
 dotnet add package OptionalValues.DataAnnotations
 ```
 
+**Presence Validators:**
+
+- `[Specified]`: Ensures the `OptionalValue<T>` is specified (present), but allows `null` or empty values.
+- `[RequiredValue]`: Ensures the `OptionalValue<T>` is specified and its value is not `null` or empty. This should be used instead of the standard `[Required]` attribute.
+
 Example usage:
 ```csharp
 public class ExampleModel
@@ -432,6 +437,12 @@ public class ExampleModel
 
     [OptionalRegularExpression("^something$")]
     public OptionalValue<string> RegularExpression { get; set; }
+
+    [Specified]
+    public OptionalValue<string?> Specified { get; set; }
+
+    [RequiredValue]
+    public OptionalValue<string> SpecifiedRequired { get; set; }
 
     [OptionalStringLength(5)]
     public OptionalValue<string> StringLength { get; set; }

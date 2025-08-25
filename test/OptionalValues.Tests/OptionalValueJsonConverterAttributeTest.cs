@@ -65,10 +65,3 @@ public class OptionalValueJsonConverterAttributeTest
         Assert.Equal("VALUE", model.UpperStringValue.Value);
     }
 }
-
-[JsonSerializable(typeof(OptionalValueJsonConverterAttributeTest.ExampleModel))]
-[JsonSerializable(typeof(OptionalValueJsonConverterAttributeTest.ExampleEnum))]
-[JsonSerializable(typeof(string))]
-public partial class OptionalValueJsonConverterAttributeTestWithSourceGeneratorJsonSerializationContext : JsonSerializerContext
-{
-}

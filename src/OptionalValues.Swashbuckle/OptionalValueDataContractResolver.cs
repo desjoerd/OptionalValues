@@ -55,7 +55,8 @@ public class OptionalValueDataContractResolver : ISerializerDataContractResolver
                     Type underLyingType = OptionalValue.GetUnderlyingType(property.MemberType);
                     var isNullable = Nullable.GetUnderlyingType(underLyingType) != null || GetNullabilityFromRuntimeInformationFlags(property.MemberInfo);
 
-                    effectiveProperty = new DataProperty(property.Name, property.MemberType, false, isNullable, property.IsReadOnly, property.IsWriteOnly, property.MemberInfo);
+                    var isRequired = property.MemberInfo.GetCustomAttributes(true).Any(a => a.GetType().FullName == "OptionalValues.DataAnnotations.SpecifiedAttribute");
+                    effectiveProperty = new DataProperty(property.Name, property.MemberType, isRequired, isNullable, property.IsReadOnly, property.IsWriteOnly, property.MemberInfo);
                 }
 
                 effectiveProperties.Add(effectiveProperty);

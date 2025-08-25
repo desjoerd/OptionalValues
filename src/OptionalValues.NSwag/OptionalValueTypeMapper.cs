@@ -52,5 +52,14 @@ public class OptionalValueTypeMapper : ITypeMapper
 
         var jsonTypeDescription = JsonTypeDescription.Create(underlyingContextualType, schema.Type, underlyingIsNullable, schema.Format);
         context.JsonSchemaGenerator.ApplyDataAnnotations(schema, jsonTypeDescription);
+
+        if (schema is JsonSchemaProperty schemaProperty)
+        {
+            object? specifiedAttribute = contextualType.GetContextAttributes(true).FirstAssignableToTypeNameOrDefault("OptionalValues.DataAnnotations.SpecifiedAttribute");
+            if (specifiedAttribute != null)
+            {
+                schemaProperty.IsRequired = true;
+            }
+        }
     }
 }
