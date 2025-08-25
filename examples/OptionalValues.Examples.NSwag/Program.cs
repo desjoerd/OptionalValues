@@ -44,7 +44,7 @@ class Company
 {
     public Guid Id { get; init; } = Guid.NewGuid();
 
-    [OptionalRequired]
+    [RequiredValue]
     public OptionalValue<string> Name { get; init; }
 
     [OptionalLength(0, 50)]
@@ -65,8 +65,8 @@ class Person
 
 class Address
 {
-    [OptionalSpecified]
-    public OptionalValue<string> Street { get; init; }
+    [Specified]
+    public OptionalValue<string?> Street { get; init; }
 
     public OptionalValue<string> City { get; init; }
 

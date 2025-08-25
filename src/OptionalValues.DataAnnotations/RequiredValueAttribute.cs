@@ -8,14 +8,9 @@ namespace OptionalValues.DataAnnotations;
 /// Validation attribute to indicate that a property, field or parameter is required.
 /// </summary>
 /// <remarks>Consider NOT using an <see cref="OptionalValue{T}"/> and use the <c>required</c> keyword instead when you want to enforce the property to be <c>Specified</c>.</remarks>
-public class OptionalRequiredAttribute : RequiredAttribute
+[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter, AllowMultiple = false)]
+public sealed class RequiredValueAttribute : RequiredAttribute
 {
-    /// <summary>
-    /// Whether the property is allowed to be Unspecified. That is <c>OptionalValue.IsSpecified == false</c>.
-    /// Defaults to <c>false</c>.
-    /// </summary>
-    public bool AllowUnspecified { get; set; }
-
     /// <inheritdoc />
     public override bool IsValid(object? value)
     {
@@ -23,7 +18,7 @@ public class OptionalRequiredAttribute : RequiredAttribute
         {
             if (!optionalValue.IsSpecified)
             {
-                return AllowUnspecified;
+                return false;
             }
 
             value = optionalValue.GetSpecifiedValue();

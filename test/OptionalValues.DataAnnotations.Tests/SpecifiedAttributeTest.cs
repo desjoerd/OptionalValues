@@ -4,11 +4,11 @@ using Shouldly;
 
 namespace OptionalValues.DataAnnotations.Tests;
 
-public class OptionalSpecifiedTest
+public class SpecifiedAttributeTest
 {
     private class Example
     {
-        [OptionalSpecified]
+        [Specified]
         public OptionalValue<bool?> OptionalBool { get; set; }
     }
 

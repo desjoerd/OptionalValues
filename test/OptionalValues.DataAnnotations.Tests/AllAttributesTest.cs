@@ -42,8 +42,11 @@ public class AllAttributesTest
         [OptionalRegularExpression("^something$")]
         public OptionalValue<string> RegularExpression { get; set; }
 
-        [OptionalRequired(AllowUnspecified = true)]
-        public OptionalValue<string> Required { get; set; }
+        [Specified]
+        public OptionalValue<string?> Specified { get; set; }
+
+        [RequiredValue]
+        public OptionalValue<string> SpecifiedRequired { get; set; }
 
         [OptionalStringLength(5)]
         public OptionalValue<string> StringLength { get; set; }
@@ -64,7 +67,8 @@ public class AllAttributesTest
                 MinLengthString = "1",
                 Range = 42,
                 RegularExpression = "something",
-                Required = "something",
+                Specified = null,
+                SpecifiedRequired = "something",
                 StringLength = "12345",
             };
 
@@ -82,7 +86,8 @@ public class AllAttributesTest
                 MinLengthString = "",
                 Range = 4,
                 RegularExpression = "something else",
-                Required = "",
+                Specified = OptionalValue<string?>.Unspecified,
+                SpecifiedRequired = "",
                 StringLength = "123456",
             };
     }
@@ -99,9 +104,11 @@ public class AllAttributesTest
     }
 
     [Fact]
-    public void UnspecifiedValuesShouldBeValid()
+    public void UnspecifiedValuesShouldBeValid_Except_For_Specified()
     {
         var model = TestModel.CreateUnspecified();
+        model.Specified = null; // Specified must be explicitly set to be valid
+        model.SpecifiedRequired = "something"; // SpecifiedRequired must be explicitly set to a non-null non-empty string be valid
         var context = new ValidationContext(model);
         var results = new List<ValidationResult>();
 
