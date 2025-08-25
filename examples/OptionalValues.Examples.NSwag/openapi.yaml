@@ -58,6 +58,8 @@ components:
     Address:
       type: object
       additionalProperties: false
+      required:
+      - street
       properties:
         street:
           type: string

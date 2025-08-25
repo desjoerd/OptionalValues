@@ -6,7 +6,7 @@ namespace OptionalValues.DataAnnotations.Tests;
 
 public class OptionalRequiredTest
 {
-    public class Example
+    private class Example
     {
         [OptionalRequired]
         public OptionalValue<bool?> RequiredOptionalBool { get; set; }

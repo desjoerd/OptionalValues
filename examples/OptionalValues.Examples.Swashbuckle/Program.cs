@@ -63,6 +63,7 @@ class Person
 
 class Address
 {
+    [OptionalSpecified]
     public OptionalValue<string> Street { get; init; }
 
     public OptionalValue<string> City { get; init; }

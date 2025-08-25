@@ -13,15 +13,19 @@ OptionalValues.DataAnnotations.OptionalMaxLengthAttribute.OptionalMaxLengthAttri
 OptionalValues.DataAnnotations.OptionalMinLengthAttribute
 OptionalValues.DataAnnotations.OptionalMinLengthAttribute.OptionalMinLengthAttribute(int length) -> void
 OptionalValues.DataAnnotations.OptionalRangeAttribute
+OptionalValues.DataAnnotations.OptionalRangeAttribute.OptionalRangeAttribute(System.Type! type, string! minimum, string! maximum) -> void
 OptionalValues.DataAnnotations.OptionalRangeAttribute.OptionalRangeAttribute(double minimum, double maximum) -> void
 OptionalValues.DataAnnotations.OptionalRangeAttribute.OptionalRangeAttribute(int minimum, int maximum) -> void
-OptionalValues.DataAnnotations.OptionalRangeAttribute.OptionalRangeAttribute(System.Type! type, string! minimum, string! maximum) -> void
 OptionalValues.DataAnnotations.OptionalRegularExpressionAttribute
 OptionalValues.DataAnnotations.OptionalRegularExpressionAttribute.OptionalRegularExpressionAttribute(string! pattern) -> void
 OptionalValues.DataAnnotations.OptionalRequiredAttribute
 OptionalValues.DataAnnotations.OptionalRequiredAttribute.AllowUnspecified.get -> bool
 OptionalValues.DataAnnotations.OptionalRequiredAttribute.AllowUnspecified.set -> void
 OptionalValues.DataAnnotations.OptionalRequiredAttribute.OptionalRequiredAttribute() -> void
+OptionalValues.DataAnnotations.OptionalSpecifiedAttribute
+OptionalValues.DataAnnotations.OptionalSpecifiedAttribute.AllowEmptyStrings.get -> bool
+OptionalValues.DataAnnotations.OptionalSpecifiedAttribute.AllowEmptyStrings.set -> void
+OptionalValues.DataAnnotations.OptionalSpecifiedAttribute.OptionalSpecifiedAttribute() -> void
 OptionalValues.DataAnnotations.OptionalStringLengthAttribute
 OptionalValues.DataAnnotations.OptionalStringLengthAttribute.OptionalStringLengthAttribute(int maximumLength) -> void
 override OptionalValues.DataAnnotations.OptionalAllowedValuesAttribute.IsValid(object? value) -> bool
@@ -33,4 +37,5 @@ override OptionalValues.DataAnnotations.OptionalMinLengthAttribute.IsValid(objec
 override OptionalValues.DataAnnotations.OptionalRangeAttribute.IsValid(object? value) -> bool
 override OptionalValues.DataAnnotations.OptionalRegularExpressionAttribute.IsValid(object? value) -> bool
 override OptionalValues.DataAnnotations.OptionalRequiredAttribute.IsValid(object? value) -> bool
+override OptionalValues.DataAnnotations.OptionalSpecifiedAttribute.IsValid(object? value) -> bool
 override OptionalValues.DataAnnotations.OptionalStringLengthAttribute.IsValid(object? value) -> bool

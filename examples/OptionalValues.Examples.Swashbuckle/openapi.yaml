@@ -25,6 +25,8 @@ paths:
 components:
   schemas:
     Address:
+      required:
+        - street
       type: object
       properties:
         street:
