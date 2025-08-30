@@ -4,7 +4,8 @@
     <OptionalValuesLibraryTargetFrameworks>net8.0;net9.0</OptionalValuesLibraryTargetFrameworks>
     <OptionalValuesTestsTargetFrameworks>net8.0;net9.0</OptionalValuesTestsTargetFrameworks>
 
-    <CommonPackageTags>optional partial json undefined jsonpatch jsonmergepatch patch System.Text.Json Api
+    <CommonPackageTags>optional partial json undefined jsonpatch jsonmergepatch patch
+      System.Text.Json Api
       unspecified</CommonPackageTags>
   </PropertyGroup>
 
@@ -35,11 +36,14 @@
     <DebugType>portable</DebugType>
   </PropertyGroup>
 
-  <Sdk Name="DotNet.ReproducibleBuilds.Isolated" Version="1.2.25"/>
+  <!-- This fails with .NET 10 preview 4, error NETSDK1226: Prune Package data not found .NETCoreApp
+  10.0 Microsoft.AspNetCore.App -->
+  <!-- TODO: Uncomment when it's working again -->
+  <!-- <Sdk Name="DotNet.ReproducibleBuilds.Isolated" Version="1.2.25"/> -->
 
   <ItemGroup>
-    <PackageReference Include="Nerdbank.GitVersioning" PrivateAssets="all"/>
-    <PackageReference Include="DotNet.ReproducibleBuilds" PrivateAssets="All"/>
+    <PackageReference Include="Nerdbank.GitVersioning" PrivateAssets="All" />
+    <PackageReference Include="DotNet.ReproducibleBuilds" PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(IsPackable)' == 'true'">

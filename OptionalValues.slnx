@@ -12,6 +12,7 @@
   <Folder Name="/examples/">
     <Project Path="examples/OptionalValues.Examples.NSwag/OptionalValues.Examples.NSwag.csproj" />
     <Project Path="examples/OptionalValues.Examples.Swashbuckle/OptionalValues.Examples.Swashbuckle.csproj" />
+    <Project Path="examples\OptionalValues.Examples.OpenApi\OptionalValues.Examples.OpenApi.csproj" Type="Classic C#" />
   </Folder>
   <Folder Name="/src/">
     <Project Path="src/OptionalValues.DataAnnotations/OptionalValues.DataAnnotations.csproj" />

@@ -1,0 +1,112 @@
+{
+  "openapi": "3.1.1",
+  "info": {
+    "title": "OptionalValues.Examples.OpenApi | v1",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/company": {
+      "post": {
+        "tags": [
+          "Example"
+        ],
+        "description": "This directly returns the posted object",
+        "operationId": "Example Post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Company"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Company"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Address": {
+        "type": "object",
+        "properties": {
+          "street": {
+            "type": "string",
+            "description": "The street address."
+          },
+          "city": {
+            "type": "string"
+          },
+          "state": {
+            "pattern": "^[a-zA-Z ]+$",
+            "type": "string"
+          },
+          "zip": {
+            "type": "string"
+          }
+        },
+        "description": "Address2 of the person."
+      },
+      "Company": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The unique identifier for the company",
+            "format": "uuid"
+          },
+          "summary": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "description": "The name of the company"
+          },
+          "contact": {
+            "$ref": "#/components/schemas/Person"
+          }
+        }
+      },
+      "Person": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "age": {
+            "maximum": 120,
+            "minimum": 0,
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "address": {
+            "$ref": "#/components/schemas/Address"
+          },
+          "address2": {
+            "$ref": "#/components/schemas/Address"
+          }
+        },
+        "description": "The Contact person for the company"
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Example"
+    }
+  ]
+}
