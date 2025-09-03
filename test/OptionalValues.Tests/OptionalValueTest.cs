@@ -333,5 +333,14 @@ public class OptionalValueTest
 
             sut.GetSpecifiedValueOrDefault("Default").ShouldBe(null);
         }
+
+        [Fact]
+        public void Allows_Null_Default()
+        {
+            OptionalValue<string> sut = default;
+
+            var nullDefault = sut.GetSpecifiedValueOrDefault(null);
+            nullDefault.ShouldBeNull();
+        }
     }
 }

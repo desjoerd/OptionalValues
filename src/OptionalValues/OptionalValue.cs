@@ -55,7 +55,7 @@ public readonly struct OptionalValue<T> : IEquatable<OptionalValue<T>>, IOptiona
     /// <returns>
     /// The specified value or the default value of <typeparamref name="T"/>.
     /// </returns>
-    public T GetSpecifiedValueOrDefault() => GetSpecifiedValueOrDefault(default!);
+    public T? GetSpecifiedValueOrDefault() => GetSpecifiedValueOrDefault(default);
 
     /// <summary>
     /// Gets the specified value or the provided default value.
@@ -64,7 +64,8 @@ public readonly struct OptionalValue<T> : IEquatable<OptionalValue<T>>, IOptiona
     /// <returns>
     /// The specified value or the <paramref name="defaultValue"/>.
     /// </returns>
-    public T GetSpecifiedValueOrDefault(T defaultValue) => IsSpecified ? Value! : defaultValue;
+    [return: NotNullIfNotNull(nameof(defaultValue))]
+    public T? GetSpecifiedValueOrDefault(T? defaultValue) => IsSpecified ? Value! : defaultValue;
 
     /// <summary>
     /// Creates an Unspecified OptionalValue. This will have <see cref="IsSpecified"/> set to <c>false</c>.
