@@ -9,7 +9,12 @@ public class RequiredKeywordTest
     private static readonly JsonSerializerOptions Options = new JsonSerializerOptions()
         .AddOptionalValueSupport();
 
-    public class RequiredKeywordModel
+    public class RequiredKeywordClassModel
+    {
+        public required OptionalValue<string> NotRequired { get; init; }
+    }
+
+    public record RequiredKeywordRecordModel
     {
         public required OptionalValue<string> NotRequired { get; init; }
     }
@@ -24,10 +29,12 @@ public class RequiredKeywordTest
     {
         var json = "{}";
 
-        RequiredKeywordModel? requiredKeywordModel = JsonSerializer.Deserialize<RequiredKeywordModel>(json, Options);
+        RequiredKeywordClassModel? requiredKeywordClassModel = JsonSerializer.Deserialize<RequiredKeywordClassModel>(json, Options);
+        RequiredKeywordRecordModel? requiredKeywordRecordModel = JsonSerializer.Deserialize<RequiredKeywordRecordModel>(json, Options);
         Func<ReferenceModel?> actReference = () => JsonSerializer.Deserialize<ReferenceModel>(json, Options);
 
-        requiredKeywordModel!.NotRequired.IsSpecified.ShouldBeFalse();
+        requiredKeywordClassModel!.NotRequired.IsSpecified.ShouldBeFalse();
+        requiredKeywordRecordModel!.NotRequired.IsSpecified.ShouldBeFalse();
         actReference.ShouldThrow<JsonException>();
     }
 }
