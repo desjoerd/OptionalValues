@@ -23,7 +23,7 @@ public static class OptionalRuleExtensions
     /// </exception>
     public static void OptionalRuleFor<T, TProperty>(
         this AbstractValidator<T> validator,
-        Expression<Func<T, OptionalValue<TProperty?>>> propertySelector,
+        Expression<Func<T, OptionalValue<TProperty>>> propertySelector,
         Func<IRuleBuilderInitial<T, TProperty>, IRuleBuilderOptions<T, TProperty>> configure)
     {
         ArgumentNullException.ThrowIfNull(validator);
@@ -53,13 +53,13 @@ public static class OptionalRuleExtensions
         });
     }
 
-    private readonly struct WhenIsSpecified<T, TProperty>(Expression<Func<T, OptionalValue<TProperty?>>> propertySelector)
+    private readonly struct WhenIsSpecified<T, TProperty>(Expression<Func<T, OptionalValue<TProperty>>> propertySelector)
     {
-        private readonly Func<T, OptionalValue<TProperty?>> _propertySelectorFunc = propertySelector.Compile();
+        private readonly Func<T, OptionalValue<TProperty>> _propertySelectorFunc = propertySelector.Compile();
 
         public bool Check(T instance)
         {
-            OptionalValue<TProperty?> value = _propertySelectorFunc(instance);
+            OptionalValue<TProperty> value = _propertySelectorFunc(instance);
             return value.IsSpecified;
         }
     }

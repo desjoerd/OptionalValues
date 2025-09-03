@@ -61,6 +61,7 @@ public class OptionalRuleExtensionsTest
     public class TestData
     {
         public OptionalValue<string?> FirstName { get; set; }
+        public OptionalValue<string> LastName { get; set; }
         public OptionalValue<int> Age { get; set; }
     }
 
@@ -71,6 +72,9 @@ public class OptionalRuleExtensionsTest
             this.OptionalRuleFor(x => x.FirstName, x => x
                 .NotEmpty()
                 .MinimumLength(3));
+
+            this.OptionalRuleFor(x => x.LastName, x => x
+                .NotEmpty());
 
             this.OptionalRuleFor(x => x.Age, x => x
                 .GreaterThan(18));
