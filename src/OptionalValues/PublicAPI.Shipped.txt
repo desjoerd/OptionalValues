@@ -3,8 +3,8 @@ OptionalValues.Extensions.DictionaryExtensions
 OptionalValues.OptionalValue
 OptionalValues.OptionalValue<T>
 OptionalValues.OptionalValue<T>.Equals(OptionalValues.OptionalValue<T> other) -> bool
-OptionalValues.OptionalValue<T>.GetSpecifiedValueOrDefault() -> T
-OptionalValues.OptionalValue<T>.GetSpecifiedValueOrDefault(T defaultValue) -> T
+OptionalValues.OptionalValue<T>.GetSpecifiedValueOrDefault() -> T?
+OptionalValues.OptionalValue<T>.GetSpecifiedValueOrDefault(T? defaultValue) -> T?
 OptionalValues.OptionalValue<T>.IsSpecified.get -> bool
 OptionalValues.OptionalValue<T>.OptionalValue() -> void
 OptionalValues.OptionalValue<T>.OptionalValue(T value) -> void
@@ -29,11 +29,11 @@ static OptionalValues.Extensions.DictionaryExtensions.SetOptionalValue<TKey, T>(
 static OptionalValues.Extensions.DictionaryExtensions.TryAddOptionalValue<TKey, T>(this System.Collections.Generic.IDictionary<TKey, T>! dictionary, TKey key, OptionalValues.OptionalValue<T> value) -> bool
 static OptionalValues.OptionalValue.GetUnderlyingType(System.Type! optionalValueType) -> System.Type!
 static OptionalValues.OptionalValue.IsOptionalValueType(System.Type! type) -> bool
+static OptionalValues.OptionalValue<T>.Unspecified.get -> OptionalValues.OptionalValue<T>
 static OptionalValues.OptionalValue<T>.implicit operator OptionalValues.OptionalValue<T>(T value) -> OptionalValues.OptionalValue<T>
 static OptionalValues.OptionalValue<T>.implicit operator T?(OptionalValues.OptionalValue<T> value) -> T?
 static OptionalValues.OptionalValue<T>.operator !=(OptionalValues.OptionalValue<T> left, OptionalValues.OptionalValue<T> right) -> bool
 static OptionalValues.OptionalValue<T>.operator ==(OptionalValues.OptionalValue<T> left, OptionalValues.OptionalValue<T> right) -> bool
-static OptionalValues.OptionalValue<T>.Unspecified.get -> OptionalValues.OptionalValue<T>
 static OptionalValues.OptionalValueJsonExtensions.AddOptionalValueSupport(this System.Text.Json.JsonSerializerOptions! options) -> System.Text.Json.JsonSerializerOptions!
 static OptionalValues.OptionalValueJsonExtensions.WithOptionalValueSupport(this System.Text.Json.JsonSerializerOptions! options) -> System.Text.Json.JsonSerializerOptions!
 virtual OptionalValues.OptionalValueJsonConverterAttribute.CreateInnerConverter() -> System.Text.Json.Serialization.JsonConverter!
