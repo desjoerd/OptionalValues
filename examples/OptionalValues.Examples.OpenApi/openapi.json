@@ -75,8 +75,29 @@
           },
           "contact": {
             "$ref": "#/components/schemas/Person"
+          },
+          "type": {
+            "$ref": "#/components/schemas/NullableOfCompanyType"
+          },
+          "type2": {
+            "$ref": "#/components/schemas/CompanyType"
           }
         }
+      },
+      "CompanyType": {
+        "enum": [
+          "Private",
+          "Public",
+          "NonProfit"
+        ]
+      },
+      "NullableOfCompanyType": {
+        "enum": [
+          "Private",
+          "Public",
+          "NonProfit",
+          null
+        ]
       },
       "Person": {
         "type": "object",

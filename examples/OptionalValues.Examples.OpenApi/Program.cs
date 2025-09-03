@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using System.Text.Json.Serialization.Metadata;
 
 using Microsoft.OpenApi.Models;
@@ -11,13 +12,13 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi(options =>
 {
-    var originalCreateSchemaReferenceId = options.CreateSchemaReferenceId;
+    Func<JsonTypeInfo, string?> originalCreateSchemaReferenceId = options.CreateSchemaReferenceId;
 
     options.CreateSchemaReferenceId = (jsonTypeInfo) =>
     {
         if (OptionalValue.IsOptionalValueType(jsonTypeInfo.Type))
         {
-            var underlyingType = OptionalValue.GetUnderlyingType(jsonTypeInfo.Type);
+            Type underlyingType = OptionalValue.GetUnderlyingType(jsonTypeInfo.Type);
             var underlyingJsonTypeInfo = JsonTypeInfo.CreateJsonTypeInfo(underlyingType, jsonTypeInfo.Options);
 
             return originalCreateSchemaReferenceId(underlyingJsonTypeInfo);
@@ -45,6 +46,14 @@ builder.Services.AddOpenApi(options =>
         schema.Format = underlyingSchema.Format;
         schema.Properties = underlyingSchema.Properties;
         schema.Items = underlyingSchema.Items;
+        schema.AnyOf = underlyingSchema.AnyOf;
+        schema.AllOf = underlyingSchema.AllOf;
+        schema.OneOf = underlyingSchema.OneOf;
+        schema.Not = underlyingSchema.Not;
+        schema.AdditionalProperties = underlyingSchema.AdditionalProperties;
+        schema.Enum = underlyingSchema.Enum;
+        schema.Metadata = underlyingSchema.Metadata;
+        schema.AdditionalPropertiesAllowed = underlyingSchema.AdditionalPropertiesAllowed;
     });
 });
 
@@ -93,6 +102,17 @@ class Company
     /// The Contact person for the company
     /// </summary>
     public OptionalValue<Person?> Contact { get; init; }
+
+    public OptionalValue<CompanyType?> Type { get; init; }
+    public OptionalValue<CompanyType> Type2 { get; init; }
+}
+
+[JsonConverter(typeof(JsonStringEnumConverter<CompanyType>))]
+enum CompanyType
+{
+    Private,
+    Public,
+    NonProfit,
 }
 
 /// <summary>
