@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>$(OptionalValuesTestsTargetFrameworks)</TargetFrameworks>
+    <TargetFrameworks>$(OptionalValuesSwashbuckleTargetFrameworks)</TargetFrameworks>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 
