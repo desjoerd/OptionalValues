@@ -3,6 +3,7 @@
     <!-- Custom properties, which are used in the main projects -->
     <OptionalValuesLibraryTargetFrameworks>net8.0;net9.0;net10.0</OptionalValuesLibraryTargetFrameworks>
     <OptionalValuesSwashbuckleTargetFrameworks>net8.0;net9.0</OptionalValuesSwashbuckleTargetFrameworks>
+    <OptionalValuesOpenApiTargetFrameworks>net10.0</OptionalValuesOpenApiTargetFrameworks>
     <OptionalValuesTestsTargetFrameworks>net8.0;net9.0;net10.0</OptionalValuesTestsTargetFrameworks>
 
     <CommonPackageTags>optional partial json undefined jsonpatch jsonmergepatch patch

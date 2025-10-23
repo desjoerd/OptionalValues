@@ -1,0 +1,151 @@
+{
+  "openapi": "3.1.1",
+  "info": {
+    "title": "OptionalValues.Examples.OpenApi | v1",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/company": {
+      "post": {
+        "tags": [
+          "Example"
+        ],
+        "description": "This directly returns the posted object",
+        "operationId": "Example Post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Company"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Company"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Address": {
+        "required": [
+          "street"
+        ],
+        "type": "object",
+        "properties": {
+          "street": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "city": {
+            "type": "string"
+          },
+          "state": {
+            "pattern": "^[a-zA-Z ]+$",
+            "type": "string"
+          },
+          "zip": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        },
+        "description": "A mailing address."
+      },
+      "Company": {
+        "required": [
+          "name",
+          "contact"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the company."
+          },
+          "summary": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "contact": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "description": "The contact person for the company.",
+                "$ref": "#/components/schemas/Person"
+              }
+            ]
+          }
+        },
+        "description": "This is the main example company model."
+      },
+      "Person": {
+        "required": [
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "The full name of the person."
+          },
+          "age": {
+            "maximum": 120,
+            "minimum": 0,
+            "type": "integer",
+            "format": "int32"
+          },
+          "address": {
+            "description": "Contact address for the person.",
+            "$ref": "#/components/schemas/Address"
+          },
+          "billingAddress": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "description": "Billing address for the person.",
+                "$ref": "#/components/schemas/Address"
+              }
+            ]
+          }
+        },
+        "description": "This is a person."
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Example"
+    }
+  ]
+}

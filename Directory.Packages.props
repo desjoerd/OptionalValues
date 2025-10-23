@@ -11,12 +11,13 @@
   <!-- Package dependency versions -->
   <ItemGroup>
     <PackageVersion Include="FluentValidation" Version="$(FluentValidationVersion)" />
+    <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="10.0.0-rc.2.25502.107" />
     <PackageVersion Include="NJsonSchema" Version="$(NJsonSchemaVersion)" />
     <PackageVersion Include="Swashbuckle.AspNetCore.SwaggerGen" Version="$(SwashbuckleVersion)" />
   </ItemGroup>
   <!-- Examples dependency versions -->
   <ItemGroup>
-    <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="8.0.11" />
+    <PackageVersion Include="Microsoft.Extensions.ApiDescription.Server" Version="10.0.0-rc.2.25502.107" />
     <PackageVersion Include="NSwag.AspNetCore" Version="$(NSwagVersion)" />
     <PackageVersion Include="NSwag.MSBuild" Version="$(NSwagVersion)" />
     <PackageVersion Include="Swashbuckle.AspNetCore" Version="$(SwashbuckleVersion)" />
