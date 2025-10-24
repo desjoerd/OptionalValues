@@ -35,7 +35,7 @@
     <DebugType>portable</DebugType>
   </PropertyGroup>
 
-  <Sdk Name="DotNet.ReproducibleBuilds.Isolated" Version="1.2.25"/>
+  <Sdk Name="DotNet.ReproducibleBuilds.Isolated" Version="1.2.39"/>
 
   <ItemGroup>
     <PackageReference Include="Nerdbank.GitVersioning" PrivateAssets="all"/>
