@@ -3,12 +3,16 @@ using System.Reflection;
 using System.Text.Json.Serialization.Metadata;
 
 using Microsoft.AspNetCore.OpenApi;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi;
 
 namespace OptionalValues.OpenApi;
 
 internal class OptionalValuesSchemaTransformer : IOpenApiSchemaTransformer
 {
+    private readonly HashSet<string> _generatedSchemaIds = [];
+
     public async Task TransformAsync(OpenApiSchema schema, OpenApiSchemaTransformerContext context, CancellationToken cancellationToken)
     {
         TransformObjectSchema(schema, context);
@@ -27,8 +31,34 @@ internal class OptionalValuesSchemaTransformer : IOpenApiSchemaTransformer
             return;
         }
 
+        // Get the OpenApiOptions of the current document
+        IOptionsMonitor<OpenApiOptions> openApiOptionsSnapshot = context.ApplicationServices.GetRequiredService<IOptionsMonitor<OpenApiOptions>>();
+        OpenApiOptions openApiOptions = openApiOptionsSnapshot.Get(context.DocumentName);
+
         Type underlyingType = OptionalValue.GetUnderlyingType(context.JsonPropertyInfo.PropertyType);
-        OpenApiSchema underlyingSchema = await context.GetOrCreateSchemaAsync(underlyingType, cancellationToken: cancellationToken);
+        var underlyingSchemaId = openApiOptions.CreateSchemaReferenceId(
+            JsonTypeInfo.CreateJsonTypeInfo(underlyingType, context.JsonTypeInfo.Options));
+        var isSchemaReference = !string.IsNullOrEmpty(underlyingSchemaId);
+
+        OpenApiSchema? underlyingSchema = null;
+        if (isSchemaReference)
+        {
+            underlyingSchema = new OpenApiSchema
+            {
+                Metadata = schema.Metadata,
+            };
+            underlyingSchema.Metadata ??= new Dictionary<string, object>();
+            underlyingSchema.Metadata["x-schema-id"] = underlyingSchemaId!;
+
+            if (_generatedSchemaIds.Add(underlyingSchemaId!))
+            {
+                await context.GetOrCreateSchemaAsync(underlyingType, cancellationToken: cancellationToken);
+            }
+        }
+        else
+        {
+            underlyingSchema = await context.GetOrCreateSchemaAsync(underlyingType, cancellationToken: cancellationToken);
+        }
 
         schema.Type = underlyingSchema.Type;
 
@@ -43,6 +73,7 @@ internal class OptionalValuesSchemaTransformer : IOpenApiSchemaTransformer
         schema.Enum = underlyingSchema.Enum;
         schema.AdditionalPropertiesAllowed = underlyingSchema.AdditionalPropertiesAllowed;
         schema.Required = underlyingSchema.Required;
+        schema.Pattern = underlyingSchema.Pattern;
 
         // Merge annotations
         schema.Description ??= underlyingSchema.Description;
@@ -60,14 +91,12 @@ internal class OptionalValuesSchemaTransformer : IOpenApiSchemaTransformer
         }
 
         // Patch nullability
-        var isUnderlyingIsReferencedSchema = IsSchemaReference(underlyingSchema);
-
         var customAttributes = context.JsonPropertyInfo.AttributeProvider?.GetCustomAttributes(false) ?? [];
         var isNullable = !customAttributes.OfType<RequiredAttribute>().Any()
                          && GetOptionalValueIsNullable(context.JsonPropertyInfo.AttributeProvider as MemberInfo);
         if (isNullable)
         {
-            if (!isUnderlyingIsReferencedSchema)
+            if (!isSchemaReference)
             {
                 schema.Type |= JsonSchemaType.Null;
             }
@@ -88,7 +117,7 @@ internal class OptionalValuesSchemaTransformer : IOpenApiSchemaTransformer
                 var propAttributes = prop.AttributeProvider?.GetCustomAttributes(false) ?? [];
 
                 // If the property has a [Specified] attribute, mark it as required
-                if (propAttributes.Any(x => x.GetType().FullName == "OptionalValues.DataAnnotations.SpecifiedAttribute"))
+                if (propAttributes.Any(x => x.GetType()?.FullName == "OptionalValues.DataAnnotations.SpecifiedAttribute"))
                 {
                     schema.Required ??= new HashSet<string>(StringComparer.Ordinal);
                     schema.Required.Add(prop.Name);
@@ -97,15 +126,6 @@ internal class OptionalValuesSchemaTransformer : IOpenApiSchemaTransformer
         }
     }
 
-    private static bool IsSchemaReference(IOpenApiSchema? schema)
-        => schema switch
-        {
-            OpenApiSchema actualSchema => actualSchema.Metadata?.TryGetValue("x-schema-id", out var schemaId) == true
-                                          && !string.IsNullOrEmpty(schemaId as string),
-            OpenApiSchemaReference => true,
-            _ => false,
-        };
-
     private static bool GetOptionalValueIsNullable(ICustomAttributeProvider? memberInfo)
     {
         NullabilityInfo? nullabilityInfo = GetOptionalValueNullabilityInfo(memberInfo);
@@ -113,6 +133,7 @@ internal class OptionalValuesSchemaTransformer : IOpenApiSchemaTransformer
         {
             return false;
         }
+
         return nullabilityInfo.ReadState == NullabilityState.Nullable;
     }
 

@@ -2,20 +2,16 @@
 using Microsoft.AspNetCore.OpenApi;
 using Microsoft.OpenApi;
 
-using Shouldly;
-
 namespace OptionalValues.OpenApi.Tests;
 
-public class UnitTest1
+public class OpenApiDocumentTestBase
 {
-    [Fact]
-    public async Task Test1()
+    protected static async Task<OpenApiDocument> GetDocument()
     {
         await using var application = new WebApplicationFactory<Program>();
         IOpenApiDocumentProvider? documentProvider = application.Services.GetKeyedService<IOpenApiDocumentProvider>("v1");
 
         OpenApiDocument document = await documentProvider!.GetOpenApiDocumentAsync();
-
-        document.ShouldNotBeNull();
+        return document;
     }
 }
