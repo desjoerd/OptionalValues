@@ -390,16 +390,6 @@
           "value": {
             "type": "integer",
             "format": "int32"
-          },
-          "parent": {
-            "oneOf": [
-              {
-                "type": "null"
-              },
-              {
-                "$ref": "#/components/schemas/ReferenceA"
-              }
-            ]
           }
         }
       },

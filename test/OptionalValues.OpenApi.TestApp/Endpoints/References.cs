@@ -38,7 +38,9 @@ public static class References
     public class ReferenceC
     {
         public int Value { get; set; }
-        public ReferenceA? Parent { get; set; } // circular reference back to A
+
+        // NOT POSSIBLE TO HAVE CIRCULAR REFERENCES TILL https://github.com/dotnet/aspnetcore/pull/64109 is merged
+        //public ReferenceA? Parent { get; set; } // circular reference back to A
     }
 
     // Optional versions of the nested models
@@ -57,6 +59,8 @@ public static class References
     public class ReferenceCOptional
     {
         public OptionalValue<int> Value { get; set; }
-        public OptionalValue<ReferenceAOptional> Parent { get; set; } // circular back to A (nullable)
+
+        // NOT POSSIBLE TO HAVE CIRCULAR REFERENCES TILL https://github.com/dotnet/aspnetcore/pull/64109 is merged
+        //public OptionalValue<ReferenceAOptional?> Parent { get; set; } // circular back to A (nullable)
     }
 }

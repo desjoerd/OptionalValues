@@ -55,7 +55,6 @@
             "type": "string"
           },
           "state": {
-            "pattern": "^[a-zA-Z ]+$",
             "type": "string"
           },
           "zip": {

@@ -40,25 +40,7 @@ internal class OptionalValuesSchemaTransformer : IOpenApiSchemaTransformer
             JsonTypeInfo.CreateJsonTypeInfo(underlyingType, context.JsonTypeInfo.Options));
         var isSchemaReference = !string.IsNullOrEmpty(underlyingSchemaId);
 
-        OpenApiSchema? underlyingSchema = null;
-        if (isSchemaReference)
-        {
-            underlyingSchema = new OpenApiSchema
-            {
-                Metadata = schema.Metadata,
-            };
-            underlyingSchema.Metadata ??= new Dictionary<string, object>();
-            underlyingSchema.Metadata["x-schema-id"] = underlyingSchemaId!;
-
-            if (_generatedSchemaIds.Add(underlyingSchemaId!))
-            {
-                await context.GetOrCreateSchemaAsync(underlyingType, cancellationToken: cancellationToken);
-            }
-        }
-        else
-        {
-            underlyingSchema = await context.GetOrCreateSchemaAsync(underlyingType, cancellationToken: cancellationToken);
-        }
+        OpenApiSchema underlyingSchema = await context.GetOrCreateSchemaAsync(underlyingType, cancellationToken: cancellationToken);;
 
         schema.Type = underlyingSchema.Type;
 
@@ -157,16 +139,12 @@ internal class OptionalValuesSchemaTransformer : IOpenApiSchemaTransformer
         }
 
         NullabilityInfo? nullabilityInfo = GetNullabilityInfo(memberInfo);
-        if (nullabilityInfo == null)
+        if (nullabilityInfo == null
+            || !OptionalValue.IsOptionalValueType(nullabilityInfo.Type))
         {
             return null;
         }
 
-        if (OptionalValue.IsOptionalValueType(nullabilityInfo.Type))
-        {
-            return nullabilityInfo.GenericTypeArguments[0];
-        }
-
-        return null;
+        return nullabilityInfo.GenericTypeArguments[0];
     }
 }
