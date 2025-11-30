@@ -39,7 +39,7 @@ internal class OptionalValuesSchemaTransformer : IOpenApiSchemaTransformer
             JsonTypeInfo.CreateJsonTypeInfo(underlyingType, context.JsonTypeInfo.Options));
         var isSchemaReference = !string.IsNullOrEmpty(underlyingSchemaId);
 
-        OpenApiSchema underlyingSchema = await context.GetOrCreateSchemaAsync(underlyingType, cancellationToken: cancellationToken);;
+        OpenApiSchema underlyingSchema = await context.GetOrCreateSchemaAsync(underlyingType, cancellationToken: cancellationToken);
 
         schema.Type = underlyingSchema.Type;
 
