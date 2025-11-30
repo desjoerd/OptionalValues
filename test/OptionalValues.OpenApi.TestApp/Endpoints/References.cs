@@ -22,7 +22,7 @@ public static class References
         public ReferenceA A { get; set; } = null!;
     }
 
-    // Baseline nested models (A -> B -> C -> A circular)
+    // Baseline nested models (A -> B -> C; no circular reference currently, pending https://github.com/dotnet/aspnetcore/pull/64109)
     public class ReferenceA
     {
         public string Name { get; set; } = null!;
