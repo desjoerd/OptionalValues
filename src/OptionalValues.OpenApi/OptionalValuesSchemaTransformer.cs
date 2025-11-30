@@ -11,7 +11,6 @@ namespace OptionalValues.OpenApi;
 
 internal class OptionalValuesSchemaTransformer : IOpenApiSchemaTransformer
 {
-    private readonly HashSet<string> _generatedSchemaIds = [];
 
     public async Task TransformAsync(OpenApiSchema schema, OpenApiSchemaTransformerContext context, CancellationToken cancellationToken)
     {
