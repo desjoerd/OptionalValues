@@ -1,11 +1,5 @@
 <Project>
   <PropertyGroup>
-    <!-- Custom properties, which are used in the main projects -->
-    <OptionalValuesLibraryTargetFrameworks>net8.0;net9.0;net10.0</OptionalValuesLibraryTargetFrameworks>
-    <OptionalValuesSwashbuckleTargetFrameworks>net8.0;net9.0</OptionalValuesSwashbuckleTargetFrameworks>
-    <OptionalValuesOpenApiTargetFrameworks>net10.0</OptionalValuesOpenApiTargetFrameworks>
-    <OptionalValuesTestsTargetFrameworks>net8.0;net9.0;net10.0</OptionalValuesTestsTargetFrameworks>
-
     <CommonPackageTags>optional partial json undefined jsonpatch jsonmergepatch patch
       System.Text.Json Api unspecified</CommonPackageTags>
   </PropertyGroup>
@@ -37,11 +31,11 @@
     <DebugType>portable</DebugType>
   </PropertyGroup>
 
-  <Sdk Name="DotNet.ReproducibleBuilds.Isolated" Version="1.2.39"/>
+  <Sdk Name="DotNet.ReproducibleBuilds.Isolated" Version="1.2.39" />
 
   <ItemGroup>
-    <PackageReference Include="Nerdbank.GitVersioning" PrivateAssets="all"/>
-    <PackageReference Include="DotNet.ReproducibleBuilds" PrivateAssets="All"/>
+    <PackageReference Include="Nerdbank.GitVersioning" PrivateAssets="all" />
+    <PackageReference Include="DotNet.ReproducibleBuilds" PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(IsPackable)' == 'true'">
@@ -49,7 +43,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All"/>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" />
   </ItemGroup>
 
   <!-- Common nuget package properties -->
@@ -70,8 +64,11 @@
   </PropertyGroup>
 
   <ItemGroup Condition="'$(IsPackable)' == 'true'">
-    <None Include="$(MSBuildThisFileDirectory)/README.md" CopyToPublishDirectory="Always" Pack="true" PackagePath="\" />
-    <None Include="$(MSBuildThisFileDirectory)/LICENSE" CopyToPublishDirectory="Always" Pack="true" PackagePath="\" />
-    <None Include="$(MSBuildThisFileDirectory)/assets/icon.png" CopyToPublishDirectory="Always" Pack="true" PackagePath="\" />
+    <None Include="$(MSBuildThisFileDirectory)/README.md" CopyToPublishDirectory="Always"
+      Pack="true" PackagePath="\" />
+    <None Include="$(MSBuildThisFileDirectory)/LICENSE" CopyToPublishDirectory="Always" Pack="true"
+      PackagePath="\" />
+    <None Include="$(MSBuildThisFileDirectory)/assets/icon.png" CopyToPublishDirectory="Always"
+      Pack="true" PackagePath="\" />
   </ItemGroup>
 </Project>

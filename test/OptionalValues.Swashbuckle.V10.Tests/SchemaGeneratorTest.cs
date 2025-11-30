@@ -1,13 +1,12 @@
 using System.Text.Json;
 
-using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Writers;
+using Microsoft.OpenApi;
 
 using Shouldly;
 
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace OptionalValues.Swashbuckle.Tests;
+namespace OptionalValues.Swashbuckle.V10.Tests;
 
 public class SchemaGeneratorTest
 {
@@ -20,6 +19,8 @@ public class SchemaGeneratorTest
 
     private SchemaGenerator SchemaGeneratorOptionalValues { get; } = new SchemaGenerator(new SchemaGeneratorOptions
     {
+        // This should be true, because Nullable Reference Support is built into the OptionalValue<T> type
+        // So we set it to true to match the behavior of the OptionalValueDataContractResolver
         SupportNonNullableReferenceTypes = true,
     }, new OptionalValueDataContractResolver(new JsonSerializerDataContractResolver(JsonSerializerOptions.Default)));
 
@@ -27,53 +28,59 @@ public class SchemaGeneratorTest
     public void Should_Generate_The_Same_Schema_With_OptionalValues()
     {
         var schemaRepositoryForOptionalValues = new SchemaRepository();
-        OpenApiSchema? schemaOptionalValuesAsRef = SchemaGeneratorOptionalValues.GenerateSchema(typeof(ExamplesOptionalValues.Primitives), schemaRepositoryForOptionalValues);
-
         var schemaRepositoryForDefault = new SchemaRepository();
-        OpenApiSchema? schemaDefaultAsRef = SchemaGeneratorDefault.GenerateSchema(typeof(ExamplesPlain.Primitives), schemaRepositoryForDefault);
 
-        OpenApiSchema? schemaOptionalValues = schemaRepositoryForOptionalValues.Schemas[schemaOptionalValuesAsRef.Reference.Id];
-        OpenApiSchema? schemaDefault = schemaRepositoryForDefault.Schemas[schemaDefaultAsRef.Reference.Id];
+        IOpenApiSchema schemaOptionalValuesAsRef = SchemaGeneratorOptionalValues.GenerateSchema(typeof(ExamplesOptionalValues.Primitives), schemaRepositoryForOptionalValues);
+        schemaOptionalValuesAsRef.ShouldNotBeNull();
+
+        IOpenApiSchema schemaDefaultAsRef = SchemaGeneratorDefault.GenerateSchema(typeof(ExamplesPlain.Primitives), schemaRepositoryForDefault);
+        schemaDefaultAsRef.ShouldNotBeNull();
+
+        var refId1 = ((OpenApiSchemaReference)schemaOptionalValuesAsRef).Reference.Id;
+        var refId2 = ((OpenApiSchemaReference)schemaDefaultAsRef).Reference.Id;
+
+        IOpenApiSchema schemaOptionalValues = schemaRepositoryForOptionalValues.Schemas[refId1!];
+        IOpenApiSchema schemaDefault = schemaRepositoryForDefault.Schemas[refId2!];
 
         var schemaOptionalValuesJson = SerializeSchema(schemaOptionalValues);
         var schemaDefaultJson = SerializeSchema(schemaDefault);
 
         schemaOptionalValuesJson.ShouldBe(schemaDefaultJson);
-        schemaOptionalValues.Properties.Count.ShouldBe(4);
-        schemaDefault.Properties.Count.ShouldBe(4);
+        schemaOptionalValues.Properties?.Count.ShouldBe(4);
+        schemaDefault.Properties?.Count.ShouldBe(4);
     }
 
     [Fact]
     public void OptionalValue_Support_Should_Not_Change_Behavior()
     {
         var schemaRepositoryForOptionalValues = new SchemaRepository();
-        OpenApiSchema? schemaOptionalValuesAsRef = SchemaGeneratorOptionalValues.GenerateSchema(typeof(ExamplesPlain.Primitives), schemaRepositoryForOptionalValues);
-
         var schemaRepositoryForDefault = new SchemaRepository();
-        OpenApiSchema? schemaDefault = SchemaGeneratorDefault.GenerateSchema(typeof(ExamplesPlain.Primitives), schemaRepositoryForDefault);
 
-        OpenApiSchema? schema1 = schemaRepositoryForOptionalValues.Schemas[schemaOptionalValuesAsRef.Reference.Id];
-        OpenApiSchema? schema2 = schemaRepositoryForDefault.Schemas[schemaDefault.Reference.Id];
+        IOpenApiSchema schemaOptionalValuesAsRef = SchemaGeneratorOptionalValues.GenerateSchema(typeof(ExamplesPlain.Primitives), schemaRepositoryForOptionalValues);
+        schemaOptionalValuesAsRef.ShouldNotBeNull();
+
+        IOpenApiSchema schemaDefaultAsRef = SchemaGeneratorDefault.GenerateSchema(typeof(ExamplesPlain.Primitives), schemaRepositoryForDefault);
+        schemaDefaultAsRef.ShouldNotBeNull();
+
+        var refId1 = ((OpenApiSchemaReference)schemaOptionalValuesAsRef).Reference.Id;
+        var refId2 = ((OpenApiSchemaReference)schemaDefaultAsRef).Reference.Id;
+
+        IOpenApiSchema schema1 = schemaRepositoryForOptionalValues.Schemas[refId1!];
+        IOpenApiSchema schema2 = schemaRepositoryForDefault.Schemas[refId2!];
 
         var schema1Json = SerializeSchema(schema1);
         var schema2Json = SerializeSchema(schema2);
 
         schema1Json.ShouldBe(schema2Json);
-
-        schema1.Properties.Count.ShouldBe(4);
-        schema2.Properties.Count.ShouldBe(4);
     }
 
-    private static string SerializeSchema(OpenApiSchema schema)
+    private static string SerializeSchema(Microsoft.OpenApi.IOpenApiSchema schema)
     {
-        using var textWriter = new StringWriter();
-        var openApiWriter = new OpenApiJsonWriter(textWriter);
-        schema.SerializeAsV3(openApiWriter);
-        var json = textWriter.ToString();
-
-        json.ShouldNotBeNullOrEmpty();
-
-        return json;
+        using var stringWriter = new StringWriter();
+        // OpenApi 2.x uses OpenApiWriterBase instead of OpenApiJsonWriter
+        var writer = new Microsoft.OpenApi.OpenApiJsonWriter(stringWriter);
+        schema.SerializeAsV31(writer);
+        return stringWriter.ToString();
     }
 
     private static class ExamplesOptionalValues

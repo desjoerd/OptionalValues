@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
+    <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 
@@ -10,9 +10,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="..\OptionalValues.Swashbuckle.Tests\*.cs" LinkBase="." />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="coverlet.collector" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="Shouldly" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" VersionOverride="9.0.0" />
     <PackageReference Include="xunit" />
     <PackageReference Include="xunit.runner.visualstudio">
       <PrivateAssets>all</PrivateAssets>
@@ -26,7 +31,7 @@
 
   <ItemGroup>
     <ProjectReference
-      Include="..\..\src\OptionalValues.FluentValidation\OptionalValues.FluentValidation.csproj" />
+      Include="..\..\src\OptionalValues.Swashbuckle\OptionalValues.Swashbuckle.csproj" />
   </ItemGroup>
 
 </Project>
