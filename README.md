@@ -98,7 +98,7 @@ dotnet add package OptionalValues.FluentValidation
 - **OpenApi/Swagger Support**: 
   - **ASP.NET Core OpenAPI**: Support for ASP.NET Core's built-in OpenAPI support (Microsoft.AspNetCore.OpenApi) is available through the `OptionalValues.OpenApi` package. It provides a schema transformer to correctly handle `OptionalValue<T>` types.
   - **Swashbuckle** Includes a custom data contract resolver for Swashbuckle to generate accurate OpenAPI/Swagger documentation.
-  - **NSwag**: Support for NSwag is available through the `OptionalValues.NSwag` package. It includes an `OptionalValueTypeMapper` to map the `OptionalValue<T>` to it's underlying type `T` in the generated OpenAPI schema.
+  - **NSwag**: Support for NSwag is available through the `OptionalValues.NSwag` package. It includes an `OptionalValueTypeMapper` to map the `OptionalValue<T>` to its underlying type `T` in the generated OpenAPI schema.
 - **Patch Operation Support**: Ideal for API patch operations where fields can be updated to `null` or remain unchanged.
 
 # Table of Contents
