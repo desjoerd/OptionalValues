@@ -11,7 +11,7 @@ public static class SchemaAssertionExtensions
         var actualSchemaJson = await actualSchema.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_1);
         var baselineSchemaJson = await baselineSchema.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_1);
 
-        foreach(var ignoreString in ignoreStrings)
+        foreach (var ignoreString in ignoreStrings)
         {
             actualSchemaJson = actualSchemaJson.Replace(ignoreString, "");
             baselineSchemaJson = baselineSchemaJson.Replace(ignoreString, "");
