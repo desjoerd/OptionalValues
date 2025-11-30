@@ -1,0 +1,428 @@
+{
+  "openapi": "3.1.1",
+  "info": {
+    "title": "OptionalValues.OpenApi.TestApp | v1",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/primitives/body/baseline": {
+      "post": {
+        "tags": [
+          "OptionalValues.OpenApi.TestApp"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PrimitivesBodyBaseline"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/primitives/body/optional": {
+      "post": {
+        "tags": [
+          "OptionalValues.OpenApi.TestApp"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PrimitivesBodyOptional"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/references/body/baseline": {
+      "post": {
+        "tags": [
+          "OptionalValues.OpenApi.TestApp"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReferencesBodyBaseline"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/references/body/optional": {
+      "post": {
+        "tags": [
+          "OptionalValues.OpenApi.TestApp"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReferencesBodyOptional"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "PrimitivesBodyBaseline": {
+        "type": "object",
+        "properties": {
+          "int": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nullableInt": {
+            "type": [
+              "null",
+              "integer"
+            ],
+            "format": "int32"
+          },
+          "uInt": {
+            "type": "integer",
+            "format": "uint32"
+          },
+          "nullableUInt": {
+            "type": [
+              "null",
+              "integer"
+            ],
+            "format": "uint32"
+          },
+          "double": {
+            "type": "number",
+            "format": "double"
+          },
+          "nullableDouble": {
+            "type": [
+              "null",
+              "number"
+            ],
+            "format": "double"
+          },
+          "bool": {
+            "type": "boolean"
+          },
+          "nullableBool": {
+            "type": [
+              "null",
+              "boolean"
+            ]
+          },
+          "string": {
+            "type": "string"
+          },
+          "nullableString": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "guid": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "nullableGuid": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "uuid"
+          },
+          "dateTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "nullableDateTime": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date-time"
+          },
+          "dateOnly": {
+            "type": "string",
+            "format": "date"
+          },
+          "nullableDateOnly": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date"
+          },
+          "dateTimeOffset": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "nullableDateTimeOffset": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date-time"
+          },
+          "timeOnly": {
+            "type": "string",
+            "format": "time"
+          },
+          "nullableTimeOnly": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "time"
+          },
+          "timeSpan": {
+            "pattern": "^-?(\\d+\\.)?\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,7})?$",
+            "type": "string"
+          },
+          "nullableTimeSpan": {
+            "pattern": "^-?(\\d+\\.)?\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,7})?$",
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
+      },
+      "PrimitivesBodyOptional": {
+        "type": "object",
+        "properties": {
+          "int": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nullableInt": {
+            "type": [
+              "null",
+              "integer"
+            ],
+            "format": "int32"
+          },
+          "uInt": {
+            "type": "integer",
+            "format": "uint32"
+          },
+          "nullableUInt": {
+            "type": [
+              "null",
+              "integer"
+            ],
+            "format": "uint32"
+          },
+          "double": {
+            "type": "number",
+            "format": "double"
+          },
+          "nullableDouble": {
+            "type": [
+              "null",
+              "number"
+            ],
+            "format": "double"
+          },
+          "bool": {
+            "type": "boolean"
+          },
+          "nullableBool": {
+            "type": [
+              "null",
+              "boolean"
+            ]
+          },
+          "string": {
+            "type": "string"
+          },
+          "nullableString": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "guid": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "nullableGuid": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "uuid"
+          },
+          "dateTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "nullableDateTime": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date-time"
+          },
+          "dateOnly": {
+            "type": "string",
+            "format": "date"
+          },
+          "nullableDateOnly": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date"
+          },
+          "dateTimeOffset": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "nullableDateTimeOffset": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date-time"
+          },
+          "timeOnly": {
+            "type": "string",
+            "format": "time"
+          },
+          "nullableTimeOnly": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "time"
+          },
+          "timeSpan": {
+            "pattern": "^-?(\\d+\\.)?\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,7})?$",
+            "type": "string"
+          },
+          "nullableTimeSpan": {
+            "pattern": "^-?(\\d+\\.)?\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,7})?$",
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
+      },
+      "ReferenceA": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "b": {
+            "$ref": "#/components/schemas/ReferenceB"
+          }
+        }
+      },
+      "ReferenceAOptional": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "b": {
+            "$ref": "#/components/schemas/ReferenceBOptional"
+          }
+        }
+      },
+      "ReferenceB": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string"
+          },
+          "c": {
+            "$ref": "#/components/schemas/ReferenceC"
+          }
+        }
+      },
+      "ReferenceBOptional": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string"
+          },
+          "c": {
+            "$ref": "#/components/schemas/ReferenceCOptional"
+          }
+        }
+      },
+      "ReferenceC": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "ReferenceCOptional": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "ReferencesBodyBaseline": {
+        "type": "object",
+        "properties": {
+          "a": {
+            "$ref": "#/components/schemas/ReferenceA"
+          }
+        }
+      },
+      "ReferencesBodyOptional": {
+        "type": "object",
+        "properties": {
+          "a": {
+            "$ref": "#/components/schemas/ReferenceAOptional"
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "OptionalValues.OpenApi.TestApp"
+    }
+  ]
+}

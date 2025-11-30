@@ -1,0 +1,2 @@
+OptionalValues.OpenApi.OpenApiOptionsExtensions
+static OptionalValues.OpenApi.OpenApiOptionsExtensions.AddOptionalValueSupport(this Microsoft.AspNetCore.OpenApi.OpenApiOptions! options) -> void
