@@ -15,7 +15,7 @@ public static class OpenApiOptionsExtensions
     /// <see cref="OptionalValue{T}"/> types by applying a custom schema reference ID
     /// creation logic and adding a schema transformer.
     /// </summary>
-    /// <param name="options"></param>
+    /// <param name="options">The OpenApiOptions instance to configure.</param>
     public static void AddOptionalValueSupport(this OpenApiOptions options)
     {
         options.ApplyOptionalValueCreateSchemaReferenceId();
