@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>$(OptionalValuesLibraryTargetFrameworks)</TargetFrameworks>
+    <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
 
     <!-- CA1813: Avoid unsealed attributes -->
     <NoWarn>$(NoWarn);CA1813</NoWarn>
@@ -15,7 +15,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\OptionalValues\OptionalValues.csproj"/>
+    <ProjectReference Include="..\OptionalValues\OptionalValues.csproj" />
   </ItemGroup>
 
 </Project>

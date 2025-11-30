@@ -4,7 +4,7 @@ using Shouldly;
 
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace OptionalValues.Swashbuckle.Tests;
+namespace OptionalValues.Swashbuckle.V9.Tests;
 
 public class ServiceCollectionTest
 {
