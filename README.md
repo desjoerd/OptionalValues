@@ -233,76 +233,21 @@ bool areUnspecifiedEqual = unspecified == new OptionalValue<string>(); // True
 
 ## Dictionary Extensions
 
-The library includes extension methods for working with dictionaries and `OptionalValue<T>`, making it easy to retrieve, add, and update values optionally.
-
-### GetOptionalValue
-
-Retrieves a value from a dictionary as an `OptionalValue<T>`. If the key exists, returns a specified value; otherwise, returns `OptionalValue<T>.Unspecified`.
+Extension methods for working with dictionaries and `OptionalValue<T>`:
 
 ```csharp
 using OptionalValues.Extensions;
 
-var settings = new Dictionary<string, int>
-{
-    ["timeout"] = 30
-};
+var settings = new Dictionary<string, int> { ["timeout"] = 30 };
 
-OptionalValue<int> timeout = settings.GetOptionalValue("timeout");
-// timeout.IsSpecified == true, timeout.SpecifiedValue == 30
+// Get value as OptionalValue (returns Unspecified if key not found)
+OptionalValue<int> timeout = settings.GetOptionalValue("timeout"); // IsSpecified == true
+OptionalValue<int> retries = settings.GetOptionalValue("retries"); // IsSpecified == false
 
-OptionalValue<int> retries = settings.GetOptionalValue("retries");
-// retries.IsSpecified == false
-```
-
-### AddOptionalValue
-
-Adds a key-value pair to the dictionary only if the value is specified. Throws an exception if the key already exists.
-
-```csharp
-var settings = new Dictionary<string, int>();
-
-settings.AddOptionalValue("timeout", new OptionalValue<int>(30));
-// Adds timeout with value 30
-
-settings.AddOptionalValue("retries", OptionalValue<int>.Unspecified);
-// Does nothing - unspecified values are not added
-```
-
-### TryAddOptionalValue
-
-Attempts to add a key-value pair to the dictionary if the value is specified. Returns `true` if the value was added, `false` otherwise.
-
-```csharp
-var settings = new Dictionary<string, int>();
-
-bool added1 = settings.TryAddOptionalValue("timeout", new OptionalValue<int>(30));
-// Returns true, timeout is added
-
-bool added2 = settings.TryAddOptionalValue("retries", OptionalValue<int>.Unspecified);
-// Returns false, unspecified value is not added
-
-bool added3 = settings.TryAddOptionalValue("timeout", new OptionalValue<int>(60));
-// Returns false, key already exists
-```
-
-### SetOptionalValue
-
-Sets or updates a value in the dictionary only if the value is specified. If the value is unspecified, the dictionary remains unchanged.
-
-```csharp
-var settings = new Dictionary<string, int>
-{
-    ["timeout"] = 30
-};
-
-settings.SetOptionalValue("timeout", new OptionalValue<int>(60));
-// Updates timeout to 60
-
-settings.SetOptionalValue("timeout", OptionalValue<int>.Unspecified);
-// Does nothing - timeout remains 60
-
-settings.SetOptionalValue("retries", new OptionalValue<int>(3));
-// Adds retries with value 3 (key didn't exist)
+// Add/Set only when value is specified
+settings.AddOptionalValue("maxRetries", new OptionalValue<int>(3)); // Adds the value
+settings.AddOptionalValue("other", OptionalValue<int>.Unspecified); // Does nothing
+settings.SetOptionalValue("timeout", new OptionalValue<int>(60));   // Updates to 60
 ```
 
 ## JSON Serialization with System.Text.Json
