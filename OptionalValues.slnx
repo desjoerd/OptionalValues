@@ -20,7 +20,7 @@
     <Project Path="src/OptionalValues.NSwag/OptionalValues.NSwag.csproj" />
     <Project Path="src/OptionalValues.Swashbuckle/OptionalValues.Swashbuckle.csproj" />
     <Project Path="src/OptionalValues/OptionalValues.csproj" />
-    <Project Path="src\OptionalValues.OpenApi\OptionalValues.OpenApi.csproj" Type="Classic C#" />
+    <Project Path="src/OptionalValues.OpenApi/OptionalValues.OpenApi.csproj" Type="Classic C#" />
   </Folder>
   <Folder Name="/test/">
     <Project Path="test/OptionalValues.Benchmarks/OptionalValues.Benchmarks.csproj" />
