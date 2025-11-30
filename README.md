@@ -10,6 +10,7 @@ A .NET library that provides an `OptionalValue<T>` type, representing a value th
 | Package                                                                                           | Version                                                                                                                                        |
 | ------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
 | [OptionalValues](https://www.nuget.org/packages/OptionalValues)                                   | [![NuGet](https://img.shields.io/nuget/v/OptionalValues.svg)](https://www.nuget.org/packages/OptionalValues)                                   |
+| [OptionalValues.OpenApi](https://www.nuget.org/packages/OptionalValues.OpenApi)                   | [![NuGet](https://img.shields.io/nuget/v/OptionalValues.OpenApi.svg)](https://www.nuget.org/packages/OptionalValues.OpenApi)                   |
 | [OptionalValues.Swashbuckle](https://www.nuget.org/packages/OptionalValues.Swashbuckle)           | [![NuGet](https://img.shields.io/nuget/v/OptionalValues.Swashbuckle.svg)](https://www.nuget.org/packages/OptionalValues.Swashbuckle)           |
 | [OptionalValues.NSwag](https://www.nuget.org/packages/OptionalValues.NSwag)                       | [![NuGet](https://img.shields.io/nuget/v/OptionalValues.NSwag.svg)](https://www.nuget.org/packages/OptionalValues.NSwag)                       |
 | [OptionalValues.DataAnnotations](https://www.nuget.org/packages/OptionalValues.DataAnnotations)   | [![NuGet](https://img.shields.io/nuget/v/OptionalValues.DataAnnotations.svg)](https://www.nuget.org/packages/OptionalValues.DataAnnotations)   |
@@ -95,6 +96,7 @@ dotnet add package OptionalValues.FluentValidation
 - **Optional DataAnnotations**: An extension library that provides support for DataAnnotations validation attributes on `OptionalValue<T>` properties.
 - **FluentValidation Extensions**: Provides extension methods to simplify the validation of `OptionalValue<T>` properties using FluentValidation.
 - **OpenApi/Swagger Support**: 
+  - **ASP.NET Core OpenAPI**: Support for ASP.NET Core's built-in OpenAPI support (Microsoft.AspNetCore.OpenApi) is available through the `OptionalValues.OpenApi` package. It provides a schema transformer to correctly handle `OptionalValue<T>` types.
   - **Swashbuckle** Includes a custom data contract resolver for Swashbuckle to generate accurate OpenAPI/Swagger documentation.
   - **NSwag**: Support for NSwag is available through the `OptionalValues.NSwag` package. It includes an `OptionalValueTypeMapper` to map the `OptionalValue<T>` to it's underlying type `T` in the generated OpenAPI schema.
 - **Patch Operation Support**: Ideal for API patch operations where fields can be updated to `null` or remain unchanged.
@@ -119,13 +121,15 @@ dotnet add package OptionalValues.FluentValidation
     - [Respect nullable annotations](#respect-nullable-annotations)
 - [Library support](#library-support)
   - [ASP.NET Core](#aspnet-core)
-  - [Swashbuckle](#swashbuckle)
+  - [ASP.NET Core OpenAPI](#aspnet-core-openapi)
     - [Installation](#installation-1)
-  - [NSwag](#nswag)
+  - [Swashbuckle](#swashbuckle)
     - [Installation](#installation-2)
+  - [NSwag](#nswag)
+    - [Installation](#installation-3)
   - [System.ComponentModel.DataAnnotations](#systemcomponentmodeldataannotations)
   - [FluentValidation](#fluentvalidation)
-    - [Installation](#installation-3)
+    - [Installation](#installation-4)
     - [Using OptionalRuleFor](#using-optionalrulefor)
     - [How It Works](#how-it-works)
     - [Example Usage](#example-usage)
@@ -343,6 +347,29 @@ builder.Services.AddControllers()
     {
         options.JsonSerializerOptions.AddOptionalValueSupport();
     });
+```
+
+## ASP.NET Core OpenAPI
+
+The `OptionalValues.OpenApi` package provides support for ASP.NET Core's built-in OpenAPI support (Microsoft.AspNetCore.OpenApi) to generate accurate OpenAPI documentation for `OptionalValue<T>` properties.
+
+It correctly unwraps the `OptionalValue<T>` type and generates the appropriate schema for the underlying type `T`.
+
+### Installation
+
+Install the package using the .NET CLI:
+
+```bash
+dotnet add package OptionalValues.OpenApi
+```
+
+Configure the OpenAPI services to use the `OptionalValue<T>` schema transformer:
+
+```csharp
+builder.Services.AddOpenApi(options =>
+{
+    options.AddOptionalValueSupport();
+});
 ```
 
 ## Swashbuckle
