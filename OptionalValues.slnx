@@ -30,6 +30,6 @@
     <Project Path="test/OptionalValues.Swashbuckle.Tests/OptionalValues.Swashbuckle.Tests.csproj" />
     <Project Path="test/OptionalValues.Tests/OptionalValues.Tests.csproj" />
     <Project Path="test\OptionalValues.OpenApi.TestApp\OptionalValues.OpenApi.TestApp.csproj" Type="Classic C#" />
-    <Project Path="test\OptionalValues.OpenApi.Tests\OptionalValues.OpenApi.Tests.csproj" Type="Classic C#" />
+    <Project Path="test/OptionalValues.OpenApi.Tests/OptionalValues.OpenApi.Tests.csproj" Type="Classic C#" />
   </Folder>
 </Solution>
