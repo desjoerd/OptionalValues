@@ -93,6 +93,7 @@ dotnet add package OptionalValues.FluentValidation
 
 - **Distinguish Between Unspecified and Null Values**: Clearly differentiate when a value is intentionally `null` versus when it has not been specified at all. This allows for mapping `undefined` values in JSON to `Unspecified` values in C#.
 - **JSON Serialization Support**: Includes a custom JSON converter and TypeResolverModifier that correctly handles serialization and deserialization, ensuring unspecified values are omitted from JSON outputs.
+- **Dictionary Extensions**: Extension methods for working with dictionaries and `OptionalValue<T>`, including `GetOptionalValue`, `AddOptionalValue`, `TryAddOptionalValue`, and `SetOptionalValue`.
 - **Optional DataAnnotations**: An extension library that provides support for DataAnnotations validation attributes on `OptionalValue<T>` properties.
 - **FluentValidation Extensions**: Provides extension methods to simplify the validation of `OptionalValue<T>` properties using FluentValidation.
 - **OpenApi/Swagger Support**: 
@@ -115,6 +116,7 @@ dotnet add package OptionalValues.FluentValidation
   - [Accessing the Value](#accessing-the-value)
   - [Implicit Conversions](#implicit-conversions)
   - [Equality Comparisons](#equality-comparisons)
+  - [Dictionary Extensions](#dictionary-extensions)
   - [JSON Serialization with System.Text.Json](#json-serialization-with-systemtextjson)
     - [Serialization Behavior](#serialization-behavior)
     - [Deserialization Behavior](#deserialization-behavior)
@@ -231,6 +233,25 @@ var unspecified = new OptionalValue<string>();
 
 bool areEqual = value1 == value2; // True
 bool areUnspecifiedEqual = unspecified == new OptionalValue<string>(); // True
+```
+
+## Dictionary Extensions
+
+Extension methods for working with dictionaries and `OptionalValue<T>`:
+
+```csharp
+using OptionalValues.Extensions;
+
+var settings = new Dictionary<string, int> { ["timeout"] = 30 };
+
+// Get value as OptionalValue (returns Unspecified if key not found)
+OptionalValue<int> timeout = settings.GetOptionalValue("timeout"); // IsSpecified == true
+OptionalValue<int> retries = settings.GetOptionalValue("retries"); // IsSpecified == false
+
+// Add/Set only when value is specified
+settings.AddOptionalValue("maxRetries", new OptionalValue<int>(3)); // Adds the value
+settings.AddOptionalValue("other", OptionalValue<int>.Unspecified); // Does nothing
+settings.SetOptionalValue("timeout", new OptionalValue<int>(60));   // Updates to 60
 ```
 
 ## JSON Serialization with System.Text.Json
