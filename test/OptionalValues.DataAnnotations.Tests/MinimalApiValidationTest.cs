@@ -37,7 +37,9 @@ public class MinimalApiValidationTest
             SpecifiedField = "value"
         };
 
-        // Act - ValidationContext with IServiceProvider enables nested validation
+        // Act - ValidationContext accepts IServiceProvider for nested validation support.
+        // Passing null is valid for simple scenarios; minimal APIs provide a service provider
+        // when needed for complex nested validation scenarios.
         var context = new ValidationContext(validModel, serviceProvider: null, items: null);
         var results = new List<ValidationResult>();
         bool isValid = Validator.TryValidateObject(validModel, context, results, validateAllProperties: true);
@@ -58,7 +60,9 @@ public class MinimalApiValidationTest
             SpecifiedField = OptionalValue<string?>.Unspecified
         };
 
-        // Act - ValidationContext with IServiceProvider enables nested validation
+        // Act - ValidationContext accepts IServiceProvider for nested validation support.
+        // Passing null is valid for simple scenarios; minimal APIs provide a service provider
+        // when needed for complex nested validation scenarios.
         var context = new ValidationContext(invalidModel, serviceProvider: null, items: null);
         var results = new List<ValidationResult>();
         bool isValid = Validator.TryValidateObject(invalidModel, context, results, validateAllProperties: true);
@@ -79,7 +83,9 @@ public class MinimalApiValidationTest
             // RangeValue is unspecified, which should be valid for optional fields
         };
 
-        // Act - ValidationContext with IServiceProvider enables nested validation
+        // Act - ValidationContext accepts IServiceProvider for nested validation support.
+        // Passing null is valid for simple scenarios; minimal APIs provide a service provider
+        // when needed for complex nested validation scenarios.
         var context = new ValidationContext(validModel, serviceProvider: null, items: null);
         var results = new List<ValidationResult>();
         bool isValid = Validator.TryValidateObject(validModel, context, results, validateAllProperties: true);
