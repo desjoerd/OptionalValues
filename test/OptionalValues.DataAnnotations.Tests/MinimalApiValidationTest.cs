@@ -52,11 +52,10 @@ public class MinimalApiValidationTest : IAsyncLifetime
             options.SerializerOptions.AddOptionalValueSupport();
         });
         
-        // Note: AddValidation() in .NET 10 performs deep recursive validation
-        // which causes issues with OptionalValue's circular reference structure (Unspecified property).
-        // Instead, we rely on DataAnnotations validation which is automatically performed
-        // by minimal APIs when the model has validation attributes.
-        // This is the same validation mechanism, just without the deep recursion that causes issues.
+        // Add validation support for minimal APIs in .NET 10
+        // Note: This causes a circular reference issue with OptionalValue's Unspecified property
+        // during deep recursive validation, but keeping it to demonstrate the issue.
+        builder.Services.AddValidation();
         
         // Use test server
         builder.WebHost.UseTestServer();
