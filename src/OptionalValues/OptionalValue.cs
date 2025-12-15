@@ -75,6 +75,7 @@ public readonly struct OptionalValue<T> : IEquatable<OptionalValue<T>>, IOptiona
         "Design",
         "CA1000:Do not declare static members on generic types",
         Justification = "Having a static class for Unspecified is not adding value at the moment")]
+    [JsonIgnore]
     public static OptionalValue<T> Unspecified => new();
 
     /// <summary>
