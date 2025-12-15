@@ -53,8 +53,6 @@ public class MinimalApiValidationTest : IAsyncLifetime
         });
         
         // Add validation support for minimal APIs in .NET 10
-        // Note: This causes a circular reference issue with OptionalValue's Unspecified property
-        // during deep recursive validation, but keeping it to demonstrate the issue.
         builder.Services.AddValidation();
         
         // Use test server
