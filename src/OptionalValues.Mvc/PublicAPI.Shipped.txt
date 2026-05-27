@@ -1,0 +1,3 @@
+﻿#nullable enable
+OptionalValues.Mvc.MvcOptionsExtensions
+static OptionalValues.Mvc.MvcOptionsExtensions.AddOptionalValueSupport(this Microsoft.AspNetCore.Mvc.MvcOptions! options) -> void

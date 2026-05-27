@@ -18,6 +18,7 @@
   <Folder Name="/src/">
     <Project Path="src/OptionalValues.DataAnnotations/OptionalValues.DataAnnotations.csproj" />
     <Project Path="src/OptionalValues.FluentValidation/OptionalValues.FluentValidation.csproj" />
+    <Project Path="src/OptionalValues.Mvc/OptionalValues.Mvc.csproj" />
     <Project Path="src/OptionalValues.NSwag/OptionalValues.NSwag.csproj" />
     <Project Path="src/OptionalValues.Swashbuckle/OptionalValues.Swashbuckle.csproj" />
     <Project Path="src/OptionalValues/OptionalValues.csproj" />
@@ -29,6 +30,7 @@
       Path="test/OptionalValues.DataAnnotations.Tests/OptionalValues.DataAnnotations.Tests.csproj" />
     <Project
       Path="test/OptionalValues.FluentValidation.Tests/OptionalValues.FluentValidation.Tests.csproj" />
+    <Project Path="test/OptionalValues.Mvc.Tests/OptionalValues.Mvc.Tests.csproj" />
     <Project Path="test/OptionalValues.NSwag.Tests/OptionalValues.NSwag.Tests.csproj" />
     <Project
       Path="test/OptionalValues.Swashbuckle.V7.Tests/OptionalValues.Swashbuckle.V7.Tests.csproj" />
