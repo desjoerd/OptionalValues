@@ -11,6 +11,7 @@ A .NET library that provides an `OptionalValue<T>` type, representing a value th
 | ------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
 | [OptionalValues](https://www.nuget.org/packages/OptionalValues)                                   | [![NuGet](https://img.shields.io/nuget/v/OptionalValues.svg)](https://www.nuget.org/packages/OptionalValues)                                   |
 | [OptionalValues.OpenApi](https://www.nuget.org/packages/OptionalValues.OpenApi)                   | [![NuGet](https://img.shields.io/nuget/v/OptionalValues.OpenApi.svg)](https://www.nuget.org/packages/OptionalValues.OpenApi)                   |
+| [OptionalValues.Mvc](https://www.nuget.org/packages/OptionalValues.Mvc)                           | [![NuGet](https://img.shields.io/nuget/v/OptionalValues.Mvc.svg)](https://www.nuget.org/packages/OptionalValues.Mvc)                           |
 | [OptionalValues.Swashbuckle](https://www.nuget.org/packages/OptionalValues.Swashbuckle)           | [![NuGet](https://img.shields.io/nuget/v/OptionalValues.Swashbuckle.svg)](https://www.nuget.org/packages/OptionalValues.Swashbuckle)           |
 | [OptionalValues.NSwag](https://www.nuget.org/packages/OptionalValues.NSwag)                       | [![NuGet](https://img.shields.io/nuget/v/OptionalValues.NSwag.svg)](https://www.nuget.org/packages/OptionalValues.NSwag)                       |
 | [OptionalValues.DataAnnotations](https://www.nuget.org/packages/OptionalValues.DataAnnotations)   | [![NuGet](https://img.shields.io/nuget/v/OptionalValues.DataAnnotations.svg)](https://www.nuget.org/packages/OptionalValues.DataAnnotations)   |
@@ -85,6 +86,7 @@ Optionally, install one or more extension packages:
 ```bash
 dotnet add package OptionalValues.Swashbuckle
 dotnet add package OptionalValues.NSwag
+dotnet add package OptionalValues.Mvc
 dotnet add package OptionalValues.DataAnnotations
 dotnet add package OptionalValues.FluentValidation
 ```
@@ -352,7 +354,7 @@ public class Model<T>
 
 The `OptionalValues` library integrates seamlessly with ASP.NET Core, allowing you to use `OptionalValue<T>` properties in your API models.
 
-You only need to configure the `JsonSerializerOptions` to include the `OptionalValue<T>` converter:
+Configure the `JsonSerializerOptions` to include the `OptionalValue<T>` converter, and for MVC controller validation add `OptionalValues.Mvc`:
 
 ```csharp
 // For Minimal API
@@ -364,6 +366,23 @@ builder.Services.ConfigureHttpJsonOptions(jsonOptions =>
 
 // For MVC
 builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.AddOptionalValueSupport();
+    })
+    .AddMvcOptions(options =>
+    {
+        options.AddOptionalValuesMvc();
+    });
+```
+
+Or configure the MVC options directly:
+
+```csharp
+builder.Services.AddControllers(options =>
+    {
+        options.AddOptionalValuesMvc();
+    })
     .AddJsonOptions(options =>
     {
         options.JsonSerializerOptions.AddOptionalValueSupport();
