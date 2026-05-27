@@ -1,6 +1,1 @@
-﻿#nullable enable
-OptionalValues.Mvc.MvcOptionsExtensions
-static OptionalValues.Mvc.MvcOptionsExtensions.AddOptionalValueSupport(this Microsoft.AspNetCore.Mvc.MvcOptions! options) -> void
-OptionalValues.Mvc.OptionalValueValidationMetadataProvider
-OptionalValues.Mvc.OptionalValueValidationMetadataProvider.CreateValidationMetadata(Microsoft.AspNetCore.Mvc.ModelBinding.Metadata.ValidationMetadataProviderContext! context) -> void
-OptionalValues.Mvc.OptionalValueValidationMetadataProvider.OptionalValueValidationMetadataProvider() -> void
+﻿
