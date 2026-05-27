@@ -46,7 +46,7 @@ internal sealed class OptionalValueSpecifiedValueModelValidator : IModelValidato
 
         return validationResults.SelectMany(static result =>
         {
-            var memberNames = result.MemberNames.DefaultIfEmpty(string.Empty).ToArray();
+            var memberNames = result.MemberNames.DefaultIfEmpty(string.Empty);
             return memberNames.Select(memberName => new ModelValidationResult(memberName, result.ErrorMessage ?? string.Empty));
         });
     }
