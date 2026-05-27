@@ -372,7 +372,7 @@ builder.Services.AddControllers()
     })
     .AddMvcOptions(options =>
     {
-        options.AddOptionalValuesMvc();
+        options.AddOptionalValueSupport();
     });
 ```
 
@@ -381,7 +381,7 @@ Or configure the MVC options directly:
 ```csharp
 builder.Services.AddControllers(options =>
     {
-        options.AddOptionalValuesMvc();
+        options.AddOptionalValueSupport();
     })
     .AddJsonOptions(options =>
     {
