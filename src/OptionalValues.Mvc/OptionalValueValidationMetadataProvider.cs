@@ -12,7 +12,9 @@ public sealed class OptionalValueValidationMetadataProvider : IValidationMetadat
     {
         ArgumentNullException.ThrowIfNull(context);
 
-        if (context.Key.ContainerType is null || !OptionalValue.IsOptionalValueType(context.Key.ContainerType))
+        if (context.Key.MetadataKind != ModelMetadataKind.Property ||
+            context.Key.ContainerType is null ||
+            !OptionalValue.IsOptionalValueType(context.Key.ContainerType))
         {
             return;
         }
