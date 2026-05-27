@@ -85,7 +85,7 @@ public class MvcControllerIntegrationValidationTest : IAsyncLifetime
     [Fact]
     public async Task UnspecifiedOptionalValue_ShouldPass_ControllerValidation()
     {
-        var content = new StringContent("""{"requiredField":null}""", Encoding.UTF8, "application/json");
+        var content = new StringContent("{}", Encoding.UTF8, "application/json");
 
         HttpResponseMessage response = await _client!.PostAsync("/validation", content);
 
@@ -95,7 +95,7 @@ public class MvcControllerIntegrationValidationTest : IAsyncLifetime
     [Fact]
     public async Task SpecifiedOptionalValue_ShouldPass_ControllerValidation()
     {
-        var content = new StringContent("""{"name":"short","requiredField":"present","child":{"value":"valid"}}""", Encoding.UTF8, "application/json");
+        var content = new StringContent("""{"name":"short","child":{"value":"valid"}}""", Encoding.UTF8, "application/json");
 
         HttpResponseMessage response = await _client!.PostAsync("/validation", content);
 
@@ -105,7 +105,7 @@ public class MvcControllerIntegrationValidationTest : IAsyncLifetime
     [Fact]
     public async Task InvalidOptionalValueDataAnnotations_ShouldFail_ControllerValidation()
     {
-        var content = new StringContent("""{"name":"toolong","requiredField":"present"}""", Encoding.UTF8, "application/json");
+        var content = new StringContent("""{"name":"toolong"}""", Encoding.UTF8, "application/json");
 
         HttpResponseMessage response = await _client!.PostAsync("/validation", content);
 
@@ -121,7 +121,7 @@ public class MvcControllerIntegrationValidationTest : IAsyncLifetime
     [Fact]
     public async Task InvalidChildDataAnnotations_ShouldFail_ControllerValidation()
     {
-        var content = new StringContent("""{"requiredField":"present","child":{"value":"toolong"}}""", Encoding.UTF8, "application/json");
+        var content = new StringContent("""{"child":{"value":"toolong"}}""", Encoding.UTF8, "application/json");
 
         HttpResponseMessage response = await _client!.PostAsync("/validation", content);
 
@@ -139,9 +139,6 @@ public class MvcControllerValidationRequestModel
 {
     [OptionalStringLength(5)]
     public OptionalValue<string> Name { get; init; }
-
-    [Specified]
-    public OptionalValue<string?> RequiredField { get; init; }
 
     public OptionalValue<MvcControllerValidationChildModel> Child { get; init; }
 }
