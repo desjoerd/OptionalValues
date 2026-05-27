@@ -94,6 +94,16 @@ public class MvcControllerIntegrationValidationTest : IAsyncLifetime
 
         response.StatusCode.ShouldBe(HttpStatusCode.OK);
     }
+
+    [Fact]
+    public async Task SpecifiedOptionalValue_ShouldPass_ControllerValidation()
+    {
+        var content = new StringContent("""{"child":{"value":"present"}}""", Encoding.UTF8, "application/json");
+
+        HttpResponseMessage response = await _client!.PostAsync("/validation", content);
+
+        response.StatusCode.ShouldBe(HttpStatusCode.OK);
+    }
 }
 #endif
 
