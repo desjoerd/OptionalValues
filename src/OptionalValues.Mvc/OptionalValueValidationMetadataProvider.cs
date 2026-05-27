@@ -18,5 +18,10 @@ public sealed class OptionalValueValidationMetadataProvider : IValidationMetadat
         }
 
         context.ValidationMetadata.ValidateChildren = false;
+
+        if (!context.ValidationMetadata.ValidatorMetadata.Contains(OptionalValueSpecifiedValueModelValidator.Instance))
+        {
+            context.ValidationMetadata.ValidatorMetadata.Add(OptionalValueSpecifiedValueModelValidator.Instance);
+        }
     }
 }

@@ -8,7 +8,7 @@ namespace OptionalValues.Mvc;
 public static class MvcOptionsExtensions
 {
     /// <summary>
-    /// Adds validation metadata support for <see cref="OptionalValue{T}"/> so MVC does not validate its child properties.
+    /// Adds validation metadata support for <see cref="OptionalValue{T}"/>.
     /// </summary>
     /// <param name="options">The MVC options to configure.</param>
     public static void AddOptionalValueSupport(this MvcOptions options)

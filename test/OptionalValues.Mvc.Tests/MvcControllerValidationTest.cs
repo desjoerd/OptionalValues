@@ -1,20 +1,18 @@
+using System.ComponentModel.DataAnnotations;
 using System.Net;
+using System.Net.Http.Json;
 using System.Text;
 
-#if NET10_0_OR_GREATER
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-#endif
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-#if NET10_0_OR_GREATER
 using Microsoft.AspNetCore.TestHost;
-#endif
 using Microsoft.Extensions.DependencyInjection;
-#if NET10_0_OR_GREATER
 using Microsoft.Extensions.Hosting;
-#endif
 
+using OptionalValues.DataAnnotations;
 using Shouldly;
 
 namespace OptionalValues.Mvc.Tests;
@@ -52,7 +50,6 @@ public class MvcControllerValidationTest
     }
 }
 
-#if NET10_0_OR_GREATER
 public class MvcControllerIntegrationValidationTest : IAsyncLifetime
 {
     private WebApplication? _app;
@@ -88,7 +85,7 @@ public class MvcControllerIntegrationValidationTest : IAsyncLifetime
     [Fact]
     public async Task UnspecifiedOptionalValue_ShouldPass_ControllerValidation()
     {
-        var content = new StringContent("{}", Encoding.UTF8, "application/json");
+        var content = new StringContent("""{"requiredField":null}""", Encoding.UTF8, "application/json");
 
         HttpResponseMessage response = await _client!.PostAsync("/validation", content);
 
@@ -98,26 +95,63 @@ public class MvcControllerIntegrationValidationTest : IAsyncLifetime
     [Fact]
     public async Task SpecifiedOptionalValue_ShouldPass_ControllerValidation()
     {
-        var content = new StringContent("""{"child":{"value":"present"}}""", Encoding.UTF8, "application/json");
+        var content = new StringContent("""{"name":"short","requiredField":"present","child":{"value":"valid"}}""", Encoding.UTF8, "application/json");
 
         HttpResponseMessage response = await _client!.PostAsync("/validation", content);
 
         response.StatusCode.ShouldBe(HttpStatusCode.OK);
     }
+
+    [Fact]
+    public async Task InvalidOptionalValueDataAnnotations_ShouldFail_ControllerValidation()
+    {
+        var content = new StringContent("""{"name":"toolong","requiredField":"present"}""", Encoding.UTF8, "application/json");
+
+        HttpResponseMessage response = await _client!.PostAsync("/validation", content);
+
+        response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
+
+        HttpValidationProblemDetails? problemDetails =
+            await response.Content.ReadFromJsonAsync<HttpValidationProblemDetails>();
+
+        problemDetails.ShouldNotBeNull();
+        problemDetails.Errors.ShouldContainKey(nameof(MvcControllerValidationRequestModel.Name));
+    }
+
+    [Fact]
+    public async Task InvalidChildDataAnnotations_ShouldFail_ControllerValidation()
+    {
+        var content = new StringContent("""{"requiredField":"present","child":{"value":"toolong"}}""", Encoding.UTF8, "application/json");
+
+        HttpResponseMessage response = await _client!.PostAsync("/validation", content);
+
+        response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
+
+        HttpValidationProblemDetails? problemDetails =
+            await response.Content.ReadFromJsonAsync<HttpValidationProblemDetails>();
+
+        problemDetails.ShouldNotBeNull();
+        problemDetails.Errors.ShouldContainKey($"{nameof(MvcControllerValidationRequestModel.Child)}.{nameof(MvcControllerValidationChildModel.Value)}");
+    }
 }
-#endif
 
 public class MvcControllerValidationRequestModel
 {
+    [OptionalStringLength(5)]
+    public OptionalValue<string> Name { get; init; }
+
+    [Specified]
+    public OptionalValue<string?> RequiredField { get; init; }
+
     public OptionalValue<MvcControllerValidationChildModel> Child { get; init; }
 }
 
 public class MvcControllerValidationChildModel
 {
+    [StringLength(5)]
     public string? Value { get; init; }
 }
 
-#if NET10_0_OR_GREATER
 [ApiController]
 [Route("validation")]
 public class ValidationController : ControllerBase
@@ -125,4 +159,3 @@ public class ValidationController : ControllerBase
     [HttpPost]
     public IActionResult Post(MvcControllerValidationRequestModel model) => Ok(model);
 }
-#endif
