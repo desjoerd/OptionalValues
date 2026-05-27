@@ -45,6 +45,7 @@ public readonly struct OptionalValue<T> : IEquatable<OptionalValue<T>>, IOptiona
     /// The specified value of the OptionalValue. If <see cref="IsSpecified"/> is false, this will throw an <see cref="InvalidOperationException"/>.
     /// </summary>
     /// <exception cref="InvalidOperationException"></exception>
+    [MvcIgnoreValidation]
     public T SpecifiedValue => IsSpecified
         ? Value!
         : throw new InvalidOperationException("Value is unspecified.");
