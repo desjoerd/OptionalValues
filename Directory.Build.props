@@ -71,4 +71,9 @@
     <None Include="$(MSBuildThisFileDirectory)/assets/icon.png" CopyToPublishDirectory="Always"
       Pack="true" PackagePath="\" />
   </ItemGroup>
+
+  <!-- Common properties for testing -->
+  <ItemGroup>
+    <InternalsVisibleTo Include="$(AssemblyName).Tests" />
+  </ItemGroup>
 </Project>

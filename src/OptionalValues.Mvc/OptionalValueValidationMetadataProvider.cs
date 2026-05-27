@@ -5,7 +5,7 @@ namespace OptionalValues.Mvc;
 /// <summary>
 /// Provides MVC validation metadata for <see cref="OptionalValue{T}"/>.
 /// </summary>
-public sealed class OptionalValueValidationMetadataProvider : IValidationMetadataProvider
+internal sealed class OptionalValueValidationMetadataProvider : IValidationMetadataProvider
 {
     /// <inheritdoc />
     public void CreateValidationMetadata(ValidationMetadataProviderContext context)
