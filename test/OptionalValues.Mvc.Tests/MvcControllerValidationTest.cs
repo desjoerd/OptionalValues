@@ -20,7 +20,7 @@ namespace OptionalValues.Mvc.Tests;
 public class MvcControllerValidationTest
 {
     [Fact]
-    public void AddOptionalValueSupport_ShouldDisableChildValidationForOptionalValueTypes()
+    public void AddOptionalValueSupport_ShouldConfigureOptionalValueValidationMetadata()
     {
         ServiceProvider services = new ServiceCollection()
             .AddControllers(options => options.AddOptionalValueSupport())
@@ -29,11 +29,17 @@ public class MvcControllerValidationTest
 
         var metadataProvider = services.GetRequiredService<IModelMetadataProvider>();
         var metadata = metadataProvider.GetMetadataForType(typeof(OptionalValue<MvcControllerValidationChildModel>));
+        var value = metadata.Properties[nameof(OptionalValue<MvcControllerValidationChildModel>.Value)];
         var specifiedValue = metadata.Properties[nameof(OptionalValue<MvcControllerValidationChildModel>.SpecifiedValue)];
+        var isSpecified = metadata.Properties[nameof(OptionalValue<MvcControllerValidationChildModel>.IsSpecified)];
 
-        metadata.ValidateChildren.ShouldBeFalse();
+        metadata.ValidateChildren.ShouldBeTrue();
+        value.ShouldNotBeNull();
+        value.PropertyValidationFilter.ShouldBeNull();
         specifiedValue.ShouldNotBeNull();
-        specifiedValue.PropertyValidationFilter.ShouldBeNull();
+        specifiedValue.PropertyValidationFilter.ShouldNotBeNull();
+        isSpecified.ShouldNotBeNull();
+        isSpecified.PropertyValidationFilter.ShouldNotBeNull();
     }
 
     [Fact]
@@ -95,7 +101,7 @@ public class MvcControllerIntegrationValidationTest : IAsyncLifetime
     [Fact]
     public async Task SpecifiedOptionalValue_ShouldPass_ControllerValidation()
     {
-        var content = new StringContent("""{"name":"short","child":{"value":"valid"}}""", Encoding.UTF8, "application/json");
+        var content = new StringContent("""{"name":"short","child":{"value":"valid","nested":{"grandchild":{"value":"valid"}}}}""", Encoding.UTF8, "application/json");
 
         HttpResponseMessage response = await _client!.PostAsync("/validation", content);
 
@@ -133,6 +139,26 @@ public class MvcControllerIntegrationValidationTest : IAsyncLifetime
         problemDetails.ShouldNotBeNull();
         problemDetails.Errors.ShouldContainKey($"{nameof(MvcControllerValidationRequestModel.Child)}.{nameof(MvcControllerValidationChildModel.Value)}");
     }
+
+    [Fact]
+    public async Task InvalidNestedChildDataAnnotations_ShouldFail_ControllerValidation()
+    {
+        var content = new StringContent(
+            """{"child":{"value":"valid","nested":{"grandchild":{"value":"toolong"}}}}""",
+            Encoding.UTF8,
+            "application/json");
+
+        HttpResponseMessage response = await _client!.PostAsync("/validation", content);
+
+        response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
+
+        HttpValidationProblemDetails? problemDetails =
+            await response.Content.ReadFromJsonAsync<HttpValidationProblemDetails>();
+
+        problemDetails.ShouldNotBeNull();
+        problemDetails.Errors.ShouldContainKey(
+            $"{nameof(MvcControllerValidationRequestModel.Child)}.{nameof(MvcControllerValidationChildModel.Nested)}.{nameof(MvcControllerValidationNestedChildModel.Grandchild)}.{nameof(MvcControllerValidationGrandchildModel.Value)}");
+    }
 }
 
 public class MvcControllerValidationRequestModel
@@ -144,6 +170,19 @@ public class MvcControllerValidationRequestModel
 }
 
 public class MvcControllerValidationChildModel
+{
+    [StringLength(5)]
+    public string? Value { get; init; }
+
+    public MvcControllerValidationNestedChildModel? Nested { get; init; }
+}
+
+public class MvcControllerValidationNestedChildModel
+{
+    public MvcControllerValidationGrandchildModel? Grandchild { get; init; }
+}
+
+public class MvcControllerValidationGrandchildModel
 {
     [StringLength(5)]
     public string? Value { get; init; }
