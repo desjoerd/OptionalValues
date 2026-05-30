@@ -1,9 +1,7 @@
-﻿namespace OptionalValues.Internal;
+namespace OptionalValues.Internal;
 
-internal interface IOptionalValueInternals
+internal interface IOptionalValueInternals : IOptionalValue
 {
-    bool IsSpecified { get; }
-
     object? GetValue();
 
     object? GetSpecifiedValue();
