@@ -55,6 +55,25 @@ public class OptionalValueTest
         }
     }
 
+    public class PublicInterface : OptionalValueTest
+    {
+        [Fact]
+        public void Should_Be_Implemented_By_OptionalValue()
+        {
+            IOptionalValue sut = new OptionalValue<string?>("Value");
+
+            sut.IsSpecified.ShouldBeTrue();
+        }
+
+        [Fact]
+        public void Should_Expose_Unspecified_State()
+        {
+            IOptionalValue sut = OptionalValue<string?>.Unspecified;
+
+            sut.IsSpecified.ShouldBeFalse();
+        }
+    }
+
     public class Value : OptionalValueTest
     {
         [Fact]
