@@ -1,6 +1,10 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 
+#if NET11_0_OR_GREATER
+using System.Runtime.CompilerServices;
+#endif
+
 using OptionalValues.Internal;
 
 namespace OptionalValues;
@@ -10,7 +14,12 @@ namespace OptionalValues;
 /// </summary>
 /// <typeparam name="T">The type of the value, can be <see cref="Nullable{T}"/></typeparam>
 [JsonConverter(typeof(OptionalValueJsonConverterFactory))]
+#if NET11_0_OR_GREATER
+[Union]
+#endif
 public readonly struct OptionalValue<T> : IEquatable<OptionalValue<T>>, IOptionalValueInternals
+    , OptionalValue<T>.IUnionMembers
+
 {
     /// <summary>
     /// Creates an Unspecified OptionalValue.
@@ -78,6 +87,8 @@ public readonly struct OptionalValue<T> : IEquatable<OptionalValue<T>>, IOptiona
     [JsonIgnore]
     public static OptionalValue<T> Unspecified => new();
 
+    object? IUnionMembers.Value => IsSpecified ? Value : new Unspecified();
+
     /// <summary>
     /// Determines whether the other OptionalValue is equal to the current OptionalValue.
     /// </summary>
@@ -101,6 +112,18 @@ public readonly struct OptionalValue<T> : IEquatable<OptionalValue<T>>, IOptiona
             null => IsSpecified && Value is null,
             _ => false,
         };
+
+    public bool TryGetValue(out T? value)
+    {
+        value = Value;
+        return IsSpecified;
+    }
+
+    public bool TryGetValue(out Unspecified value)
+    {
+        value = new Unspecified();
+        return !IsSpecified;
+    }
 
     /// <inheritdoc />
     public override int GetHashCode()
@@ -157,6 +180,17 @@ public readonly struct OptionalValue<T> : IEquatable<OptionalValue<T>>, IOptiona
     public static implicit operator OptionalValue<T>(T value) => new(value);
 
     /// <summary>
+    /// Implicitly converts a value to an OptionalValue.
+    /// </summary>
+    /// <param name="value"></param>
+    /// <returns></returns>
+    [SuppressMessage(
+        "Usage",
+        "CA2225:Operator overloads have named alternates",
+        Justification = "The alternative is the constructor")]
+    public static implicit operator OptionalValue<T>(Unspecified _) => new();
+
+    /// <summary>
     /// Implicitly converts an OptionalValue to a value. If the value is unspecified, this will return null.
     /// </summary>
     /// <param name="value"></param>
@@ -178,6 +212,14 @@ public readonly struct OptionalValue<T> : IEquatable<OptionalValue<T>>, IOptiona
     /// </summary>
     /// <remarks>Try not to use this method, as it will box the value and requires the OptionalValue to be boxed.</remarks>
     object? IOptionalValueInternals.GetSpecifiedValue() => SpecifiedValue;
+
+    public interface IUnionMembers
+    {
+        public static OptionalValue<T> Create(T value) => new(value);
+        public static OptionalValue<T> Create(Unspecified _) => new();
+
+        public object? Value { get; }
+    }
 }
 
 /// <summary>
