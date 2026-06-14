@@ -50,16 +50,46 @@ public class SchemaGeneratorTest
         schemaDefault.Properties?.Count.ShouldBe(4);
     }
 
-    [Fact]
-    public void OptionalValue_Support_Should_Not_Change_Behavior()
+    [Fact(Skip = "Skip this test until Swashbuckle does not override nullability for ValueTypes, (that is, OptionalValue<T>)")]
+    public void Should_Generate_The_Same_Schema_For_Nullable_Reference_Types_With_OptionalValues()
     {
         var schemaRepositoryForOptionalValues = new SchemaRepository();
         var schemaRepositoryForDefault = new SchemaRepository();
 
-        IOpenApiSchema schemaOptionalValuesAsRef = SchemaGeneratorOptionalValues.GenerateSchema(typeof(ExamplesPlain.Primitives), schemaRepositoryForOptionalValues);
+        IOpenApiSchema schemaOptionalValuesAsRef = SchemaGeneratorOptionalValues.GenerateSchema(typeof(ExamplesOptionalValues.NullableReferences), schemaRepositoryForOptionalValues);
         schemaOptionalValuesAsRef.ShouldNotBeNull();
 
-        IOpenApiSchema schemaDefaultAsRef = SchemaGeneratorDefault.GenerateSchema(typeof(ExamplesPlain.Primitives), schemaRepositoryForDefault);
+        IOpenApiSchema schemaDefaultAsRef = SchemaGeneratorDefault.GenerateSchema(typeof(ExamplesPlain.NullableReferences), schemaRepositoryForDefault);
+        schemaDefaultAsRef.ShouldNotBeNull();
+
+        var refId1 = ((OpenApiSchemaReference)schemaOptionalValuesAsRef).Reference.Id;
+        var refId2 = ((OpenApiSchemaReference)schemaDefaultAsRef).Reference.Id;
+
+        IOpenApiSchema schemaOptionalValues = schemaRepositoryForOptionalValues.Schemas[refId1!];
+        IOpenApiSchema schemaDefault = schemaRepositoryForDefault.Schemas[refId2!];
+
+        var schemaOptionalValuesJson = SerializeSchema(schemaOptionalValues);
+        var schemaDefaultJson = SerializeSchema(schemaDefault);
+
+        schemaOptionalValuesJson.ShouldBe(schemaDefaultJson);
+        schemaOptionalValues.Properties?.Count.ShouldBe(2);
+        schemaDefault.Properties?.Count.ShouldBe(2);
+    }
+
+    [Fact]
+    public void OptionalValue_Support_Should_Not_Change_Default_Behavior()
+    {
+        var schemaRepositoryForOptionalValues = new SchemaRepository();
+        var schemaRepositoryForDefault = new SchemaRepository();
+
+        // Generate the schema for the ExamplesPlain.Primitives type with both SchemaGenerators. 
+        // They should generate the same schema, because the OptionalValue support should not change the behavior for types that are not OptionalValue<T>
+        IOpenApiSchema schemaOptionalValuesAsRef = SchemaGeneratorOptionalValues
+            .GenerateSchema(typeof(ExamplesPlain.Primitives), schemaRepositoryForOptionalValues);
+        schemaOptionalValuesAsRef.ShouldNotBeNull();
+
+        IOpenApiSchema schemaDefaultAsRef = SchemaGeneratorDefault
+            .GenerateSchema(typeof(ExamplesPlain.Primitives), schemaRepositoryForDefault);
         schemaDefaultAsRef.ShouldNotBeNull();
 
         var refId1 = ((OpenApiSchemaReference)schemaOptionalValuesAsRef).Reference.Id;
@@ -92,6 +122,12 @@ public class SchemaGeneratorTest
             public OptionalValue<bool> BoolValue { get; set; }
             public OptionalValue<Guid> GuidValue { get; set; }
         }
+
+        public class NullableReferences
+        {
+            public OptionalValue<string> StringValue { get; set; }
+            public OptionalValue<string?> NullableStringValue { get; set; }
+        }
     }
 
     private static class ExamplesPlain
@@ -102,6 +138,12 @@ public class SchemaGeneratorTest
             public string StringValue { get; set; } = null!;
             public bool BoolValue { get; set; }
             public Guid GuidValue { get; set; }
+        }
+
+        public class NullableReferences
+        {
+            public string StringValue { get; set; } = null!;
+            public string? NullableStringValue { get; set; }
         }
     }
 }

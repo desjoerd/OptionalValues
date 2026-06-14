@@ -1,4 +1,4 @@
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 
 using OptionalValues;
 using OptionalValues.DataAnnotations;
@@ -9,6 +9,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new OpenApiInfo { Title = "OptionalValues.Examples.Swashbuckle", Version = "1.0" });
+    options.SchemaGeneratorOptions.SupportNonNullableReferenceTypes = true;
 });
 // Add OptionalValue support to Swashbuckle
 builder.Services.AddSwaggerGenOptionalValueSupport();

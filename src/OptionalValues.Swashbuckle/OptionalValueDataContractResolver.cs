@@ -44,60 +44,76 @@ public class OptionalValueDataContractResolver : ISerializerDataContractResolver
         }
 
         DataContract? dataContract = _inner.GetDataContractForType(effectiveType);
-        if (dataContract is { DataType: DataType.Object })
+        if (dataContract is not
+            { DataType: DataType.Object })
         {
-            var effectiveProperties = new List<DataProperty>();
-            foreach (DataProperty property in dataContract.ObjectProperties)
+            return dataContract;
+        }
+
+        var effectiveProperties = new List<DataProperty>();
+        foreach (DataProperty property in dataContract.ObjectProperties)
+        {
+            DataProperty effectiveProperty = property;
+            if (OptionalValue.IsOptionalValueType(property.MemberType))
             {
-                DataProperty effectiveProperty = property;
-                if (OptionalValue.IsOptionalValueType(property.MemberType))
-                {
-                    Type underLyingType = OptionalValue.GetUnderlyingType(property.MemberType);
-                    var isNullable = Nullable.GetUnderlyingType(underLyingType) != null || GetNullabilityFromRuntimeInformationFlags(property.MemberInfo);
+                Type underLyingType = OptionalValue.GetUnderlyingType(property.MemberType);
+                var isNullable = Nullable.GetUnderlyingType(underLyingType) != null
+                    || GetOptionalValueIsNullable(property.MemberInfo);
 
-                    var isRequired = property.MemberInfo.GetCustomAttributes(true).Any(a => a.GetType().FullName == "OptionalValues.DataAnnotations.SpecifiedAttribute");
-                    effectiveProperty = new DataProperty(property.Name, property.MemberType, isRequired, isNullable, property.IsReadOnly, property.IsWriteOnly, property.MemberInfo);
-                }
-
-                effectiveProperties.Add(effectiveProperty);
+                var isRequired = property.MemberInfo.GetCustomAttributes(true).Any(a => a.GetType().FullName == "OptionalValues.DataAnnotations.SpecifiedAttribute");
+                effectiveProperty = new DataProperty(property.Name, property.MemberType, isRequired, isNullable, property.IsReadOnly, property.IsWriteOnly, property.MemberInfo);
             }
 
-            dataContract = DataContract.ForObject(
-                dataContract.UnderlyingType,
-                effectiveProperties,
-                dataContract.ObjectExtensionDataType,
-                dataContract.ObjectTypeNameProperty,
-                dataContract.ObjectTypeNameProperty,
-                dataContract.JsonConverter);
+            effectiveProperties.Add(effectiveProperty);
         }
+
+        dataContract = DataContract.ForObject(
+            dataContract.UnderlyingType,
+            effectiveProperties,
+            dataContract.ObjectExtensionDataType,
+            dataContract.ObjectTypeNameProperty,
+            dataContract.ObjectTypeNameProperty,
+            dataContract.JsonConverter);
 
         return dataContract;
     }
 
-    private static bool GetNullabilityFromRuntimeInformationFlags(MemberInfo memberInfo)
+    private static bool GetOptionalValueIsNullable(ICustomAttributeProvider? memberInfo)
     {
-        NullabilityInfo? nullabilityInfo = GetNullabilityInfo(memberInfo);
+        NullabilityInfo? nullabilityInfo = GetOptionalValueNullabilityInfo(memberInfo);
         if (nullabilityInfo == null)
         {
             return false;
         }
 
-        if (OptionalValue.IsOptionalValueType(nullabilityInfo.Type))
-        {
-            return nullabilityInfo.GenericTypeArguments[0].ReadState == NullabilityState.Nullable;
-        }
-
         return nullabilityInfo.ReadState == NullabilityState.Nullable;
     }
 
-    private static NullabilityInfo? GetNullabilityInfo(MemberInfo memberInfo)
+    private static NullabilityInfo? GetOptionalValueNullabilityInfo(ICustomAttributeProvider? memberInfo)
+    {
+        if (memberInfo == null)
+        {
+            return null;
+        }
+
+        NullabilityInfo? nullabilityInfo = GetNullabilityInfo(memberInfo);
+        if (nullabilityInfo == null
+            || !OptionalValue.IsOptionalValueType(nullabilityInfo.Type))
+        {
+            return null;
+        }
+
+        return nullabilityInfo.GenericTypeArguments[0];
+    }
+
+    private static NullabilityInfo? GetNullabilityInfo(ICustomAttributeProvider memberInfo)
     {
         var nullabilityInfoContext = new NullabilityInfoContext();
-
         return memberInfo switch
         {
             PropertyInfo propertyInfo => nullabilityInfoContext.Create(propertyInfo),
             FieldInfo fieldInfo => nullabilityInfoContext.Create(fieldInfo),
+            ParameterInfo parameterInfo => nullabilityInfoContext.Create(parameterInfo),
             _ => null,
         };
     }
