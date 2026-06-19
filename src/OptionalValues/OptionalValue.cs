@@ -17,9 +17,10 @@ namespace OptionalValues;
 #if NET11_0_OR_GREATER
 [Union]
 #endif
-public readonly struct OptionalValue<T> : IEquatable<OptionalValue<T>>, IOptionalValueInternals
+public readonly struct OptionalValue<T> :
+    IEquatable<OptionalValue<T>>
+    , IOptionalValueInternals
     , OptionalValue<T>.IUnionMembers
-
 {
     /// <summary>
     /// Creates an Unspecified OptionalValue.
@@ -113,12 +114,23 @@ public readonly struct OptionalValue<T> : IEquatable<OptionalValue<T>>, IOptiona
             _ => false,
         };
 
-    public bool TryGetValue(out T? value)
+    /// <summary>
+    /// Tries to get the specified value. If the value is unspecified, this will return <c>false</c> and the out parameter will be default.
+    /// </summary>
+    /// <param name="value">The value to return when <see cref="IsSpecified" /> is <c>true</c></param>
+    /// <returns><c>true</c> if the value is specified; otherwise, <c>false</c>.</returns>
+    public bool TryGetValue(out T value)
     {
-        value = Value;
+        value = Value!;
         return IsSpecified;
     }
 
+    /// <summary>
+    /// Tries to get the unspecified value. If the value is specified, this will return <c>false</c>.
+    /// </summary>
+    /// <remarks>This method is provided for union pattern matching. It is not intended to be used for general purpose value retrieval.</remarks>
+    /// <param name="value">Will always be an Unspecified value.</param>
+    /// <returns><c>true</c> if the value is unspecified; otherwise, <c>false</c>.</returns>
     public bool TryGetValue(out Unspecified value)
     {
         value = new Unspecified();

@@ -11,18 +11,104 @@ namespace OptionalValues.Tests;
 
 public class UnionTest
 {
-    [Fact]
-    public void CanPatternMatch()
+    [Theory]
+    [InlineData(null, "is null")]
+    [InlineData("Hello", "has value")]
+    [InlineData(false, "is unspecified")]
+    public void CanPatternMatchNullable(object? value, string expected)
     {
-        var optionalValue = new OptionalValue<string?>("Hello");
-
-        var result = optionalValue switch
+        OptionalValue<string> sut;
+        if (value is bool and false)
         {
-            string => "has value",
+            sut = Unspecified.Value;
+        }
+        else
+        {
+            sut = new OptionalValue<string>((string?)value!);
+        }
+
+        var result = sut switch
+        {
+            null => "is null",
+            string s => $"has value",
             Unspecified => "is unspecified",
         };
 
-        Assert.Equal("has value", result);
+        Assert.Equal(expected, result);
+    }
+
+    [Theory]
+    [InlineData("Hello", "has value")]
+    [InlineData(false, "is unspecified")]
+    public void CanPatternMatchNotNull(object? value, string expected)
+    {
+        OptionalValue<string> sut;
+        if (value is bool and false)
+        {
+            sut = Unspecified.Value;
+        }
+        else
+        {
+            sut = new OptionalValue<string>((string?)value!);
+        }
+
+        var result = sut switch
+        {
+            string s => $"has value",
+            Unspecified => "is unspecified",
+        };
+
+        Assert.Equal(expected, result);
+    }
+
+    [Theory]
+    [InlineData(1, "has value")]
+    [InlineData(false, "is unspecified")]
+    public void CanPatternMatchValueType(object? value, string expected)
+    {
+        OptionalValue<int> sut;
+        if (value is bool and false)
+        {
+            sut = Unspecified.Value;
+        }
+        else
+        {
+            sut = new OptionalValue<int>((int)value!);
+        }
+
+        var result = sut switch
+        {
+            int => $"has value",
+            Unspecified => "is unspecified",
+        };
+
+        Assert.Equal(expected, result);
+    }
+
+    [Theory]
+    [InlineData(1, "has value")]
+    [InlineData(null, "is null")]
+    [InlineData(false, "is unspecified")]
+    public void CanPatternMatchValueTypeNullable(object? value, string expected)
+    {
+        OptionalValue<int?> sut;
+        if (value is bool and false)
+        {
+            sut = Unspecified.Value;
+        }
+        else
+        {
+            sut = new OptionalValue<int?>((int?)value);
+        }
+
+        var result = sut switch
+        {
+            int => $"has value",
+            null => "is null",
+            Unspecified => "is unspecified",
+        };
+
+        Assert.Equal(expected, result);
     }
 
     [Fact]
