@@ -80,8 +80,8 @@ public class SchemaGeneratorTest
         schemaOptionalValues.Properties?.Count.ShouldBe(2);
         schemaDefault.Properties?.Count.ShouldBe(2);
 
-        schemaDefault.Properties["StringValue"].Type.ShouldBe(JsonSchemaType.String);
-        schemaDefault.Properties["NullableStringValue"].Type.ShouldBe(JsonSchemaType.String | JsonSchemaType.Null);
+        schemaDefault.Properties?["StringValue"].Type.ShouldBe(JsonSchemaType.String);
+        schemaDefault.Properties?["NullableStringValue"].Type.ShouldBe(JsonSchemaType.String | JsonSchemaType.Null);
     }
 
     [Fact]
