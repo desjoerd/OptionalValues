@@ -11,6 +11,19 @@ namespace OptionalValues.OpenApi;
 
 internal class OptionalValuesSchemaTransformer : IOpenApiSchemaTransformer
 {
+    /// <summary>
+    /// Annotation used by ASP.NET Core's OpenAPI schema service (OpenApiConstants.SchemaId) to
+    /// mark a schema as componentized so that it is replaced with a reference to the schema
+    /// registered under this ID in #/components/schemas.
+    /// </summary>
+    private const string SchemaIdAnnotation = "x-schema-id";
+
+    /// <summary>
+    /// Underlying types whose schema is currently being generated through GetOrCreateSchemaAsync.
+    /// Each such call starts a fresh schema pass that re-runs the schema transformers, so a
+    /// self-referencing type would otherwise recurse without end.
+    /// </summary>
+    private readonly HashSet<Type> _underlyingTypesInProgress = [];
 
     public async Task TransformAsync(OpenApiSchema schema, OpenApiSchemaTransformerContext context, CancellationToken cancellationToken)
     {
@@ -39,7 +52,39 @@ internal class OptionalValuesSchemaTransformer : IOpenApiSchemaTransformer
             JsonTypeInfo.CreateJsonTypeInfo(underlyingType, context.JsonTypeInfo.Options));
         var isSchemaReference = !string.IsNullOrEmpty(underlyingSchemaId);
 
-        OpenApiSchema underlyingSchema = await context.GetOrCreateSchemaAsync(underlyingType, cancellationToken: cancellationToken);
+        // Compute the nullability of the underlying value
+        var customAttributes = context.JsonPropertyInfo.AttributeProvider?.GetCustomAttributes(false) ?? [];
+        var isNullable = !customAttributes.OfType<RequiredAttribute>().Any()
+                         && GetOptionalValueIsNullable(context.JsonPropertyInfo.AttributeProvider as MemberInfo);
+
+        if (!_underlyingTypesInProgress.Add(underlyingType))
+        {
+            // The schema for the underlying type is being generated higher up the call chain
+            // (the type references itself). Generating it again would recurse without end.
+            // Mark the property as a reference to the component that the in-flight schema
+            // pass registers so the framework resolves it to a $ref instead.
+            if (isSchemaReference)
+            {
+                schema.Metadata ??= new Dictionary<string, object>();
+                schema.Metadata[SchemaIdAnnotation] = underlyingSchemaId!;
+                if (isNullable)
+                {
+                    schema.Metadata["x-is-nullable-property"] = true;
+                }
+            }
+
+            return;
+        }
+
+        OpenApiSchema underlyingSchema;
+        try
+        {
+            underlyingSchema = await context.GetOrCreateSchemaAsync(underlyingType, cancellationToken: cancellationToken);
+        }
+        finally
+        {
+            _underlyingTypesInProgress.Remove(underlyingType);
+        }
 
         schema.Type = underlyingSchema.Type;
 
@@ -72,9 +117,6 @@ internal class OptionalValuesSchemaTransformer : IOpenApiSchemaTransformer
         }
 
         // Patch nullability
-        var customAttributes = context.JsonPropertyInfo.AttributeProvider?.GetCustomAttributes(false) ?? [];
-        var isNullable = !customAttributes.OfType<RequiredAttribute>().Any()
-                         && GetOptionalValueIsNullable(context.JsonPropertyInfo.AttributeProvider as MemberInfo);
         if (isNullable)
         {
             if (!isSchemaReference)
