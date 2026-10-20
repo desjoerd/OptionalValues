@@ -1,4 +1,4 @@
-openapi: 3.0.4
+openapi: '3.1.1'
 info:
   title: OptionalValues.Examples.Swashbuckle
   version: '1.0'
@@ -30,16 +30,18 @@ components:
       type: object
       properties:
         street:
-          type: string
-          nullable: true
+          type:
+            - 'null'
+            - string
         city:
           type: string
         state:
           pattern: '^[a-zA-Z ]+$'
           type: string
         zip:
-          type: string
-          nullable: true
+          type:
+            - 'null'
+            - string
       additionalProperties: false
     Company:
       required:
@@ -54,8 +56,9 @@ components:
         summary:
           maxLength: 50
           minLength: 0
-          type: string
-          nullable: true
+          type:
+            - 'null'
+            - string
         contact:
           $ref: '#/components/schemas/Person'
       additionalProperties: false
@@ -63,8 +66,9 @@ components:
       type: object
       properties:
         name:
-          type: string
-          nullable: true
+          type:
+            - 'null'
+            - string
         age:
           maximum: 120
           minimum: 0
@@ -73,3 +77,5 @@ components:
         address:
           $ref: '#/components/schemas/Address'
       additionalProperties: false
+tags:
+  - name: Example
