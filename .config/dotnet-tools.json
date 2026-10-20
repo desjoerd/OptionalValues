@@ -4,12 +4,23 @@
   "tools": {
     "nbgv": {
       "version": "3.6.146",
-      "commands": ["nbgv"],
+      "commands": [
+        "nbgv"
+      ],
       "rollForward": false
     },
     "swashbuckle.aspnetcore.cli": {
       "version": "10.3.1",
-      "commands": ["swagger"],
+      "commands": [
+        "swagger"
+      ],
+      "rollForward": false
+    },
+    "dotnet-outdated-tool": {
+      "version": "4.8.1",
+      "commands": [
+        "dotnet-outdated"
+      ],
       "rollForward": false
     }
   }
