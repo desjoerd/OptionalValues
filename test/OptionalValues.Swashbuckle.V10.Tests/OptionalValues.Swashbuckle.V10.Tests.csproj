@@ -17,7 +17,8 @@
     <PackageReference Include="coverlet.collector" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="Shouldly" />
-    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" VersionOverride="10.0.1" />
+    <!-- The V10 tests uses version >= 10.3.0 which contains a nullability fix -->
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" VersionOverride="10.3.1" />
     <PackageReference Include="xunit" />
     <PackageReference Include="xunit.runner.visualstudio">
       <PrivateAssets>all</PrivateAssets>
