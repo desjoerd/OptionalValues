@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+
 using OptionalValues;
 
 namespace OptionalValues.OpenApi.TestApp.Endpoints;
@@ -22,7 +23,7 @@ public static class References
         public ReferenceA A { get; set; } = null!;
     }
 
-    // Baseline nested models (A -> B -> C; no circular reference currently, pending https://github.com/dotnet/aspnetcore/pull/64109)
+    // Baseline nested models (A -> B -> C -> A circular reference)
     public class ReferenceA
     {
         public string Name { get; set; } = null!;
@@ -39,8 +40,7 @@ public static class References
     {
         public int Value { get; set; }
 
-        // NOT POSSIBLE TO HAVE CIRCULAR REFERENCES TILL https://github.com/dotnet/aspnetcore/pull/64109 is merged
-        //public ReferenceA? Parent { get; set; } // circular reference back to A
+        public ReferenceA? Parent { get; set; } // circular reference back to A
     }
 
     // Optional versions of the nested models
@@ -60,7 +60,6 @@ public static class References
     {
         public OptionalValue<int> Value { get; set; }
 
-        // NOT POSSIBLE TO HAVE CIRCULAR REFERENCES TILL https://github.com/dotnet/aspnetcore/pull/64109 is merged
-        //public OptionalValue<ReferenceAOptional?> Parent { get; set; } // circular back to A (nullable)
+        public OptionalValue<ReferenceAOptional?> Parent { get; set; } // circular back to A (nullable)
     }
 }
