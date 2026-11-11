@@ -1,0 +1,20 @@
+{
+	"name": "C# (.NET)",
+	"image": "mcr.microsoft.com/devcontainers/dotnet:2-10.0-noble",
+
+	"features": {
+		"ghcr.io/devcontainers/features/github-cli:1": {
+      "extensions": "github/gh-stack"
+    }
+	},
+	"postCreateCommand": "dotnet restore",
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"JakubKozera.csharp-dev-tools",
+				"ms-dotnettools.csharp",
+				"seatonjiang.gitmoji-vscode"
+			]
+		}
+	}
+}
