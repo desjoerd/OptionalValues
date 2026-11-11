@@ -1,0 +1,3 @@
+#nullable enable
+OptionalValues.IOptionalValue
+OptionalValues.IOptionalValue.IsSpecified.get -> bool
